@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>SignalR roomhub</title>
+</head>
+<body>
+    <div id="header"></div><br />
+    <div id="loginBlock">
+        Login:<br />
+        <input id="userName" type="text" />
+        <input id="loginBtn" type="button" value="Log in" />
+    </div><br />
+
+    <div id="log"></div>
+
+    <script src="js/signalr/dist/browser/signalr.min.js"></script>
+
+    <script>
+        const hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl("/roomhub", {
+                skipNegotiation: true,
+                transport: signalR.HttpTransportType.WebSockets
+            })
+            .build();
+
+        let userName = '';
+
+        // удачный вход
+        hubConnection.on('onLogin', function () {
+            let elem = document.createElement("p");
+            elem.appendChild(document.createTextNode("You successfully logined"));
+
+            var firstElem = document.getElementById("log").firstChild;
+            document.getElementById("log").insertBefore(elem, firstElem);
+        });
+
+        // время вышло
+        hubConnection.on('onTimeOver', function () {
+            let elem = document.createElement("p");
+            elem.appendChild(document.createTextNode("Time is over!"));
+
+            var firstElem = document.getElementById("log").firstChild;
+            document.getElementById("log").insertBefore(elem, firstElem);
+        });
+
+        // все сделали выбор
+        hubConnection.on('onAllChosed', function (round) {
+            let elem = document.createElement("p");
+            elem.appendChild(document.createTextNode("All chosed(Result: " + round.result + ")"));
+            var firstElem = document.getElementById("log").firstChild;
+            document.getElementById("log").insertBefore(elem, firstElem);
+
+            for (let i = 0; i < round.choices.length; i++)
+            {
+                elem = document.createElement("p");
+                elem.appendChild(document.createTextNode("User " + round.choices[i].user.name + " has chosed " + round.choices[i].card.name + " card"));
+                firstElem = document.getElementById("log").firstChild;
+                document.getElementById("log").insertBefore(elem, firstElem);
+            }
+        });
+
+        // пользователь выбрал карту
+        hubConnection.on('onUserChosed', function (user) {
+            let elem = document.createElement("p");
+            elem.appendChild(document.createTextNode(user.name + "(ID = " + user.id + ") chosed card"));
+
+            var firstElem = document.getElementById("log").firstChild;
+            document.getElementById("log").insertBefore(elem, firstElem);
+        });
+
+        // выбрана неверная карта
+        hubConnection.on('onWrongCard', function () {
+            let elem = document.createElement("p");
+            elem.appendChild(document.createTextNode("Wrong card was chosed"));
+
+            var firstElem = document.getElementById("log").firstChild;
+            document.getElementById("log").insertBefore(elem, firstElem);
+        });
+
+        // пользователь не готов
+        hubConnection.on('onUserNotReady', function (id, name) {
+            let elem = document.createElement("p");
+            elem.appendChild(document.createTextNode(name + "(ID = " + id + ") is not ready"));
+
+            var firstElem = document.getElementById("log").firstChild;
+            document.getElementById("log").insertBefore(elem, firstElem);
+        });
+
+        // пользователь готов
+        hubConnection.on('onUserReady', function (id, name) {
+            let elem = document.createElement("p");
+            elem.appendChild(document.createTextNode(name + "(ID = " + id + ") is ready"));
+
+            var firstElem = document.getElementById("log").firstChild;
+            document.getElementById("log").insertBefore(elem, firstElem);
+        });
+
+        // другой пользователь отключился
+        hubConnection.on('onUserDisconnected', function (user, roomId) {
+            let elem = document.createElement("p");
+            elem.appendChild(document.createTextNode(user.name + "(ID = " + user.id + ") disconnected from the room with ID = " + roomId));
+
+            var firstElem = document.getElementById("log").firstChild;
+            document.getElementById("log").insertBefore(elem, firstElem);
+        });
+
+        // другой пользователь подключился
+        hubConnection.on('onUserConnected', function (user, users, roomId) {
+            let elem = document.createElement("p");
+            elem.appendChild(document.createTextNode(user.name + "(ID = " + user.id + ") connected to the room with ID = " + roomId));
+
+            var firstElem = document.getElementById("log").firstChild;
+            document.getElementById("log").insertBefore(elem, firstElem);
+
+            for (var i = 0; i < users.length; i++) {
+                elem = document.createElement("p");
+                elem.appendChild(document.createTextNode(users[i].name));
+                firstElem = document.getElementById("log").firstChild;
+                document.getElementById("log").insertBefore(elem, firstElem);
+            }
+        });
+
+        // клиент отлючился
+        hubConnection.on('onDisconnected', function () {
+            let elem = document.createElement("p");
+            elem.appendChild(document.createTextNode("You were disconnected"));
+
+            var firstElem = document.getElementById("log").firstChild;
+            document.getElementById("log").insertBefore(elem, firstElem);
+        });
+
+        // клиент подключился
+        hubConnection.on('onConnected', function (room) {
+            let elem = document.createElement("p");
+            elem.appendChild(document.createTextNode("You connected to the room with ID = " + room.id));
+            var firstElem = document.getElementById("log").firstChild;
+            document.getElementById("log").insertBefore(elem, firstElem);
+
+            elem = document.createElement("p");
+            elem.appendChild(document.createTextNode("Cards mean " + room.cardInterpretation));
+            firstElem = document.getElementById("log").firstChild;
+            document.getElementById("log").insertBefore(elem, firstElem);
+
+            elem = document.createElement("p");
+            elem.appendChild(document.createTextNode("Room created by " + room.host.name + "(ID = " + room.host.id + ")"));
+            firstElem = document.getElementById("log").firstChild;
+            document.getElementById("log").insertBefore(elem, firstElem);
+
+            for (var i = 0; i < room.users.length; i++) {
+                elem = document.createElement("p");
+                elem.appendChild(document.createTextNode(room.users[i].name));
+                firstElem = document.getElementById("log").firstChild;
+                document.getElementById("log").insertBefore(elem, firstElem);
+            }
+        });
+
+        // стартовал раунд
+        hubConnection.on('onRoundStarted', function (id) {
+            let elem = document.createElement("p");
+            elem.appendChild(document.createTextNode("Round ID = " + id));
+            // Обработать users
+            var firstElem = document.getElementById("log").firstChild;
+            document.getElementById("log").insertBefore(elem, firstElem);
+        });
+
+        // установка имени пользователя
+        document.getElementById("loginBtn").addEventListener("click", function (e) {
+            userName = document.getElementById("userName").value;
+            hubConnection.invoke("Login", userName);
+            document.getElementById("header").innerHTML = '<h3>Welcome ' + userName + '</h3>';
+        });
+
+        hubConnection.start().then(() => console.warn(hubConnection.connectionId));
+    </script>
+</body>
+</html>
