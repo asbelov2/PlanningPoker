@@ -126,7 +126,7 @@ namespace RoomApi
       if (this.IsUsersReady(roomId))
       {
         this.StartNewRound(roomId, this.rooms.GetItem(roomId).Host.Id);
-        this.isUsersReady.TurnToFalse(roomId);
+        this.TurnToFalse(roomId);
       }
     }
 
@@ -283,6 +283,20 @@ namespace RoomApi
       {
         this.timers.GetItem(roundId).Stop();
         await this.context.Clients.Group($"room{this.rounds.GetItem(roundId).RoomId}").SendAsync("onEnd", new RoundDTO(this.rounds.GetItem(roundId)));
+      }
+    }
+
+
+    /// <summary>
+    /// Turn to false all readiness in room.
+    /// </summary>
+    /// <param name="roomId">Room ID.</param>
+    private void TurnToFalse(string roomId)
+    {
+      var dict = this.isUsersReady.GetList().FirstOrDefault(x => x.RoomId == roomId).IsUsersReady;
+      foreach (var key in dict.Keys.Cast<User>().ToArray())
+      {
+        dict[key] = false;
       }
     }
   }
