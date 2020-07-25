@@ -33,18 +33,11 @@
       if (cardType == CardType.Valuable)
       {
         this.Name = value.ToString();
-      }
-      else
-      {
-        this.Name = name;
-      }
-
-      if (cardType == CardType.Valuable)
-      {
         this.Value = value;
       }
       else
       {
+        this.Name = name;
         this.Value = 0;
       }
 
