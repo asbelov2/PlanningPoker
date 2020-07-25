@@ -4,12 +4,10 @@ using System.Collections.Generic;
 namespace Data
 {
   /// <summary>
-  /// <see cref="Room"/> class
+  /// <see cref="Room"/> class.
   /// </summary>
   public class Room : IEntity
   {
-    private List<User> participants = new List<User>();
-
     /// <summary>
     /// Initializes a new instance of the <see cref="Room"/> class.
     /// </summary>
