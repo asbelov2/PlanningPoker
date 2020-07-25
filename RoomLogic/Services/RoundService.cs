@@ -54,7 +54,7 @@ namespace RoomApi
     {
       if (userId == this.rooms.GetItem(rounds.GetItem(roundId)?.RoomId)?.Host?.Id)
       {
-        this.timers.GetItem(roundId).SetTimer();
+        this.timers.GetItem(roundId)?.SetTimer();
       }
     }
 
