@@ -1,3 +1,4 @@
+using Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Connections;
@@ -12,6 +13,8 @@ namespace RoomApi
     public Startup(IConfiguration configuration)
     {
       this.Configuration = configuration;
+      var decks = new DeckRepository();
+      decks.Add(new DefaultDeck());
     }
 
     public IConfiguration Configuration { get; }
