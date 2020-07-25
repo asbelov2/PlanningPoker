@@ -52,7 +52,7 @@ namespace RoomApi
     /// <param name="userId">User ID.</param>
     public void ResetTimer(string roundId, string userId)
     {
-      if (userId == this.rooms.GetItem(rounds.GetItem(roundId).RoomId).Host.Id)
+      if (userId == this.rooms.GetItem(rounds.GetItem(roundId)?.RoomId)?.Host?.Id)
       {
         this.timers.GetItem(roundId).SetTimer();
       }
