@@ -10,13 +10,7 @@ namespace RoomApi
   /// </summary>
   public class RoomHub : Hub
   {
-    private IHubContext<RoomHub> context;
     private UserRepository users = new UserRepository();
-    private RoundService roundService;
-    private RoundRepository rounds = new RoundRepository();
-    private RoomService roomService;
-    private RoomRepository rooms = new RoomRepository();
-    private DeckRepository decks = new DeckRepository();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RoomHub"/> class.
