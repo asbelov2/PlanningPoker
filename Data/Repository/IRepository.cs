@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Data
 {
@@ -7,7 +6,7 @@ namespace Data
   /// Repository interface.
   /// </summary>
   /// <typeparam name="T">Entity with ID.</typeparam>
-  internal interface IRepository<T> : IDisposable
+  internal interface IRepository<T>
     where T : class, IEntity
   {
     /// <summary>

@@ -11,8 +11,6 @@ namespace Data
   public abstract class Repository<T> : IRepository<T>
     where T : class, IEntity
   {
-    private bool disposed = false;
-
     /// <summary>
     /// Gets collection of data.
     /// </summary>
@@ -40,31 +38,6 @@ namespace Data
       {
         Data.Remove(item);
       }
-    }
-
-    /// <summary>
-    /// Dispose.
-    /// </summary>
-    public void Dispose()
-    {
-      this.Dispose(true);
-      GC.SuppressFinalize(this);
-    }
-
-    /// <summary>
-    /// Dispose for override.
-    /// </summary>
-    /// <param name="disposing"> Disposing.</param>
-    public virtual void Dispose(bool disposing)
-    {
-      if (!this.disposed)
-      {
-        if (disposing)
-        {
-        }
-      }
-
-      this.disposed = true;
     }
 
     /// <summary>
