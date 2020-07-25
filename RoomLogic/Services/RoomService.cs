@@ -16,8 +16,6 @@ namespace RoomApi
     private RoomRepository rooms = new RoomRepository();
     private RoundService roundService;
     private RoundRepository rounds = new RoundRepository();
-    private DeckService deckService = new DeckService();
-    private RoundResultRepository results = new RoundResultRepository();
     private UsersReadinessRepository isUsersReady = new UsersReadinessRepository();
     private RoundTimerRepository timers = new RoundTimerRepository();
 
