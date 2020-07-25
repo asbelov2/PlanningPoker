@@ -71,25 +71,25 @@ namespace RoomApi
       {
         if (round.Deck.Cards.Contains(card))
         {
-          if (round.Choices.Select(x => x.User == user).Count()>0)
+          if (round.Choices.Select(x => x.User == user).Count() > 0)
           {
             round.Choices.FirstOrDefault(x => x.User == user).Card = card;
-            await this.context.Clients.Group($"room{round.RoomId}").SendAsync("onUserChosed", user);
+            await this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onUserChosed", user);
             if (round.Choices.Count() == round.Users.Count())
             {
               this.timers.GetItem(round.Id).Stop();
-              await this.context.Clients.Group($"room{round.RoomId}").SendAsync("onAllChosed", new RoundDTO(rounds.GetItem(round.Id)));
+              await this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onAllChosed", new RoundDTO(rounds.GetItem(round.Id)));
             }
           }
           else
           {
             round.Choices.Add(new Choice(user, card));
-            await this.context.Clients.Group($"room{round.RoomId}").SendAsync("onUserChosed", user);
+            await this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onUserChosed", user);
             if (round.Choices.Count() == round.Users.Count())
             {
               this.roundResults.Add(new RoundResult(rounds.GetItem(round.Id)));
               this.timers.GetItem(round.Id).Stop();
-              await this.context.Clients.Group($"room{round.RoomId}").SendAsync("onAllChosed", new RoundDTO(rounds.GetItem(round.Id)));
+              await this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onAllChosed", new RoundDTO(rounds.GetItem(round.Id)));
             }
           }
         }
@@ -124,6 +124,11 @@ namespace RoomApi
       {
         round.Title = title;
       }
+    }
+
+    private string GetGroupKey(string roomId)
+    {
+      return $"room{roomId}";
     }
   }
 }
