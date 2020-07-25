@@ -40,7 +40,7 @@ namespace Data
     /// <summary>
     /// Gets collection of users in room.
     /// </summary>
-    public List<User> Users { get; }
+    public ICollection<User> Users { get; }
 
     /// <summary>
     /// Gets or sets password.

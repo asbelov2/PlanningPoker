@@ -83,7 +83,7 @@ namespace PlanningPokerTests
     {
       this.deckService.NewDeck("123", "TestDeck");
       this.deckService.AddCard(this.deckService.GetDeck("123"), new Card(CardType.Valuable, "321", 321));
-      this.deckService.RemoveCard(this.deckService.GetDeck("123"), this.deckService.GetDeck("123").Cards.Find(x => x.Value == 321));
+      this.deckService.RemoveCard(this.deckService.GetDeck("123"), this.deckService.GetDeck("123").Cards.FirstOrDefault(x => x.Value == 321));
       Assert.IsFalse(this.deckService.GetDeck("123").Cards.Count > 0);
     }
 
@@ -228,9 +228,9 @@ namespace PlanningPokerTests
       Round round = this.rounds.GetList().First();
       this.roomService.Choose(round.Id, host, new Card(CardType.Valuable, string.Empty, 123)).Wait();
       Assert.AreEqual("onWrongCard", InvokedMethod);
-      this.roomService.Choose(round.Id, host, this.deckService.GetDeck("1").Cards[0]).Wait();
+      this.roomService.Choose(round.Id, host, this.deckService.GetDeck("1").Cards.ElementAt(0)).Wait();
       Assert.AreEqual("onUserChosed", InvokedMethod);
-      this.roomService.Choose(round.Id, user1, this.deckService.GetDeck("1").Cards[1]).Wait();
+      this.roomService.Choose(round.Id, user1, this.deckService.GetDeck("1").Cards.ElementAt(1)).Wait();
       Assert.AreEqual("onAllChosed", InvokedMethod);
       Assert.AreEqual(10.0, round.Result);
     }
@@ -249,8 +249,8 @@ namespace PlanningPokerTests
       this.deckService.AddCard(this.deckService.GetDeck("1"), new Card(CardType.Exceptional, "ff", 0));
       this.roomService.StartNewRound("TestIDRoom", host.Id, "TestTitle", this.deckService.GetDeck("1"), 13);
       Round round = this.rounds.GetList().First();
-      this.roomService.Choose(round.Id, host, this.deckService.GetDeck("1").Cards[0]).Wait();
-      this.roomService.Choose(round.Id, user1, this.deckService.GetDeck("1").Cards[1]).Wait();
+      this.roomService.Choose(round.Id, host, this.deckService.GetDeck("1").Cards.ElementAt(0)).Wait();
+      this.roomService.Choose(round.Id, user1, this.deckService.GetDeck("1").Cards.ElementAt(1)).Wait();
       Assert.AreEqual(-1.0, round.Result);
     }
 

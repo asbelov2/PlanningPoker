@@ -34,7 +34,7 @@ namespace RoomApi.Controllers
     /// </summary>
     /// <returns>All rooms.</returns>
     [HttpGet]
-    public IEnumerable<RoomDTO> Get()
+    public ICollection<RoomDTO> Get()
     {
       var result = new List<RoomDTO>();
       foreach (var room in this.rooms.GetList())

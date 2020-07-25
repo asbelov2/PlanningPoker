@@ -50,6 +50,6 @@ namespace RoomApi
     /// <summary>
     /// Gets collection of cards.
     /// </summary>
-    public List<CardDTO> Cards { get; }
+    public ICollection<CardDTO> Cards { get; }
   }
 }

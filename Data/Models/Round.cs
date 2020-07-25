@@ -18,7 +18,7 @@ namespace Data
     /// <param name="deck">Round deck.</param>
     /// <param name="roundTime">Round time.</param>
     /// <param name="title">Title of round.</param>
-    public Round(string id, string roomId, IEnumerable<User> users, Deck deck, double roundTime, string title = "")
+    public Round(string id, string roomId, ICollection<User> users, Deck deck, double roundTime, string title = "")
     {
       this.RoomId = roomId;
       this.Title = title;
@@ -37,7 +37,7 @@ namespace Data
     /// <summary>
     /// Gets choices.
     /// </summary>
-    public List<Choice> Choices { get; } = new List<Choice>();
+    public ICollection<Choice> Choices { get; } = new List<Choice>();
 
     /// <summary>
     /// Gets or sets comment.
@@ -104,6 +104,6 @@ namespace Data
     /// <summary>
     /// Gets collection of participants.
     /// </summary>
-    public IEnumerable<User> Users { get; }
+    public ICollection<User> Users { get; }
   }
 }

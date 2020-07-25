@@ -43,7 +43,7 @@ namespace Data
     /// <summary>
     /// Gets choices.
     /// </summary>
-    public List<Choice> Choices { get; }
+    public ICollection<Choice> Choices { get; }
 
     /// <summary>
     /// Gets resuilt.

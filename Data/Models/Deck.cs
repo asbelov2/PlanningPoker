@@ -46,7 +46,7 @@ namespace Data
     /// <summary>
     /// Gets collection of cards in deck.
     /// </summary>
-    public List<Card> Cards { get; }
+    public ICollection<Card> Cards { get; }
 
     /// <summary>
     /// Adding card in deck.

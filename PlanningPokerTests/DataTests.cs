@@ -75,7 +75,7 @@ namespace PlanningPokerTests
       Deck testDeck = new Deck("1", "testDeck");
       testDeck.AddCard(new Card(CardType.Valuable, value: 1));
       testDeck.AddCard(new Card(CardType.Exceptional, name: "test"));
-      testDeck.RemoveCard(testDeck.Cards[0]);
+      testDeck.RemoveCard(testDeck.Cards.ElementAt(0));
       Assert.AreEqual(testDeck.Cards.Count, 1);
     }
 

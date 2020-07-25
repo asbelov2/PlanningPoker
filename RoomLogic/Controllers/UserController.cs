@@ -17,7 +17,7 @@ namespace RoomApi.Controllers
     /// </summary>
     /// <returns>All users.</returns>
     [HttpGet]
-    public IEnumerable<UserDTO> Get()
+    public ICollection<UserDTO> Get()
     {
       var users = new List<UserDTO>();
       foreach (var user in this.userService.GetUsers())

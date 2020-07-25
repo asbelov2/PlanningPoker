@@ -23,14 +23,14 @@ namespace RoomApi
     /// <param name="duration">Round duration.</param>
     /// <param name="startDate">Date of start round.</param>
     public RoundDTO(
-      string id, 
-      List<UserDTO> users, 
-      DeckDTO deck, 
-      double roundTime, 
-      string title, 
-      double result, 
-      string comment, 
-      List<ChoiceDTO> choices,
+      string id,
+      ICollection<UserDTO> users,
+      DeckDTO deck,
+      double roundTime,
+      string title,
+      double result,
+      string comment,
+      ICollection<ChoiceDTO> choices,
       TimeSpan duration,
       DateTime startDate)
     {
@@ -112,12 +112,12 @@ namespace RoomApi
     /// <summary>
     /// Gets collection of users.
     /// </summary>
-    public List<UserDTO> Users { get; }
+    public ICollection<UserDTO> Users { get; }
 
     /// <summary>
     /// Gets collection of choices.
     /// </summary>
-    public List<ChoiceDTO> Choices { get; }
+    public ICollection<ChoiceDTO> Choices { get; }
 
     /// <summary>
     /// Round ID.

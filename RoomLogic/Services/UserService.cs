@@ -31,7 +31,7 @@ namespace RoomApi
     /// Get all users from repository.
     /// </summary>
     /// <returns>Collection of users.</returns>
-    public IEnumerable<User> GetUsers()
+    public ICollection<User> GetUsers()
     {
       return users.GetList();
     }

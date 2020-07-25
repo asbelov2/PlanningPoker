@@ -20,9 +20,9 @@ namespace Data
     /// </summary>
     /// <param name="roomId">Room ID.</param>
     /// <returns>Round results.</returns>
-    public IEnumerable<RoundResult> GetRoomRoundResults(string roomId)
+    public ICollection<RoundResult> GetRoomRoundResults(string roomId)
     {
-      return Data.Where(x => x.RoomId == roomId);
+      return Data.Where(x => x.RoomId == roomId).ToList();
     }
   }
 }

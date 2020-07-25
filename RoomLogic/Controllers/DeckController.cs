@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ namespace RoomApi.Controllers
     /// </summary>
     /// <returns>All decks.</returns>
     [HttpGet]
-    public IEnumerable<DeckDTO> Get()
+    public ICollection<DeckDTO> Get()
     {
       var result = new List<DeckDTO>();
       foreach (var deck in this.decks.GetList())
@@ -89,7 +90,7 @@ namespace RoomApi.Controllers
     [HttpDelete("{id}/DeleteCard")]
     public void DeleteCard(string id, string name)
     {
-      this.deckService.RemoveCard(this.decks.GetItem(id), this.decks.GetItem(id).Cards.Find(x => x.Name == name));
+      this.deckService.RemoveCard(this.decks.GetItem(id), this.decks.GetItem(id).Cards.FirstOrDefault(x => x.Name == name));
     }
 
     /// <summary>

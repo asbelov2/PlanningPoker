@@ -36,7 +36,7 @@ namespace RoomApi
     /// <param name="title">Round title.</param>
     /// <param name="roomId">RoomID.</param>
     /// <returns>This round ID.</returns>
-    public string StartNewRound(IEnumerable<User> users, Deck deck, double roundTime, string id, string title, string roomId)
+    public string StartNewRound(ICollection<User> users, Deck deck, double roundTime, string id, string title, string roomId)
     {
       rounds.Add(new Round(id, roomId, users, deck, roundTime, title));
       this.timers.Add(new RoundTimer(id, roundTime));
@@ -70,9 +70,9 @@ namespace RoomApi
       {
         if (round.Deck.Cards.Contains(card))
         {
-          if (round.Choices.Exists(x => x.User == user))
+          if (round.Choices.Select(x => x.User == user).Count()>0)
           {
-            round.Choices.Find(x => x.User == user).Card = card;
+            round.Choices.FirstOrDefault(x => x.User == user).Card = card;
             await this.context.Clients.Group($"room{round.RoomId}").SendAsync("onUserChosed", user);
             if (round.Choices.Count() == round.Users.Count())
             {

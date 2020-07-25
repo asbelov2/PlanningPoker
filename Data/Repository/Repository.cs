@@ -14,6 +14,11 @@ namespace Data
     private bool disposed = false;
 
     /// <summary>
+    /// Gets collection of data.
+    /// </summary>
+    protected static ICollection<T> Data { get; } = new List<T>();
+
+    /// <summary>
     /// Add item.
     /// </summary>
     /// <param name="item">Item.</param>
@@ -76,7 +81,7 @@ namespace Data
     /// Return collection of items.
     /// </summary>
     /// <returns>collection of items.</returns>
-    public virtual IEnumerable<T> GetList()
+    public virtual ICollection<T> GetList()
     {
       return Data;
     }
@@ -106,10 +111,5 @@ namespace Data
     {
       Data.Clear();
     }
-
-    /// <summary>
-    /// Collection of data.
-    /// </summary>
-    protected static ICollection<T> Data { get; } = new List<T>();
   }
 }

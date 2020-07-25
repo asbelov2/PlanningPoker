@@ -50,7 +50,7 @@ namespace RoomApi
     /// <summary>
     /// Gets collection of users.
     /// </summary>
-    public List<UserDTO> Users { get; }
+    public ICollection<UserDTO> Users { get; }
 
     /// <summary>
     /// Gets room ID.
