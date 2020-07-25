@@ -22,7 +22,7 @@ namespace Data
     /// <returns>Round results.</returns>
     public IEnumerable<RoundResult> GetRoomRoundResults(string roomId)
     {
-      return data.Where(x => x.RoomId == roomId);
+      return Data.Where(x => x.RoomId == roomId);
     }
   }
 }

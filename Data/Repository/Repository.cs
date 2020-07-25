@@ -11,11 +11,6 @@ namespace Data
   public abstract class Repository<T> : IRepository<T>
     where T : class, IEntity
   {
-    /// <summary>
-    /// Collection of data.
-    /// </summary>
-    protected static ICollection<T> data = new List<T>();
-
     private bool disposed = false;
 
     /// <summary>
@@ -24,9 +19,9 @@ namespace Data
     /// <param name="item">Item.</param>
     public virtual void Add(T item)
     {
-      if (!data.Contains(item) && (data.FirstOrDefault(x => x.Id == item.Id) == null))
+      if (!Data.Contains(item) && (Data.FirstOrDefault(x => x.Id == item.Id) == null))
       {
-        data.Add(item);
+        Data.Add(item);
       }
     }
 
@@ -38,7 +33,7 @@ namespace Data
     {
       if (item != null)
       {
-        data.Remove(item);
+        Data.Remove(item);
       }
     }
 
@@ -74,7 +69,7 @@ namespace Data
     /// <returns>Item.</returns>
     public virtual T GetItem(string id)
     {
-      return data.FirstOrDefault(x => x.Id == id);
+      return Data.FirstOrDefault(x => x.Id == id);
     }
 
     /// <summary>
@@ -83,7 +78,7 @@ namespace Data
     /// <returns>collection of items.</returns>
     public virtual IEnumerable<T> GetList()
     {
-      return data;
+      return Data;
     }
 
     /// <summary>
@@ -109,7 +104,12 @@ namespace Data
     /// </summary>
     public virtual void ClearRepository()
     {
-      data.Clear();
+      Data.Clear();
     }
+
+    /// <summary>
+    /// Collection of data.
+    /// </summary>
+    protected static ICollection<T> Data { get; } = new List<T>();
   }
 }

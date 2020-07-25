@@ -21,7 +21,7 @@ namespace Data
     /// <returns>Users readiness in that room.</returns>
     public UsersReadiness GetItemByRoomId(string roomId)
     {
-      return data.FirstOrDefault(x => x.RoomId == roomId);
+      return Data.FirstOrDefault(x => x.RoomId == roomId);
     }
 
     /// <summary>
@@ -30,7 +30,7 @@ namespace Data
     /// <param name="roomId">Room ID.</param>
     public void TurnToFalse(string roomId)
     {
-      var dict = data.FirstOrDefault(x => x.RoomId == roomId).IsUsersReady;
+      var dict = Data.FirstOrDefault(x => x.RoomId == roomId).IsUsersReady;
       foreach (var key in dict.Keys.Cast<User>().ToArray())
       {
         dict[key] = false;
