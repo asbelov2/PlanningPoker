@@ -8,13 +8,6 @@ namespace Data
   public class UsersReadinessRepository : Repository<UsersReadiness>
   {
     /// <summary>
-    /// Initializes a new instance of the <see cref="UsersReadinessRepository"/> class.
-    /// </summary>
-    public UsersReadinessRepository()
-    {
-    }
-
-    /// <summary>
     /// Gets item by room ID.
     /// </summary>
     /// <param name="roomId">Room ID.</param>
