@@ -11,18 +11,5 @@
     public RoomRepository()
     {
     }
-
-    /// <summary>
-    /// Edit room.
-    /// </summary>
-    /// <param name="item">Room to edit.</param>
-    /// <param name="cardInterpretation">New card interpretation.</param>
-    public void Edit(Room item, string cardInterpretation)
-    {
-      if (item != null)
-      {
-        item.CardInterpretation = cardInterpretation;
-      }
-    }
   }
 }
