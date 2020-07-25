@@ -17,17 +17,18 @@ namespace RoomApi.Controllers
     private RoomRepository rooms = new RoomRepository();
     private DeckRepository decks = new DeckRepository();
     private RoomService roomService;
-    private UserService userService = new UserService();
+    private UserService userService;
     private IHubContext<RoomHub> hubContext;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RoomController"/> class.
     /// </summary>
     /// <param name="hubContext">Hub context</param>
-    public RoomController(IHubContext<RoomHub> hubContext)
+    public RoomController(IHubContext<RoomHub> hubContext, UserService userService, RoomService roomService)
     {
       this.hubContext = hubContext;
-      this.roomService = new RoomService(hubContext);
+      this.roomService = roomService;
+      this.userService = userService;
     }
 
     /// <summary>
@@ -60,6 +61,7 @@ namespace RoomApi.Controllers
       {
         return new RoomDTO(this.rooms.GetItem(id));
       }
+
       return null;
     }
 

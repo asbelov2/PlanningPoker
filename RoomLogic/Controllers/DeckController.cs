@@ -12,14 +12,24 @@ namespace RoomApi.Controllers
   [ApiController]
   public class DeckController : ControllerBase
   {
-    private DeckService deckService = new DeckService();
+    private DeckService deckService;
     private DeckRepository decks = new DeckRepository();
 
     /// <summary>
-    /// Get all decks.
+    /// Initializes a new instance of the <see cref="DeckController"/> class.
     /// </summary>
-    /// <returns>All decks.</returns>
-    [HttpGet]
+    /// <param name="deckService">Deck service</param>
+    public DeckController(DeckService deckService)
+    {
+      this.deckService = deckService;
+    }
+
+
+      /// <summary>
+      /// Get all decks.
+      /// </summary>
+      /// <returns>All decks.</returns>
+      [HttpGet]
     public ICollection<DeckDTO> Get()
     {
       var result = new List<DeckDTO>();

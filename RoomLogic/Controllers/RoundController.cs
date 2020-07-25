@@ -20,13 +20,16 @@ namespace RoomApi.Controllers
     private IHubContext<RoomHub> hubContext;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="RoomController"/> class.
+    /// Initializes a new instance of the <see cref="RoundController"/> class.
     /// </summary>
-    /// <param name="hubContext">Hub context</param>
-    public RoundController(IHubContext<RoomHub> hubContext)
+    /// <param name="hubContext">Hub context.</param>
+    /// <param name="roomService">Room service.</param>
+    /// <param name="userService">User serivce.</param>
+    public RoundController(IHubContext<RoomHub> hubContext, RoomService roomService, UserService userService)
     {
       this.hubContext = hubContext;
-      this.roomService = new RoomService(hubContext);
+      this.roomService = roomService;
+      this.userService = userService;
     }
 
     /// <summary>

@@ -10,7 +10,16 @@ namespace RoomApi.Controllers
   [ApiController]
   public class UserController : ControllerBase
   {
-    private UserService userService = new UserService();
+    private UserService userService;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserController"/> class.
+    /// </summary>
+    /// <param name="userService">User service</param>
+    public UserController(UserService userService)
+    {
+      this.userService = userService;
+    }
 
     /// <summary>
     /// Gets all users.

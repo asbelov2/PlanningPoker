@@ -45,10 +45,11 @@ namespace RoomApi
     /// <returns>Async task.</returns>
     public async Task Login(string userName)
     {
-      if (users.GetItem(Context.ConnectionId) == null)
+      if (this.users.GetItem(Context.ConnectionId) == null)
       {
-        users.Add(new User(userName, Context.ConnectionId));
+        this.users.Add(new User(userName, Context.ConnectionId));
       }
+
       await Clients.Caller.SendAsync("onLogin");
     }
   }

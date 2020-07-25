@@ -12,21 +12,24 @@ namespace RoomApi
   public class RoomService
   {
     private IHubContext<RoomHub> context;
-    private UserService userService = new UserService();
-    private RoomRepository rooms = new RoomRepository();
+    private UserService userService;
     private RoundService roundService;
+    private RoomRepository rooms = new RoomRepository();
     private RoundRepository rounds = new RoundRepository();
-    private UsersReadinessRepository isUsersReady = new UsersReadinessRepository();
     private RoundTimerRepository timers = new RoundTimerRepository();
+    private UsersReadinessRepository isUsersReady = new UsersReadinessRepository();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RoomService"/> class.
     /// </summary>
     /// <param name="hubContext">Hub context.</param>
-    public RoomService(IHubContext<RoomHub> hubContext)
+    /// <param name="roundService">Round service.</param>
+    /// <param name="userService">User service.</param>
+    public RoomService(IHubContext<RoomHub> hubContext, RoundService roundService, UserService userService)
     {
       this.context = hubContext;
-      this.roundService = new RoundService(hubContext);
+      this.roundService = roundService;
+      this.userService = userService;
     }
 
     /// <summary>

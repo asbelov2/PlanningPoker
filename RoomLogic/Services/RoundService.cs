@@ -40,8 +40,12 @@ namespace RoomApi
     public string StartNewRound(ICollection<User> users, Deck deck, TimeSpan roundTime, string id, string title, string roomId)
     {
       rounds.Add(new Round(id, roomId, users, deck, roundTime, title));
-      this.timers.Add(new RoundTimer(id, roundTime));
-      this.timers.GetItem(id).SetTimer();
+      if (roundTime != TimeSpan.Zero)
+      {
+        this.timers.Add(new RoundTimer(id, roundTime));
+        this.timers.GetItem(id).SetTimer();
+      }
+
       return id;
     }
 
