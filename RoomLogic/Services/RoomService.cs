@@ -43,7 +43,7 @@ namespace RoomApi
       if (this.IsHost(userId, roomId))
       {
         string id = Guid.NewGuid().ToString();
-        this.context.Clients.Group(this.GetGroupKey(roomId)).SendAsync("onRoundStarted", id).Wait();
+        this.context?.Clients.Group(this.GetGroupKey(roomId))?.SendAsync("onRoundStarted", id).Wait();
         return this.roundService.StartNewRound(this.rooms.GetItem(roomId).Users, deck ?? new DefaultDeck(), roundTime, id, title, roomId);
       }
 
@@ -57,10 +57,10 @@ namespace RoomApi
     /// <param name="user">User.</param>
     public void LeaveUser(string roomId, User user)
     {
-      this.context.Groups.RemoveFromGroupAsync(user.ConnectionId, this.GetGroupKey(this.rooms.GetItem(roomId).Id)).Wait();
+      this.context.Groups.RemoveFromGroupAsync(user?.ConnectionId, this.GetGroupKey(this.rooms.GetItem(roomId)?.Id)).Wait();
       this.context.Clients.Group(this.GetGroupKey(roomId)).SendAsync("onUserDisconnected", user, roomId).Wait();
-      this.context.Clients.Client(user.Id).SendAsync("onDisconnected").Wait();
-      this.rooms.GetItem(roomId).Users.Remove(user);
+      this.context.Clients.Client(user?.Id).SendAsync("onDisconnected").Wait();
+      this.rooms.GetItem(roomId)?.Users?.Remove(user);
     }
 
     /// <summary>
@@ -72,14 +72,14 @@ namespace RoomApi
     /// <returns>Succesfullness.</returns>
     public bool EnterUser(string roomId, User newUser, string password)
     {
-      if ((this.rooms.GetItem(roomId).Password == password) && (!this.rooms.GetItem(roomId).Users.Contains(newUser)))
+      if ((this.rooms.GetItem(roomId)?.Password == password) && ((!this.rooms.GetItem(roomId)?.Users?.Contains(newUser)) ?? false))
       {
         this.userService.AddNewUser(newUser);
-        this.rooms.GetItem(roomId).Users.Add(newUser);
+        this.rooms.GetItem(roomId)?.Users?.Add(newUser);
 
-        this.context.Clients.Group(this.GetGroupKey(roomId)).SendAsync("onUserConnected", newUser, this.rooms.GetItem(roomId).Users, roomId).Wait();
-        this.context.Clients.Client(newUser.Id).SendAsync("onConnected", this.rooms.GetItem(roomId)).Wait();
-        this.context.Groups.AddToGroupAsync(newUser.ConnectionId, this.GetGroupKey(roomId)).Wait();
+        this.context.Clients.Group(this.GetGroupKey(roomId))?.SendAsync("onUserConnected", newUser, this.rooms.GetItem(roomId).Users, roomId).Wait();
+        this.context.Clients.Client(newUser.Id)?.SendAsync("onConnected", this.rooms.GetItem(roomId)).Wait();
+        this.context.Groups.AddToGroupAsync(newUser?.ConnectionId, this.GetGroupKey(roomId)).Wait();
         return true;
       }
       else
@@ -100,7 +100,7 @@ namespace RoomApi
     {
       this.isUsersReady.Add(new UsersReadiness(id));
       this.rooms.Add(new Room(id, host, name, password, cardInterpretation));
-      this.context.Groups.AddToGroupAsync(host.ConnectionId, this.GetGroupKey(id)).Wait();
+      this.context.Groups.AddToGroupAsync(host?.ConnectionId, this.GetGroupKey(id)).Wait();
     }
 
     /// <summary>
@@ -111,7 +111,7 @@ namespace RoomApi
     /// <returns>Async task.</returns>
     public async Task DeclareReady(string roomId, User user)
     {
-      if (this.isUsersReady.GetItemByRoomId(roomId).IsUsersReady.ContainsKey(user))
+      if (this.isUsersReady.GetItemByRoomId(roomId)?.IsUsersReady?.ContainsKey(user) ?? false)
       {
         this.isUsersReady.GetItemByRoomId(roomId).IsUsersReady[user] = true;
       }
@@ -124,7 +124,7 @@ namespace RoomApi
 
       if (this.IsUsersReady(roomId))
       {
-        this.StartNewRound(roomId, this.rooms.GetItem(roomId).Host.Id);
+        this.StartNewRound(roomId, this.rooms.GetItem(roomId)?.Host.Id);
         this.TurnToFalse(roomId);
       }
     }
@@ -137,7 +137,7 @@ namespace RoomApi
     /// <returns>Async task.</returns>
     public async Task DeclareNotReady(string roomId, User user)
     {
-      if (this.isUsersReady.GetItemByRoomId(roomId).IsUsersReady.ContainsKey(user))
+      if (this.isUsersReady.GetItemByRoomId(roomId)?.IsUsersReady?.ContainsKey(user) ?? false)
       {
         this.isUsersReady.GetItemByRoomId(roomId).IsUsersReady[user] = false;
       }
@@ -156,7 +156,7 @@ namespace RoomApi
     /// <returns>Readiness of all users in room.</returns>
     public bool IsUsersReady(string roomId)
     {
-      if (this.isUsersReady.GetItemByRoomId(roomId).IsUsersReady.Count != this.rooms.GetItem(roomId).Users.Count())
+      if (this.isUsersReady.GetItemByRoomId(roomId)?.IsUsersReady?.Count != this.rooms.GetItem(roomId)?.Users?.Count())
       {
         return false;
       }
@@ -178,7 +178,7 @@ namespace RoomApi
     /// <param name="cardInterpretation">New card's interpretation.</param>
     public void ChangeCardInterpretation(string roomId, string userId, string cardInterpretation)
     {
-      if (this.IsHost(userId, roomId))
+      if (this.IsHost(userId, roomId) && (this.rooms.GetItem(roomId) != null))
       {
         this.rooms.GetItem(roomId).CardInterpretation = cardInterpretation;
       }
@@ -192,7 +192,7 @@ namespace RoomApi
     /// <param name="name">New name.</param>
     public void ChangeRoomName(string roomId, string userId, string name)
     {
-      if (this.IsHost(userId, roomId))
+      if (this.IsHost(userId, roomId) && (this.rooms.GetItem(roomId) != null))
       {
         this.rooms.GetItem(roomId).Name = name;
       }
@@ -206,7 +206,7 @@ namespace RoomApi
     /// <param name="newHostId">New host ID.</param>
     public void ChangeHost(string roomId, string userId, string newHostId)
     {
-      if (this.IsHost(userId, roomId))
+      if (this.IsHost(userId, roomId) && (this.rooms.GetItem(roomId) != null))
       {
         this.rooms.GetItem(roomId).Host = this.userService.GetUser(newHostId);
       }
@@ -220,7 +220,7 @@ namespace RoomApi
     /// <param name="newPassword">New password.</param>
     public void ChangePassword(string roomId, string userId, string newPassword)
     {
-      if (this.IsHost(userId, roomId))
+      if (this.IsHost(userId, roomId) && (this.rooms.GetItem(roomId) != null))
       {
         this.rooms.GetItem(roomId).Password = newPassword;
       }
@@ -235,10 +235,10 @@ namespace RoomApi
     /// <returns>Async task.</returns>
     public async Task SetRoundTitle(string userId, string roundId, string title)
     {
-      if (this.IsHost(userId, this.rounds.GetItem(roundId).RoomId))
+      if (this.IsHost(userId, this.rounds.GetItem(roundId).RoomId) && (this.rounds.GetItem(roundId) != null))
       {
         this.roundService.SetTitle(this.rounds.GetItem(roundId), title);
-        await this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId)).SendAsync("onRoundChanged", new RoundDTO(this.rounds.GetItem(roundId)));
+        await this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId))?.SendAsync("onRoundChanged", new RoundDTO(this.rounds.GetItem(roundId)));
       }
     }
 
@@ -251,10 +251,10 @@ namespace RoomApi
     /// <returns>Async task.</returns>
     public async Task SetRoundComment(string userId, string roundId, string comment)
     {
-      if (this.IsHost(userId, this.rounds.GetItem(roundId).RoomId))
+      if (this.IsHost(userId, this.rounds.GetItem(roundId).RoomId) && (this.rounds.GetItem(roundId) != null))
       {
         this.roundService.SetComment(this.rounds.GetItem(roundId), comment);
-        await this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId)).SendAsync("onRoundChanged", new RoundDTO(this.rounds.GetItem(roundId)));
+        await this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId))?.SendAsync("onRoundChanged", new RoundDTO(this.rounds.GetItem(roundId)));
       }
     }
 
@@ -278,10 +278,10 @@ namespace RoomApi
     /// <returns>Async task.</returns>
     public async Task EndRound(string roundId, string userId)
     {
-      if (this.IsHost(userId, this.rounds.GetItem(roundId).RoomId))
+      if (this.IsHost(userId, this.rounds.GetItem(roundId).RoomId) && (this.rounds.GetItem(roundId) != null))
       {
         this.timers.GetItem(roundId).Stop();
-        await this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId)).SendAsync("onEnd", new RoundDTO(this.rounds.GetItem(roundId)));
+        await this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId))?.SendAsync("onEnd", new RoundDTO(this.rounds.GetItem(roundId)));
       }
     }
 
