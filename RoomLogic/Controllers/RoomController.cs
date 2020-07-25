@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Data;
 using Microsoft.AspNetCore.Mvc;
@@ -118,11 +119,11 @@ namespace RoomApi.Controllers
     /// <param name="userId">User ID.</param>
     /// <param name="title">Round title.</param>
     /// <param name="deckId">Deck ID.</param>
-    /// <param name="roundTime">Round time.</param>
+    /// <param name="roundTimeInMinutes">Round time in minutes.</param>
     [HttpPost("{id}/StartRound")]
-    public void StartRound(string id, string userId, string title, string deckId, double roundTime)
+    public void StartRound(string id, string userId, string title, string deckId, double roundTimeInMinutes)
     {
-      this.roomService.StartNewRound(id, userId, title, this.decks.GetItem(deckId), roundTime);
+      this.roomService.StartNewRound(id, userId, title, this.decks.GetItem(deckId), TimeSpan.FromMinutes(roundTimeInMinutes));
     }
 
     /// <summary>

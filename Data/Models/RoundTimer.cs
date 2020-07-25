@@ -8,7 +8,7 @@ namespace Data
   /// </summary>
   public class RoundTimer : IEntity
   {
-    private double roundTime;
+    private TimeSpan roundTime;
     private Timer timer;
     private RoundResultRepository roundResults = new RoundResultRepository();
     private RoundRepository rounds = new RoundRepository();
@@ -18,7 +18,7 @@ namespace Data
     /// </summary>
     /// <param name="id">round ID</param>
     /// <param name="roundTime">round Time</param>
-    public RoundTimer(string id, double roundTime)
+    public RoundTimer(string id, TimeSpan roundTime)
     {
       this.Id = id;
       this.roundTime = roundTime;
@@ -40,7 +40,7 @@ namespace Data
     /// </summary>
     public void SetTimer()
     {
-      this.timer = new Timer(TimeSpan.FromMinutes(this.roundTime).TotalMilliseconds);
+      this.timer = new Timer(this.roundTime.TotalMilliseconds);
       this.timer.Elapsed += this.OnTimerTick;
       this.timer.AutoReset = false;
       this.timer.Enabled = true;

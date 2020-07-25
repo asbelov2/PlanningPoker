@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Data;
@@ -36,7 +37,7 @@ namespace RoomApi
     /// <param name="title">Round title.</param>
     /// <param name="roomId">RoomID.</param>
     /// <returns>This round ID.</returns>
-    public string StartNewRound(ICollection<User> users, Deck deck, double roundTime, string id, string title, string roomId)
+    public string StartNewRound(ICollection<User> users, Deck deck, TimeSpan roundTime, string id, string title, string roomId)
     {
       rounds.Add(new Round(id, roomId, users, deck, roundTime, title));
       this.timers.Add(new RoundTimer(id, roundTime));

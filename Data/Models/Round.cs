@@ -18,11 +18,11 @@ namespace Data
     /// <param name="deck">Round deck.</param>
     /// <param name="roundTime">Round time.</param>
     /// <param name="title">Title of round.</param>
-    public Round(string id, string roomId, ICollection<User> users, Deck deck, double roundTime, string title = "")
+    public Round(string id, string roomId, ICollection<User> users, Deck deck, TimeSpan roundTime, string title = "")
     {
       this.RoomId = roomId;
       this.Title = title;
-      this.RoundTime = TimeSpan.FromMinutes(roundTime);
+      this.RoundTime = roundTime;
       this.Users = users;
       this.Id = id;
       this.Deck = deck;

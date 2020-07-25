@@ -40,7 +40,7 @@ namespace RoomApi
     /// <param name="deck">Deck.</param>
     /// <param name="roundTime">Round time.</param>
     /// <returns>Round ID.</returns>
-    public string StartNewRound(string roomId, string userId, string title = "Default title", Deck deck = null, double roundTime = 5)
+    public string StartNewRound(string roomId, string userId, string title = "Default title", Deck deck = null, TimeSpan roundTime = default)
     {
       if (this.userService.GetUser(userId).Id == this.rooms.GetItem(roomId).Host.Id)
       {
