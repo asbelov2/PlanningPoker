@@ -32,7 +32,7 @@ namespace RoomApi
             }));
       services.AddSignalR();
       services.AddSingleton<DeckService>();
-      services.AddSingleton(typeof(RoomService));
+      services.AddSingleton<RoomService>();
       services.AddSingleton<RoundService>();
       services.AddSingleton<UserService>();
     }
