@@ -19,7 +19,7 @@ namespace Data
     /// <param name="item">Item.</param>
     public virtual void Add(T item)
     {
-      if (!Data.Contains(item) && (Data.FirstOrDefault(x => x.Id == item.Id) == null))
+      if (Data.FirstOrDefault(x => x.Id == item.Id) == null)
       {
         Data.Add(item);
       }
