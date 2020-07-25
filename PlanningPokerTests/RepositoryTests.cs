@@ -98,7 +98,7 @@ namespace PlanningPokerTests
       this.userService.AddNewUser(host);
       this.userService.AddNewUser(user1);
       this.roomService.HostRoom("TestIDRoom", host);
-      this.roomService.ConnectUser("TestIDRoom", user1, string.Empty);
+      this.roomService.EnterUser("TestIDRoom", user1, string.Empty);
 
       this.roomService.StartNewRound("TestIDRoom", host.Id);
       this.roomService.EndRound(this.rounds.GetList().First().Id, host.Id);
@@ -107,7 +107,7 @@ namespace PlanningPokerTests
       this.roomService.EndRound(this.rounds.GetList().ElementAt(1).Id, host.Id);
 
       this.roomService.HostRoom("TestID2Room", user1);
-      this.roomService.ConnectUser("TestID2Room", host, string.Empty);
+      this.roomService.EnterUser("TestID2Room", host, string.Empty);
 
       this.roomService.StartNewRound("TestID2Room", user1.Id);
       this.roomService.EndRound(this.rounds.GetList().FirstOrDefault(x => x.RoomId == "TestID2Room").Id, user1.Id);

@@ -72,7 +72,7 @@ namespace RoomApi.Controllers
     [HttpPost("{id}/Connect")]
     public void Connect(string id, string userId, string password)
     {
-      this.roomService.ConnectUser(id, this.userService.GetUser(userId), password);
+      this.roomService.EnterUser(id, this.userService.GetUser(userId), password);
     }
 
     /// <summary>
@@ -83,7 +83,7 @@ namespace RoomApi.Controllers
     [HttpPost("{id}/Disconnect")]
     public void Disconnect(string id, string userId)
     {
-      this.roomService.DisconnectUser(id, this.userService.GetUser(userId));
+      this.roomService.LeaveUser(id, this.userService.GetUser(userId));
     }
 
     /// <summary>

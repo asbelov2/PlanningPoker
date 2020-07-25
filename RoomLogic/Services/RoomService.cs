@@ -54,7 +54,7 @@ namespace RoomApi
     /// </summary>
     /// <param name="roomId">Room ID.</param>
     /// <param name="user">User.</param>
-    public void DisconnectUser(string roomId, User user)
+    public void LeaveUser(string roomId, User user)
     {
       this.context.Groups.RemoveFromGroupAsync(user.ConnectionId, this.GetGroupKey(this.rooms.GetItem(roomId).Id)).Wait();
       this.context.Clients.Group(this.GetGroupKey(roomId)).SendAsync("onUserDisconnected", user, roomId).Wait();
@@ -69,7 +69,7 @@ namespace RoomApi
     /// <param name="newUser">User.</param>
     /// <param name="password">Password.</param>
     /// <returns>Succesfullness.</returns>
-    public bool ConnectUser(string roomId, User newUser, string password)
+    public bool EnterUser(string roomId, User newUser, string password)
     {
       if ((this.rooms.GetItem(roomId).Password == password) && (!this.rooms.GetItem(roomId).Users.Contains(newUser)))
       {
