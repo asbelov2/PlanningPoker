@@ -1,7 +1,7 @@
 ﻿namespace Data
 {
   /// <summary>
-  /// <see cref="DefaultDeck"/> class.
+  /// <see cref="DefaultDeck"/> class. Contains default cards: 0, 1/2, 1, 2, 3, 5, 8, 13, 20, 40, 100, ?, ∞, ☕.
   /// </summary>
   public class DefaultDeck : Deck
   {

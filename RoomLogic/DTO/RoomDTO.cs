@@ -4,7 +4,7 @@ using Data;
 namespace RoomApi
 {
   /// <summary>
-  /// RoomDTO class
+  /// Room data transfer object class. Used for transfering objects to client.
   /// </summary>
   public class RoomDTO
   {

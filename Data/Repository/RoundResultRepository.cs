@@ -4,7 +4,7 @@ using System.Linq;
 namespace Data
 {
   /// <summary>
-  /// <see cref="RoundResultRepository"/> class.
+  /// <see cref="RoundResultRepository"/> class. Stores round results in presentable view (Usually ended rounds).
   /// </summary>
   public class RoundResultRepository : Repository<RoundResult>
   {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Data
 {
   /// <summary>
-  /// <see cref="UsersReadiness"/> class.
+  /// <see cref="UsersReadiness"/> class. Presents users readiness in room. Used for automatic round start in rooms.
   /// </summary>
   /// <remarks>Contains readiness of all users of the room.</remarks>
   public class UsersReadiness : IEntity
@@ -21,7 +21,7 @@ namespace Data
     }
 
     /// <summary>
-    /// Gets or sets user readiness in the room.
+    /// Gets user readiness in the room.
     /// </summary>
     public Dictionary<User, bool> IsUsersReady { get; }
 

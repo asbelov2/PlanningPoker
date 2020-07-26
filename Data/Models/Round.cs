@@ -5,7 +5,7 @@ using System.Linq;
 namespace Data
 {
   /// <summary>
-  /// <see cref="Round"/> class.
+  /// <see cref="Round"/> class. Round must contain round's ID, room's ID, prepared deck.
   /// </summary>
   public class Round : IEntity
   {
@@ -50,7 +50,7 @@ namespace Data
     public DateTime StartDate { get; }
 
     /// <summary>
-    /// Gets or sets duration of round
+    /// Gets or sets duration of round.
     /// </summary>
     public TimeSpan Duration { get; set; }
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace RoomApi.Controllers
 {
   /// <summary>
-  /// Room controller.
+  /// Room controller. Main controller for all room logic.
   /// </summary>
   [Route("api/[controller]")]
   [ApiController]

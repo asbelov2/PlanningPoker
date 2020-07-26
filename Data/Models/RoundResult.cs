@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Data
 {
   /// <summary>
-  /// <see cref="RoundResult"/> class.
+  /// <see cref="RoundResult"/> class. Contain information about round (usually after it's end).
   /// </summary>
   public class RoundResult : IEntity
   {

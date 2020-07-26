@@ -3,7 +3,7 @@
 namespace Data
 {
   /// <summary>
-  /// <see cref="UsersReadinessRepository"/> class.
+  /// <see cref="UsersReadinessRepository"/> class. Stores users readiness in rooms.
   /// </summary>
   public class UsersReadinessRepository : Repository<UsersReadiness>
   {

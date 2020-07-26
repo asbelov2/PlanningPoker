@@ -5,7 +5,7 @@ using Data;
 namespace RoomApi
 {
   /// <summary>
-  /// RoundDTO class.
+  /// Round data transfer object class. Used for transfering objects to client.
   /// </summary>
   public class RoundDTO
   {

@@ -4,7 +4,7 @@ using Data;
 namespace RoomApi
 {
   /// <summary>
-  /// UserService class.
+  /// UserService class. Allows work with users.
   /// </summary>
   public class UserService
   {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Data
 {
   /// <summary>
-  /// <see cref="Room"/> class.
+  /// <see cref="Room"/> class. Room must have host and can have name, password and card's interpretation.
   /// </summary>
   public class Room : IEntity
   {

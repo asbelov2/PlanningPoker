@@ -5,7 +5,7 @@ using System.Linq;
 namespace Data
 {
   /// <summary>
-  /// <see cref="Repository{T}"/> abstract class.
+  /// <see cref="Repository{T}"/> abstract class. Used for storing entities.
   /// </summary>
   /// <typeparam name="T">Entity with ID</typeparam>
   public abstract class Repository<T> : IRepository<T>

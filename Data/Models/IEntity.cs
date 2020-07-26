@@ -1,7 +1,7 @@
 ﻿namespace Data
 {
   /// <summary>
-  /// Interface of entity.
+  /// Interface of entity. Entity must have ID.
   /// </summary>
   public interface IEntity
   {

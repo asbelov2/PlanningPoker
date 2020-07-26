@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace RoomApi.Controllers
 {
   /// <summary>
-  /// User controller.
+  /// User controller. Allows work with users.
   /// </summary>
   [Route("api/[controller]")]
   [ApiController]

@@ -4,7 +4,7 @@ using Data;
 namespace RoomApi
 {
   /// <summary>
-  /// DeckService class.
+  /// DeckService class. Allows work with deck repository.
   /// </summary>
   public class DeckService
   {

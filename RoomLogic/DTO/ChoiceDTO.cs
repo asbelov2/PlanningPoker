@@ -3,7 +3,7 @@
 namespace RoomApi
 {
   /// <summary>
-  /// ChoiceDTO class
+  /// Choice data transfer object class. Used for transfering objects to client.
   /// </summary>
   public class ChoiceDTO
   {

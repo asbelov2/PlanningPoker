@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.SignalR;
 namespace RoomApi
 {
   /// <summary>
-  /// RoundService class.
+  /// RoundService class. Contains methods for round logic.
   /// </summary>
   public class RoundService
   {

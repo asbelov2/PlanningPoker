@@ -4,7 +4,7 @@ using System.Linq;
 namespace Data
 {
   /// <summary>
-  /// <see cref="Deck"/> class.
+  /// <see cref="Deck"/> class. Contains collection of not equal cards.
   /// </summary>
   public class Deck : IEntity
   {
@@ -54,16 +54,22 @@ namespace Data
     /// <param name="newCard">New card.</param>
     public void AddCard(Card newCard)
     {
-      this.Cards.Add(newCard);
+      if (!(this.Cards.Where(x => x.Name == newCard.Name).Count() > 0))
+      {
+        this.Cards?.Add(newCard);
+      }
     }
 
     /// <summary>
-    /// Removing card from deck
+    /// Removing card from deck.
     /// </summary>
     /// <param name="card">Card to remove</param>
     public void RemoveCard(Card card)
     {
-      this.Cards.Remove(card);
+      if (card != null && this.Cards.Contains(card))
+      {
+        this.Cards?.Remove(card);
+      }
     }
   }
 }

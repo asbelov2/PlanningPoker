@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace RoomApi.Controllers
 {
   /// <summary>
-  /// Deck controller
+  /// Deck controller allows work with decks.
   /// </summary>
   [Route("api/[controller]")]
   [ApiController]

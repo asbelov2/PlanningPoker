@@ -17,8 +17,9 @@
   }
 
   /// <summary>
-  /// <see cref="Card"/> class.
+  /// <see cref="Card"/> class. Cards have name and value.
   /// </summary>
+  /// <remarks>Value of exceptional cards = 0, Name of valuable card same as value.</remarks>
   public class Card
   {
     /// <summary>

@@ -1,7 +1,7 @@
 ﻿namespace Data
 {
   /// <summary>
-  /// <see cref="Choice"/> class.
+  /// <see cref="Choice"/> class. Contatins choice of one participant.
   /// </summary>
   public class Choice
   {

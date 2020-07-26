@@ -4,7 +4,7 @@ using System.Timers;
 namespace Data
 {
   /// <summary>
-  /// <see cref="RoundTimer"/> class.
+  /// <see cref="RoundTimer"/> class. Used if round has round time.
   /// </summary>
   public class RoundTimer : IEntity
   {

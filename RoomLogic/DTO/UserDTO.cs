@@ -3,7 +3,7 @@
 namespace RoomApi
 {
   /// <summary>
-  /// UserDTO class.
+  /// User data transfer object class. Used for transfering objects to client.
   /// </summary>
   public class UserDTO
   {

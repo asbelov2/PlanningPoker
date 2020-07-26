@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using Data;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Data;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 
 namespace RoomApi.Controllers
 {
   /// <summary>
-  /// Round controller.
+  /// Round controller. Allows view round results and work with round logic.
   /// </summary>
   [Route("api/[controller]")]
   [ApiController]

@@ -4,7 +4,7 @@ using Data;
 namespace RoomApi
 {
   /// <summary>
-  /// DeckDTO class.
+  /// Deck data transfer object class. Used for transfering objects to client.
   /// </summary>
   public class DeckDTO
   {

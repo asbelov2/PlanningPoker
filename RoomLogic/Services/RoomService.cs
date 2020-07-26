@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.SignalR;
 namespace RoomApi
 {
   /// <summary>
-  /// RoomService class.
+  /// RoomService class. Contains methods for working with rooms.
   /// </summary>
   public class RoomService
   {
