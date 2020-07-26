@@ -60,11 +60,11 @@ namespace RoomApi
     /// <param name="deck">Deck.</param>
     /// <param name="roundTime">Round time.</param>
     /// <returns>Round ID.</returns>
-    public Guid StartNewRound(Guid roomId, Guid userId, string title = "Default title", Deck deck = null, TimeSpan roundTime = default)
+    public Guid StartNewRound(Guid roomId, Guid userId, Deck deck, string title = "Default title", TimeSpan roundTime = default)
     {
       if (this.IsHost(userId, roomId) && (this.rooms.GetItem(roomId) != null))
       {
-        Guid id = this.roundService.StartNewRound(this.rooms.GetItem(roomId).Users, deck ?? new DefaultDeck(), roundTime, title, roomId);
+        Guid id = this.roundService.StartNewRound(this.rooms.GetItem(roomId).Users, deck, roundTime, title, roomId);
         this.context?.Clients.Group(this.GetGroupKey(roomId))?.SendAsync("onRoundStarted", id.ToString()).Wait();
         return id;
       }
@@ -148,7 +148,7 @@ namespace RoomApi
 
       if (this.IsUsersReady(roomId) && (this.rooms.GetItem(roomId) != null))
       {
-        this.StartNewRound(roomId, this.rooms.GetItem(roomId).Host.Id);
+        this.StartNewRound(roomId, this.rooms.GetItem(roomId).Host.Id, new DefaultDeck());
         this.TurnToFalse(roomId);
       }
     }

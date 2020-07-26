@@ -130,7 +130,7 @@ namespace RoomApi.Controllers
     [HttpPost("{id}/StartRound")]
     public void StartRound(string id, string userId, string title, string deckId, double roundTimeInMinutes)
     {
-        this.roomService.StartNewRound(Guid.Parse(id), Guid.Parse(userId), title, this.decks.GetItem(Guid.Parse(deckId)) ?? new DefaultDeck(), TimeSpan.FromMinutes(roundTimeInMinutes));
+        this.roomService.StartNewRound(Guid.Parse(id), Guid.Parse(userId), this.decks.GetItem(Guid.Parse(deckId)) ?? new DefaultDeck(), title, TimeSpan.FromMinutes(roundTimeInMinutes));
     }
 
     /// <summary>
