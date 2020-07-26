@@ -28,6 +28,7 @@ namespace Data
         Data.Add(item);
         return item.Id;
       }
+
       return default;
     }
 
@@ -68,7 +69,7 @@ namespace Data
     /// <param name="item">Item.</param>
     public virtual void Save(T item)
     {
-      throw new NotImplementedException();
+      this.Add(item);
     }
 
     /// <summary>
@@ -77,7 +78,8 @@ namespace Data
     /// <param name="item">Item.</param>
     public virtual void Update(T item)
     {
-      throw new NotImplementedException();
+      this.Delete(this.GetItem(item.Id));
+      this.Add(item);
     }
 
     /// <summary>
