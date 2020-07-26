@@ -23,18 +23,27 @@ namespace RoomApi
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddControllers();
-      services.AddCors(options => options.AddPolicy("CorsPolicy",
-            builder =>
-            {
-              builder.AllowAnyMethod().AllowAnyHeader()
-                     .WithOrigins("http://localhost:44365")
-                     .AllowCredentials();
-            }));
+      services.AddCors(options => options.AddPolicy(
+        "CorsPolicy",
+        builder =>
+        {
+           builder.AllowAnyMethod().AllowAnyHeader()
+              .WithOrigins("http://localhost:44365")
+              .AllowCredentials();
+        }));
       services.AddSignalR();
       services.AddSingleton<DeckService>();
       services.AddSingleton<RoomService>();
       services.AddSingleton<RoundService>();
       services.AddSingleton<UserService>();
+
+      services.AddSingleton<DeckRepository>();
+      services.AddSingleton<RoomRepository>();
+      services.AddSingleton<RoundRepository>();
+      services.AddSingleton<RoundResultRepository>();
+      services.AddSingleton<RoundTimerRepository>();
+      services.AddSingleton<UserRepository>();
+      services.AddSingleton<UsersReadinessRepository>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

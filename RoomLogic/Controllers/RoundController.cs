@@ -14,22 +14,21 @@ namespace RoomApi.Controllers
   [ApiController]
   public class RoundController : ControllerBase
   {
-    private RoundRepository rounds = new RoundRepository();
-    private UserService userService = new UserService();
+    private RoundRepository rounds;
+    private UserService userService;
     private RoomService roomService;
-    private IHubContext<RoomHub> hubContext;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RoundController"/> class.
     /// </summary>
-    /// <param name="hubContext">Hub context.</param>
     /// <param name="roomService">Room service.</param>
     /// <param name="userService">User serivce.</param>
-    public RoundController(IHubContext<RoomHub> hubContext, RoomService roomService, UserService userService)
+    /// <param name="roundRepository">Round repository.</param>
+    public RoundController(RoomService roomService, UserService userService, RoundRepository roundRepository)
     {
-      this.hubContext = hubContext;
       this.roomService = roomService;
       this.userService = userService;
+      this.rounds = roundRepository;
     }
 
     /// <summary>

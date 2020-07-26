@@ -26,7 +26,7 @@ namespace RoomApi
       string id,
       ICollection<UserDTO> users,
       DeckDTO deck,
-      double roundTime,
+      TimeSpan roundTime,
       string title,
       double result,
       string comment,
@@ -60,7 +60,7 @@ namespace RoomApi
       }
 
       this.Deck = new DeckDTO(round.Deck);
-      this.RoundTime = round.RoundTime.TotalMinutes;
+      this.RoundTime = round.RoundTime;
       this.Title = round.Title;
       this.Result = round.Result;
       this.Comment = round.Comment;
@@ -87,7 +87,7 @@ namespace RoomApi
     /// <summary>
     /// Gets round time.
     /// </summary>
-    public double RoundTime { get; }
+    public TimeSpan RoundTime { get; }
 
     /// <summary>
     /// Gets result.

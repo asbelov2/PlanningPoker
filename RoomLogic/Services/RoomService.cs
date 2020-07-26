@@ -14,10 +14,10 @@ namespace RoomApi
     private IHubContext<RoomHub> context;
     private UserService userService;
     private RoundService roundService;
-    private RoomRepository rooms = new RoomRepository();
-    private RoundRepository rounds = new RoundRepository();
-    private RoundTimerRepository timers = new RoundTimerRepository();
-    private UsersReadinessRepository isUsersReady = new UsersReadinessRepository();
+    private RoomRepository rooms;
+    private RoundRepository rounds;
+    private RoundTimerRepository timers;
+    private UsersReadinessRepository isUsersReady;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RoomService"/> class.
@@ -25,11 +25,26 @@ namespace RoomApi
     /// <param name="hubContext">Hub context.</param>
     /// <param name="roundService">Round service.</param>
     /// <param name="userService">User service.</param>
-    public RoomService(IHubContext<RoomHub> hubContext, RoundService roundService, UserService userService)
+    /// <param name="roomRepository">Room repository.</param>
+    /// <param name="roundRepository">Round repository.</param>
+    /// <param name="roundTimerRepository">Round timer repository.</param>
+    /// <param name="usersReadinessRepository">User readiness repository.</param>
+    public RoomService(
+      IHubContext<RoomHub> hubContext,
+      RoundService roundService,
+      UserService userService,
+      RoomRepository roomRepository,
+      RoundRepository roundRepository,
+      RoundTimerRepository roundTimerRepository,
+      UsersReadinessRepository usersReadinessRepository)
     {
       this.context = hubContext;
       this.roundService = roundService;
       this.userService = userService;
+      this.rooms = roomRepository;
+      this.rounds = roundRepository;
+      this.timers = roundTimerRepository;
+      this.isUsersReady = usersReadinessRepository;
     }
 
     /// <summary>

@@ -11,11 +11,12 @@ namespace RoomApi
     private static DeckRepository decks;
 
     /// <summary>
-    /// Initializes static members of the <see cref="DeckService"/> class.
+    /// Initializes a new instance of the <see cref="DeckService"/> class.
     /// </summary>
-    static DeckService()
+    /// <param name="deckRepository">Deck repository.</param>
+    public DeckService(DeckRepository deckRepository)
     {
-      decks = new DeckRepository();
+      decks = deckRepository;
     }
 
     /// <summary>
@@ -47,7 +48,7 @@ namespace RoomApi
     }
 
     /// <summary>
-    /// Add card in deck
+    /// Add card in deck.
     /// </summary>
     /// <param name="deck">Deck.</param>
     /// <param name="card">Card.</param>

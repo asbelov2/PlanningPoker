@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Data;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Data;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 
 namespace RoomApi.Controllers
 {
@@ -14,21 +13,28 @@ namespace RoomApi.Controllers
   [ApiController]
   public class RoomController : ControllerBase
   {
-    private RoomRepository rooms = new RoomRepository();
-    private DeckRepository decks = new DeckRepository();
+    private RoomRepository rooms;
+    private DeckRepository decks;
     private RoomService roomService;
     private UserService userService;
-    private IHubContext<RoomHub> hubContext;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RoomController"/> class.
     /// </summary>
-    /// <param name="hubContext">Hub context</param>
-    public RoomController(IHubContext<RoomHub> hubContext, UserService userService, RoomService roomService)
+    /// <param name="userService">User service.</param>
+    /// <param name="roomService">Room service.</param>
+    /// <param name="roomRepository">Room repository.</param>
+    /// <param name="deckRepository">Deck repository.</param>
+    public RoomController(
+      UserService userService,
+      RoomService roomService,
+      RoomRepository roomRepository,
+      DeckRepository deckRepository)
     {
-      this.hubContext = hubContext;
       this.roomService = roomService;
       this.userService = userService;
+      this.rooms = roomRepository;
+      this.decks = deckRepository;
     }
 
     /// <summary>

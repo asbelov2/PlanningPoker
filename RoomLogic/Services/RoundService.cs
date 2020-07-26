@@ -12,23 +12,36 @@ namespace RoomApi
   /// </summary>
   public class RoundService
   {
-    private static RoundRepository rounds = new RoundRepository();
-    private RoomRepository rooms = new RoomRepository();
-    private RoundTimerRepository timers = new RoundTimerRepository();
+    private RoundRepository rounds;
+    private RoomRepository rooms;
+    private RoundTimerRepository timers;
     private IHubContext<RoomHub> context;
-    private RoundResultRepository roundResults = new RoundResultRepository();
+    private RoundResultRepository roundResults;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RoundService"/> class.
     /// </summary>
     /// <param name="hubContext">Hub context.</param>
-    public RoundService(IHubContext<RoomHub> hubContext)
+    /// <param name="roomRepository">Room repository.</param>
+    /// <param name="roundRepository">Round repository.</param>
+    /// <param name="roundTimerRepository">Round timer repository.</param>
+    /// <param name="roundResultRepository">Round result repository.</param>
+    public RoundService(
+      IHubContext<RoomHub> hubContext,
+      RoomRepository roomRepository,
+      RoundRepository roundRepository,
+      RoundTimerRepository roundTimerRepository,
+      RoundResultRepository roundResultRepository)
     {
       this.context = hubContext;
+      this.rooms = roomRepository;
+      this.rounds = roundRepository;
+      this.timers = roundTimerRepository;
+      this.roundResults = roundResultRepository;
     }
 
     /// <summary>
-    /// Starting new round
+    /// Starting new round.
     /// </summary>
     /// <param name="users">Collection of users.</param>
     /// <param name="deck">Deck.</param>
@@ -39,11 +52,11 @@ namespace RoomApi
     /// <returns>This round ID.</returns>
     public string StartNewRound(ICollection<User> users, Deck deck, TimeSpan roundTime, string id, string title, string roomId)
     {
-      rounds.Add(new Round(id, roomId, users, deck, roundTime, title));
+      this.rounds.Add(new Round(id, roomId, users, deck, roundTime, title));
       if (roundTime != TimeSpan.Zero)
       {
         this.timers.Add(new RoundTimer(id, roundTime));
-        this.timers.GetItem(id).SetTimer();
+        this.timers.GetItem(id)?.SetTimer();
       }
 
       return id;
@@ -56,7 +69,7 @@ namespace RoomApi
     /// <param name="userId">User ID.</param>
     public void ResetTimer(string roundId, string userId)
     {
-      if (userId == this.rooms.GetItem(rounds.GetItem(roundId)?.RoomId)?.Host?.Id)
+      if (userId == this.rooms.GetItem(this.rounds.GetItem(roundId)?.RoomId)?.Host?.Id)
       {
         this.timers.GetItem(roundId)?.SetTimer();
       }
@@ -68,21 +81,21 @@ namespace RoomApi
     /// <param name="round">Round.</param>
     /// <param name="user">User.</param>
     /// <param name="card">Card.</param>
-    /// <returns>Async task</returns>
+    /// <returns>Async task.</returns>
     public async Task UserChosed(Round round, User user, Card card)
     {
-      if (round != null && this.timers.GetItem(round.Id).IsEnabled)
+      if ((user != null) && (card != null) && (round != null) && (this.timers.GetItem(round.Id)?.IsEnabled ?? true))
       {
         if (round.Deck.Cards.Contains(card))
         {
-          if (round.Choices.Select(x => x.User == user).Count() > 0)
+          if (round.Choices.Where(x => x.User == user).Count() > 0)
           {
             round.Choices.FirstOrDefault(x => x.User == user).Card = card;
             await this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onUserChosed", user);
             if (round.Choices.Count() == round.Users.Count())
             {
-              this.timers.GetItem(round.Id).Stop();
-              await this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onAllChosed", new RoundDTO(rounds.GetItem(round.Id)));
+              this.timers.GetItem(round.Id)?.Stop();
+              await this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onAllChosed", new RoundDTO(this.rounds.GetItem(round.Id)));
             }
           }
           else
@@ -91,9 +104,9 @@ namespace RoomApi
             await this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onUserChosed", user);
             if (round.Choices.Count() == round.Users.Count())
             {
-              this.roundResults.Add(new RoundResult(rounds.GetItem(round.Id)));
-              this.timers.GetItem(round.Id).Stop();
-              await this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onAllChosed", new RoundDTO(rounds.GetItem(round.Id)));
+              this.roundResults.Add(new RoundResult(this.rounds.GetItem(round.Id)));
+              this.timers.GetItem(round.Id)?.Stop();
+              await this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onAllChosed", new RoundDTO(this.rounds.GetItem(round.Id)));
             }
           }
         }

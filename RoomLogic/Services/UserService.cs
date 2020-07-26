@@ -8,14 +8,15 @@ namespace RoomApi
   /// </summary>
   public class UserService
   {
-    private static UserRepository users;
+    private UserRepository users;
 
     /// <summary>
-    /// Initializes static members of the <see cref="UserService"/> class.
+    /// Initializes a new instance of the <see cref="UserService"/> class.
     /// </summary>
-    static UserService()
+    /// <param name="userRepository">Users repository.</param>
+    public UserService(UserRepository userRepository)
     {
-      users = new UserRepository();
+      this.users = userRepository;
     }
 
     /// <summary>
@@ -24,7 +25,7 @@ namespace RoomApi
     /// <param name="user">User.</param>
     public void AddNewUser(User user)
     {
-      users.Add(user);
+      this.users.Add(user);
     }
 
     /// <summary>
@@ -33,7 +34,7 @@ namespace RoomApi
     /// <returns>Collection of users.</returns>
     public ICollection<User> GetUsers()
     {
-      return users.GetList();
+      return this.users.GetList();
     }
 
     /// <summary>
@@ -43,7 +44,7 @@ namespace RoomApi
     /// <returns>User.</returns>
     public User GetUser(string id)
     {
-      return users.GetItem(id);
+      return this.users.GetItem(id);
     }
 
     /// <summary>
@@ -52,7 +53,7 @@ namespace RoomApi
     /// <param name="user">User.</param>
     public void DeleteUser(User user)
     {
-      users.Delete(user);
+      this.users.Delete(user);
     }
 
     /// <summary>
@@ -61,7 +62,7 @@ namespace RoomApi
     /// <param name="id">User ID.</param>
     public void DeleteUser(string id)
     {
-      users.Delete(users.GetItem(id));
+      this.users.Delete(this.users.GetItem(id));
     }
   }
 }
