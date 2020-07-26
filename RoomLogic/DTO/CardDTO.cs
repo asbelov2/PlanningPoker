@@ -17,7 +17,7 @@ namespace RoomApi
     {
       this.Name = name;
       this.Value = value;
-      this.CardType = cardType == Data.CardType.Valuable ? "Valuable" : "Exceptional";
+      this.CardType = cardType.ToString();
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ namespace RoomApi
     {
       this.Name = card.Name;
       this.Value = card.Value;
-      this.CardType = card.CardType == Data.CardType.Valuable ? "Valuable" : "Exceptional";
+      this.CardType = card.CardType.ToString();
     }
 
     /// <summary>
