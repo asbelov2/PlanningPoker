@@ -46,13 +46,12 @@ namespace RoomApi
     /// <param name="users">Collection of users.</param>
     /// <param name="deck">Deck.</param>
     /// <param name="roundTime">Round time.</param>
-    /// <param name="id">Round ID.</param>
     /// <param name="title">Round title.</param>
     /// <param name="roomId">RoomID.</param>
     /// <returns>This round ID.</returns>
-    public string StartNewRound(ICollection<User> users, Deck deck, TimeSpan roundTime, string id, string title, string roomId)
+    public Guid StartNewRound(ICollection<User> users, Deck deck, TimeSpan roundTime, string title, Guid roomId)
     {
-      this.rounds.Add(new Round(id, roomId, users, deck, roundTime, title));
+      Guid id = this.rounds.Add(new Round(roomId, users, deck, roundTime, title));
       if (roundTime != TimeSpan.Zero)
       {
         this.timers.Add(new RoundTimer(id, roundTime));
@@ -67,9 +66,9 @@ namespace RoomApi
     /// </summary>
     /// <param name="roundId">Round ID.</param>
     /// <param name="userId">User ID.</param>
-    public void ResetTimer(string roundId, string userId)
+    public void ResetTimer(Guid roundId, Guid userId)
     {
-      if (userId == this.rooms.GetItem(this.rounds.GetItem(roundId)?.RoomId)?.Host?.Id)
+      if (this.IsHost(userId, this.rounds.GetItem(roundId)?.RoomId ?? default))
       {
         this.timers.GetItem(roundId)?.SetTimer();
       }
@@ -104,7 +103,11 @@ namespace RoomApi
             await this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onUserChosed", user);
             if (round.Choices.Count() == round.Users.Count())
             {
-              this.roundResults.Add(new RoundResult(this.rounds.GetItem(round.Id)));
+              if (this.timers.GetItem(round.Id) == null)
+              {
+                this.roundResults.Add(new RoundResult(this.rounds.GetItem(round.Id)));
+              }
+
               this.timers.GetItem(round.Id)?.Stop();
               await this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onAllChosed", new RoundDTO(this.rounds.GetItem(round.Id)));
             }
@@ -143,7 +146,23 @@ namespace RoomApi
       }
     }
 
-    private string GetGroupKey(string roomId)
+    /// <summary>
+    /// Check user on host rights in room.
+    /// </summary>
+    /// <param name="userId">User ID</param>
+    /// <param name="roomId">Room ID</param>
+    /// <returns>Is user host or not.</returns>
+    private bool IsHost(Guid userId, Guid roomId)
+    {
+      return userId == this.rooms.GetItem(roomId).Host.Id;
+    }
+
+    /// <summary>
+    /// Build group key for room.
+    /// </summary>
+    /// <param name="roomId">Room ID</param>
+    /// <returns>Group key.</returns>
+    private string GetGroupKey(Guid roomId)
     {
       return $"room{roomId}";
     }

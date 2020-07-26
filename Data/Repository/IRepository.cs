@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Data
 {
@@ -20,13 +21,14 @@ namespace Data
     /// </summary>
     /// <param name="id">Item's ID.</param>
     /// <returns>Item.</returns>
-    T GetItem(string id);
+    T GetItem(Guid id);
 
     /// <summary>
     /// Add item.
     /// </summary>
     /// <param name="item">Item.</param>
-    void Add(T item);
+    /// <returns>ID of item.</returns>
+    Guid Add(T item);
 
     /// <summary>
     /// Update item.

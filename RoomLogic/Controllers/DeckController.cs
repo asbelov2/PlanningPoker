@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Data;
 using Microsoft.AspNetCore.Mvc;
@@ -53,9 +54,9 @@ namespace RoomApi.Controllers
     [HttpGet("{id}")]
     public DeckDTO Get(string id)
     {
-      if (this.deckService.GetDeck(id) != null)
+      if (this.deckService.GetDeck(Guid.Parse(id)) != null)
       {
-        return new DeckDTO(this.deckService.GetDeck(id));
+        return new DeckDTO(this.deckService.GetDeck(Guid.Parse(id)));
       }
 
       return null;
@@ -64,12 +65,11 @@ namespace RoomApi.Controllers
     /// <summary>
     /// Creating new deck.
     /// </summary>
-    /// <param name="id">Deck ID.</param>
     /// <param name="name">Deck name.</param>
     [HttpPost]
-    public void NewDeck(string id, string name)
+    public void NewDeck(string name)
     {
-      this.deckService.NewDeck(id, name);
+      this.deckService.NewDeck(name);
     }
 
     /// <summary>
@@ -80,7 +80,7 @@ namespace RoomApi.Controllers
     [HttpPost("{id}/AddValuableCard")]
     public void AddValuableCard(string id, double value)
     {
-      this.deckService.AddCard(this.decks.GetItem(id), new Card(CardType.Valuable, value.ToString(), value));
+      this.deckService.AddCard(this.decks.GetItem(Guid.Parse(id)), new Card(CardType.Valuable, value.ToString(), value));
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ namespace RoomApi.Controllers
     [HttpPost("{id}/AddExceptionalCard")]
     public void AddExceptionalCard(string id, string name)
     {
-      this.deckService.AddCard(this.decks.GetItem(id), new Card(CardType.Exceptional, name, 0));
+      this.deckService.AddCard(this.decks.GetItem(Guid.Parse(id)), new Card(CardType.Exceptional, name, 0));
     }
 
     /// <summary>
@@ -102,7 +102,7 @@ namespace RoomApi.Controllers
     [HttpDelete("{id}/DeleteCard")]
     public void DeleteCard(string id, string name)
     {
-      this.deckService.RemoveCard(this.decks.GetItem(id), this.decks.GetItem(id).Cards.FirstOrDefault(x => x.Name == name));
+      this.deckService.RemoveCard(this.decks.GetItem(Guid.Parse(id)), this.decks.GetItem(Guid.Parse(id)).Cards.FirstOrDefault(x => x.Name == name));
     }
 
     /// <summary>
@@ -112,7 +112,7 @@ namespace RoomApi.Controllers
     [HttpDelete("{id}")]
     public void DeleteDeck(string id)
     {
-      this.deckService.DeleteDeck(id);
+      this.deckService.DeleteDeck(Guid.Parse(id));
     }
   }
 }

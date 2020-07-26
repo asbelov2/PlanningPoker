@@ -18,7 +18,7 @@ namespace Data
     /// </summary>
     /// <param name="id">round ID</param>
     /// <param name="roundTime">round Time</param>
-    public RoundTimer(string id, TimeSpan roundTime)
+    public RoundTimer(Guid id, TimeSpan roundTime)
     {
       this.Id = id;
       this.roundTime = roundTime;
@@ -28,7 +28,7 @@ namespace Data
     /// <summary>
     /// Gets round timer ID.
     /// </summary>
-    public string Id { get; }
+    public Guid Id { get; }
 
     /// <summary>
     /// Gets status of timer.

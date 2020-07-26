@@ -1,4 +1,6 @@
-﻿namespace Data
+﻿using System;
+
+namespace Data
 {
   /// <summary>
   /// Interface of entity. Entity must have ID.
@@ -8,6 +10,6 @@
     /// <summary>
     /// Gets id of entity.
     /// </summary>
-    public string Id { get; }
+    public Guid Id { get; }
   }
 }

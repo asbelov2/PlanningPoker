@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 
 namespace RoomApi.Controllers
@@ -45,7 +46,7 @@ namespace RoomApi.Controllers
     [HttpGet("{id}")]
     public UserDTO Get(string id)
     {
-      return new UserDTO(this.userService.GetUser(id));
+      return new UserDTO(this.userService.GetUser(Guid.Parse(id)));
     }
 
     /// <summary>
@@ -56,7 +57,7 @@ namespace RoomApi.Controllers
     [HttpPut("{id}/ChangeName")]
     public void ChangeName(string id, string newName)
     {
-      this.userService.GetUser(id).Name = newName;
+      this.userService.GetUser(Guid.Parse(id)).Name = newName;
     }
   }
 }

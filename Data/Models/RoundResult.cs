@@ -14,7 +14,7 @@ namespace Data
     /// <param name="round">Round.</param>
     public RoundResult(Round round)
     {
-      this.Id = Guid.NewGuid().ToString();
+      this.Id = Guid.NewGuid();
       this.RoomId = round.RoomId;
       this.RoundId = round.Id;
       this.Choices = round.Choices;
@@ -28,17 +28,17 @@ namespace Data
     /// <summary>
     /// Gets RoundResult ID.
     /// </summary>
-    public string Id { get; }
+    public Guid Id { get; }
 
     /// <summary>
     /// Gets room ID.
     /// </summary>
-    public string RoomId { get; }
+    public Guid RoomId { get; }
 
     /// <summary>
     /// Gets round ID.
     /// </summary>
-    public string RoundId { get; }
+    public Guid RoundId { get; }
 
     /// <summary>
     /// Gets choices.

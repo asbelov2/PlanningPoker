@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Data;
 
 namespace RoomApi
@@ -14,7 +15,7 @@ namespace RoomApi
     /// <param name="cards">Cards collection.</param>
     /// <param name="id">Deck ID.</param>
     /// <param name="name">Deck name.</param>
-    public DeckDTO(List<CardDTO> cards, string id, string name = "New deck")
+    public DeckDTO(List<CardDTO> cards, Guid id, string name = "New deck")
     {
       this.Cards = cards;
       this.Id = id;
@@ -45,7 +46,7 @@ namespace RoomApi
     /// <summary>
     /// Gets ID.
     /// </summary>
-    public string Id { get; }
+    public Guid Id { get; }
 
     /// <summary>
     /// Gets collection of cards.

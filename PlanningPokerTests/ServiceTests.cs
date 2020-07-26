@@ -190,14 +190,14 @@ namespace PlanningPokerTests
       this.userService.AddNewUser(user1);
       this.roomService.HostRoom("TestIDRoom", host, "TestRoomName", "TestPassword", "TestInterp");
       this.roomService.EnterUser("TestIDRoom", user1, "TestPassword");
-      this.roomService.ChangeCardInterpretation("TestIDRoom", host.Id, "NewCardInterp");
+      this.roomService.ChangeCardInterpretation("TestIDRoom", host.ConnectionId, "NewCardInterp");
       Assert.AreEqual("NewCardInterp", this.rooms.GetItem("TestIDRoom").CardInterpretation);
-      this.roomService.ChangePassword("TestIDRoom", host.Id, "NewPass");
+      this.roomService.ChangePassword("TestIDRoom", host.ConnectionId, "NewPass");
       Assert.AreEqual("NewPass", this.rooms.GetItem("TestIDRoom").Password);
-      this.roomService.ChangeRoomName("TestIDRoom", host.Id, "NewName");
+      this.roomService.ChangeRoomName("TestIDRoom", host.ConnectionId, "NewName");
       Assert.AreEqual("NewName", this.rooms.GetItem("TestIDRoom").Name);
-      this.roomService.ChangeHost("TestIDRoom", host.Id, user1.Id);
-      Assert.AreEqual("TestIDUser1", this.rooms.GetItem("TestIDRoom").Host.Id);
+      this.roomService.ChangeHost("TestIDRoom", host.ConnectionId, user1.ConnectionId);
+      Assert.AreEqual("TestIDUser1", this.rooms.GetItem("TestIDRoom").Host.ConnectionId);
     }
 
     [Test]
@@ -210,7 +210,7 @@ namespace PlanningPokerTests
       this.roomService.HostRoom("TestIDRoom", host, "TestRoomName", "TestPassword", "TestInterp");
       this.roomService.EnterUser("TestIDRoom", user1, "TestPassword");
       this.deckService.NewDeck("1", "TestDeck");
-      this.roomService.StartNewRound("TestIDRoom", host.Id, "TestTitle", this.deckService.GetDeck("1"), TimeSpan.FromMinutes(13));
+      this.roomService.StartNewRound("TestIDRoom", host.ConnectionId, "TestTitle", this.deckService.GetDeck("1"), TimeSpan.FromMinutes(13));
       Assert.AreEqual("onRoundStarted", InvokedMethod);
       Round round = this.rounds.GetList().First();
       Assert.NotNull(round.Id);
@@ -236,7 +236,7 @@ namespace PlanningPokerTests
       this.deckService.NewDeck("1", "TestDeck");
       this.deckService.AddCard(this.deckService.GetDeck("1"), new Card(CardType.Valuable, "5", 5));
       this.deckService.AddCard(this.deckService.GetDeck("1"), new Card(CardType.Valuable, "15", 15));
-      this.roomService.StartNewRound("TestIDRoom", host.Id, "TestTitle", this.deckService.GetDeck("1"), TimeSpan.FromMinutes(13));
+      this.roomService.StartNewRound("TestIDRoom", host.ConnectionId, "TestTitle", this.deckService.GetDeck("1"), TimeSpan.FromMinutes(13));
       Round round = this.rounds.GetList().First();
       this.roomService.Choose(round.Id, host, new Card(CardType.Valuable, string.Empty, 123)).Wait();
       Assert.AreEqual("onWrongCard", InvokedMethod);
@@ -259,7 +259,7 @@ namespace PlanningPokerTests
       this.deckService.NewDeck("1", "TestDeck");
       this.deckService.AddCard(this.deckService.GetDeck("1"), new Card(CardType.Valuable, "5", 5));
       this.deckService.AddCard(this.deckService.GetDeck("1"), new Card(CardType.Exceptional, "ff", 0));
-      this.roomService.StartNewRound("TestIDRoom", host.Id, "TestTitle", this.deckService.GetDeck("1"), TimeSpan.FromMinutes(13));
+      this.roomService.StartNewRound("TestIDRoom", host.ConnectionId, "TestTitle", this.deckService.GetDeck("1"), TimeSpan.FromMinutes(13));
       Round round = this.rounds.GetList().First();
       this.roomService.Choose(round.Id, host, this.deckService.GetDeck("1").Cards.ElementAt(0)).Wait();
       this.roomService.Choose(round.Id, user1, this.deckService.GetDeck("1").Cards.ElementAt(1)).Wait();
@@ -275,9 +275,9 @@ namespace PlanningPokerTests
       this.userService.AddNewUser(user1);
       this.roomService.HostRoom("TestIDRoom", host);
       this.roomService.EnterUser("TestIDRoom", user1, string.Empty);
-      var roundId = this.roomService.StartNewRound("TestIDRoom", host.Id);
+      var roundId = this.roomService.StartNewRound("TestIDRoom", host.ConnectionId);
       Round round = this.rounds.GetItem(roundId);
-      this.roomService.EndRound(round.Id, host.Id).Wait();
+      this.roomService.EndRound(round.Id, host.ConnectionId).Wait();
       Assert.AreEqual("onEnd", InvokedMethod);
       Assert.AreEqual(typeof(RoundDTO), Args[0].GetType());
     }
@@ -296,10 +296,10 @@ namespace PlanningPokerTests
       this.deckService.NewDeck("1", "TestDeck");
       this.deckService.AddCard(this.deckService.GetDeck("1"), new Card(CardType.Valuable, "5", 5));
       this.deckService.AddCard(this.deckService.GetDeck("1"), new Card(CardType.Valuable, "15", 15));
-      this.roomService.StartNewRound("TestIDRoom", host.Id, "TestTitle", this.deckService.GetDeck("1"), TimeSpan.FromMinutes(13));
+      this.roomService.StartNewRound("TestIDRoom", host.ConnectionId, "TestTitle", this.deckService.GetDeck("1"), TimeSpan.FromMinutes(13));
       Round round = this.rounds.GetList().First();
-      this.roomService.SetRoundTitle(host.Id, round.Id, "TestTitle");
-      this.roomService.SetRoundComment(host.Id, round.Id, "TestComment");
+      this.roomService.SetRoundTitle(host.ConnectionId, round.Id, "TestTitle");
+      this.roomService.SetRoundComment(host.ConnectionId, round.Id, "TestComment");
       Assert.AreEqual("TestTitle", round.Title);
       Assert.AreEqual("TestComment", round.Comment);
     }

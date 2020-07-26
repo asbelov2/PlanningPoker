@@ -13,10 +13,10 @@ namespace Data
     /// Initializes a new instance of the <see cref="UsersReadiness"/> class.
     /// </summary>
     /// <param name="roomId">room ID</param>
-    public UsersReadiness(string roomId)
+    public UsersReadiness(Guid roomId)
     {
       this.IsUsersReady = new Dictionary<User, bool>();
-      this.Id = Guid.NewGuid().ToString();
+      this.Id = Guid.NewGuid();
       this.RoomId = roomId;
     }
 
@@ -28,11 +28,11 @@ namespace Data
     /// <summary>
     /// Gets ID.
     /// </summary>
-    public string Id { get; }
+    public Guid Id { get; }
 
     /// <summary>
     /// Gets room ID.
     /// </summary>
-    public string RoomId { get; }
+    public Guid RoomId { get; }
   }
 }

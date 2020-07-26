@@ -158,7 +158,7 @@ namespace PlanningPokerTests
     public void CorrectUserId()
     {
       User testUser = new User("Vasya", "1");
-      Assert.AreEqual(testUser.Id, "1");
+      Assert.AreEqual(testUser.ConnectionId, "1");
     }
 
     [Test]

@@ -1,5 +1,6 @@
 ﻿using Data;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace RoomApi.Controllers
     public ICollection<RoundResult> GetRoundResults(string roomId)
     {
       var roundResults = new RoundResultRepository();
-      return roundResults.GetRoomRoundResults(roomId);
+      return roundResults.GetRoomRoundResults(Guid.Parse(roomId));
     }
 
     /// <summary>
@@ -50,9 +51,9 @@ namespace RoomApi.Controllers
     [HttpGet("{id}")]
     public RoundDTO Get(string id)
     {
-      if (this.rounds.GetItem(id) != null)
+      if (this.rounds.GetItem(Guid.Parse(id)) != null)
       {
-        return new RoundDTO(this.rounds.GetItem(id));
+        return new RoundDTO(this.rounds.GetItem(Guid.Parse(id)));
       }
 
       return null;
@@ -68,7 +69,7 @@ namespace RoomApi.Controllers
     [HttpPut("{id}/ChooseCard")]
     public async Task ChooseCard(string id, string userId, string cardName)
     {
-      await this.roomService.Choose(id, this.userService.GetUser(userId), this.rounds.GetItem(id).Deck.Cards.FirstOrDefault(x => x.Name == cardName));
+      await this.roomService.Choose(Guid.Parse(id), this.userService.GetUser(Guid.Parse(userId)), this.rounds.GetItem(Guid.Parse(id)).Deck.Cards.FirstOrDefault(x => x.Name == cardName));
     }
 
     /// <summary>
@@ -81,7 +82,7 @@ namespace RoomApi.Controllers
     [HttpPut("{id}/SetTitle")]
     public async Task SetTitle(string id, string userId, string title)
     {
-      await this.roomService.SetRoundTitle(userId, id, title);
+      await this.roomService.SetRoundTitle(Guid.Parse(userId), Guid.Parse(id), title);
     }
 
     /// <summary>
@@ -94,7 +95,7 @@ namespace RoomApi.Controllers
     [HttpPut("{id}/SetComment")]
     public async Task SetComment(string id, string userId, string comment)
     {
-      await this.roomService.SetRoundComment(userId, id, comment);
+      await this.roomService.SetRoundComment(Guid.Parse(userId), Guid.Parse(id), comment);
     }
 
     /// <summary>
@@ -106,7 +107,7 @@ namespace RoomApi.Controllers
     [HttpPost("{id}/EndRound")]
     public async Task EndRound(string id, string userId)
     {
-      await this.roomService.EndRound(id, userId);
+      await this.roomService.EndRound(Guid.Parse(id), Guid.Parse(userId));
     }
   }
 }

@@ -63,9 +63,9 @@ namespace RoomApi.Controllers
     [HttpGet("{id}")]
     public RoomDTO Get(string id)
     {
-      if (this.rooms.GetItem(id) != null)
+      if (this.rooms.GetItem(Guid.Parse(id)) != null)
       {
-        return new RoomDTO(this.rooms.GetItem(id));
+        return new RoomDTO(this.rooms.GetItem(Guid.Parse(id)));
       }
 
       return null;
@@ -80,7 +80,7 @@ namespace RoomApi.Controllers
     [HttpPost("{id}/Connect")]
     public void Connect(string id, string userId, string password)
     {
-      this.roomService.EnterUser(id, this.userService.GetUser(userId), password);
+      this.roomService.EnterUser(Guid.Parse(id), this.userService.GetUser(Guid.Parse(userId)), password);
     }
 
     /// <summary>
@@ -91,21 +91,20 @@ namespace RoomApi.Controllers
     [HttpPost("{id}/Disconnect")]
     public void Disconnect(string id, string userId)
     {
-      this.roomService.LeaveUser(id, this.userService.GetUser(userId));
+      this.roomService.LeaveUser(Guid.Parse(id), this.userService.GetUser(Guid.Parse(userId)));
     }
 
     /// <summary>
     /// Creating room.
     /// </summary>
-    /// <param name="id">Room ID.</param>
     /// <param name="hostId">Host ID.</param>
     /// <param name="name">Room name.</param>
     /// <param name="password">Room password.</param>
     /// <param name="cardInterpretation">Room card's interpretation.</param>
     [HttpPost]
-    public void Create(string id, string hostId, string name = "Default name", string password = "", string cardInterpretation = "Hours")
+    public void Create(string hostId, string name = "Default name", string password = "", string cardInterpretation = "Hours")
     {
-      this.roomService.HostRoom(id, this.userService.GetUser(hostId), name, password, cardInterpretation);
+      this.roomService.HostRoom(this.userService.GetUser(Guid.Parse(hostId)), name, password, cardInterpretation);
     }
 
     /// <summary>
@@ -117,7 +116,7 @@ namespace RoomApi.Controllers
     [HttpPut("{id}/SetCardInterpretation")]
     public void SetCardInterpretation(string id, string userId, string cardInterpretation)
     {
-      this.roomService.ChangeCardInterpretation(id, userId, cardInterpretation);
+      this.roomService.ChangeCardInterpretation(Guid.Parse(id), Guid.Parse(userId), cardInterpretation);
     }
 
     /// <summary>
@@ -131,7 +130,7 @@ namespace RoomApi.Controllers
     [HttpPost("{id}/StartRound")]
     public void StartRound(string id, string userId, string title, string deckId, double roundTimeInMinutes)
     {
-      this.roomService.StartNewRound(id, userId, title, this.decks.GetItem(deckId), TimeSpan.FromMinutes(roundTimeInMinutes));
+        this.roomService.StartNewRound(Guid.Parse(id), Guid.Parse(userId), title, this.decks.GetItem(Guid.Parse(deckId)) ?? new DefaultDeck(), TimeSpan.FromMinutes(roundTimeInMinutes));
     }
 
     /// <summary>
@@ -143,7 +142,7 @@ namespace RoomApi.Controllers
     [HttpPut("{id}/SetName")]
     public void SetName(string id, string userId, string name)
     {
-      this.roomService.ChangeRoomName(id, userId, name);
+      this.roomService.ChangeRoomName(Guid.Parse(id), Guid.Parse(userId), name);
     }
 
     /// <summary>
@@ -155,7 +154,7 @@ namespace RoomApi.Controllers
     [HttpPut("{id}/SetHost")]
     public void SetHost(string id, string userId, string hostId)
     {
-      this.roomService.ChangeHost(id, userId, hostId);
+      this.roomService.ChangeHost(Guid.Parse(id), Guid.Parse(userId), Guid.Parse(hostId));
     }
 
     /// <summary>
@@ -167,7 +166,7 @@ namespace RoomApi.Controllers
     [HttpPut("{id}/SetPassword")]
     public void SetPassword(string id, string userId, string password)
     {
-      this.roomService.ChangePassword(id, userId, password);
+      this.roomService.ChangePassword(Guid.Parse(id), Guid.Parse(userId), password);
     }
 
     /// <summary>
@@ -179,7 +178,7 @@ namespace RoomApi.Controllers
     [HttpPut("{id}/DeclareReady")]
     public async Task DeclareReady(string id, string userId)
     {
-      await this.roomService.DeclareReady(id, this.userService.GetUser(userId));
+      await this.roomService.DeclareReady(Guid.Parse(id), this.userService.GetUser(Guid.Parse(userId)));
     }
 
     /// <summary>
@@ -191,7 +190,7 @@ namespace RoomApi.Controllers
     [HttpPut("{id}/DeclareNotReady")]
     public async Task DeclareNotReady(string id, string userId)
     {
-      await this.roomService.DeclareNotReady(id, this.userService.GetUser(userId));
+      await this.roomService.DeclareNotReady(Guid.Parse(id), this.userService.GetUser(Guid.Parse(userId)));
     }
 
     /// <summary>
@@ -202,9 +201,9 @@ namespace RoomApi.Controllers
     [HttpDelete("{id}")]
     public void Delete(string id, string userId)
     {
-      if (userId == this.rooms.GetItem(id).Host.Id)
+      if (userId == this.rooms.GetItem(Guid.Parse(id)).Host.ConnectionId)
       {
-        this.rooms.Delete(this.rooms.GetItem(id));
+        this.rooms.Delete(this.rooms.GetItem(Guid.Parse(id)));
       }
     }
   }

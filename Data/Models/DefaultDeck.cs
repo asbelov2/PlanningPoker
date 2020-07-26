@@ -9,7 +9,7 @@
     /// Initializes a new instance of the <see cref="DefaultDeck"/> class.
     /// </summary>
     public DefaultDeck()
-      : base("0")
+      : base()
     {
       double[] numbers = { 0, 1 / 2, 1, 2, 3, 5, 8, 13, 20, 40, 100 };
       foreach (var number in numbers)

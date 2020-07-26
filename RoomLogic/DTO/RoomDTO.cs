@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Data;
 
 namespace RoomApi
@@ -16,7 +17,7 @@ namespace RoomApi
     /// <param name="name">Room name.</param>
     /// <param name="cardInterpretation">Card's interpretation.</param>
     /// <param name="users">Collection of users.</param>
-    public RoomDTO(string id, UserDTO host, string name, string cardInterpretation, List<UserDTO> users)
+    public RoomDTO(Guid id, UserDTO host, string name, string cardInterpretation, List<UserDTO> users)
     {
       this.Id = id;
       this.CardInterpretation = cardInterpretation;
@@ -45,7 +46,7 @@ namespace RoomApi
     /// <summary>
     /// Gets host.
     /// </summary>
-    public UserDTO Host { get; set; }
+    public UserDTO Host { get; }
 
     /// <summary>
     /// Gets collection of users.
@@ -55,16 +56,16 @@ namespace RoomApi
     /// <summary>
     /// Gets room ID.
     /// </summary>
-    public string Id { get; }
+    public Guid Id { get; }
 
     /// <summary>
     /// Gets room name.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; }
 
     /// <summary>
     /// Gets card's interpretation.
     /// </summary>
-    public string CardInterpretation { get; set; }
+    public string CardInterpretation { get; }
   }
 }

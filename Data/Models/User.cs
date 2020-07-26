@@ -1,4 +1,6 @@
-﻿namespace Data
+﻿using System;
+
+namespace Data
 {
   /// <summary>
   /// <see cref="User"/> class.
@@ -14,24 +16,18 @@
     {
       this.Name = name;
       this.ConnectionId = connectionId;
+      this.Id = Guid.NewGuid();
     }
 
     /// <summary>
-    /// Gets or sets connection ID of user.
+    /// Gets user ID.
+    /// </summary>
+    public Guid Id { get; }
+
+    /// <summary>
+    /// Gets or sets user connection ID.
     /// </summary>
     public string ConnectionId { get; set; }
-
-    /// <summary>
-    /// Gets or sets user ID.
-    /// </summary>
-    /// <remarks>Equal to connectionId.</remarks>
-    public string Id
-    {
-      get
-      {
-        return this.ConnectionId;
-      }
-    }
 
     /// <summary>
     /// Gets or sets username.

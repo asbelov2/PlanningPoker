@@ -20,12 +20,15 @@ namespace Data
     /// Add item.
     /// </summary>
     /// <param name="item">Item.</param>
-    public virtual void Add(T item)
+    /// <returns>Id of item.</returns>
+    public virtual Guid Add(T item)
     {
       if (Data.FirstOrDefault(x => x.Id == item.Id) == null)
       {
         Data.Add(item);
+        return item.Id;
       }
+      return default;
     }
 
     /// <summary>
@@ -45,7 +48,7 @@ namespace Data
     /// </summary>
     /// <param name="id">Item's ID.</param>
     /// <returns>Item.</returns>
-    public virtual T GetItem(string id)
+    public virtual T GetItem(Guid id)
     {
       return Data.FirstOrDefault(x => x.Id == id);
     }

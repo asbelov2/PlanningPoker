@@ -45,7 +45,7 @@ namespace RoomApi
     /// <returns>Async task.</returns>
     public async Task Login(string userName)
     {
-      if (this.users.GetItem(Context.ConnectionId) == null)
+      if (this.users.GetByConnectionID(Context.ConnectionId) == null)
       {
         this.users.Add(new User(userName, Context.ConnectionId));
       }

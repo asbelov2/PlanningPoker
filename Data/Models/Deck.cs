@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Data
@@ -14,11 +15,11 @@ namespace Data
     /// <param name="cards">Collection of <see cref="Card"/>.</param>
     /// <param name="id">Deck id.</param>
     /// <param name="name">Deck name.</param>
-    public Deck(List<Card> cards, string id, string name = "New deck")
+    public Deck(List<Card> cards, string name = "New deck")
     {
       this.Cards = cards.ToList();
       this.Name = name;
-      this.Id = id;
+      this.Id = Guid.NewGuid();
     }
 
     /// <summary>
@@ -26,11 +27,11 @@ namespace Data
     /// </summary>
     /// <param name="id">Deck id.</param>
     /// <param name="name">Deck name.</param>
-    public Deck(string id, string name = "New deck")
+    public Deck(string name = "New deck")
     {
       this.Cards = new List<Card>();
       this.Name = name;
-      this.Id = id;
+      this.Id = Guid.NewGuid();
     }
 
     /// <summary>
@@ -41,7 +42,7 @@ namespace Data
     /// <summary>
     /// Gets ID of the deck.
     /// </summary>
-    public string Id { get; }
+    public Guid Id { get; }
 
     /// <summary>
     /// Gets collection of cards in deck.

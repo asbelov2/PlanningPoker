@@ -19,13 +19,13 @@ namespace Data
     /// <param name="deck">Round deck.</param>
     /// <param name="roundTime">Round time.</param>
     /// <param name="title">Title of round.</param>
-    public Round(string id, string roomId, ICollection<User> users, Deck deck, TimeSpan roundTime, string title = "")
+    public Round(Guid roomId, ICollection<User> users, Deck deck, TimeSpan roundTime, string title = "")
     {
       this.RoomId = roomId;
       this.Title = title;
       this.RoundTime = roundTime;
       this.Users = users;
-      this.Id = id;
+      this.Id = Guid.NewGuid();
       this.Deck = deck;
       this.StartDate = DateTime.Now;
     }
@@ -33,7 +33,7 @@ namespace Data
     /// <summary>
     /// Gets room ID.
     /// </summary>
-    public string RoomId { get; }
+    public Guid RoomId { get; }
 
     /// <summary>
     /// Gets choices.
@@ -63,7 +63,7 @@ namespace Data
     /// <summary>
     /// Gets round ID
     /// </summary>
-    public string Id { get; }
+    public Guid Id { get; }
 
     /// <summary>
     /// Gets round result.

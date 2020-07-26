@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace Data
 {
@@ -12,7 +13,7 @@ namespace Data
     /// </summary>
     /// <param name="roomId">Room ID.</param>
     /// <returns>Users readiness in that room.</returns>
-    public UsersReadiness GetItemByRoomId(string roomId)
+    public UsersReadiness GetItemByRoomId(Guid roomId)
     {
       return Data.FirstOrDefault(x => x.RoomId == roomId);
     }

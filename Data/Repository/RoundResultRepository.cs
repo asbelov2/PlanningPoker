@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Data
@@ -13,7 +14,7 @@ namespace Data
     /// </summary>
     /// <param name="roomId">Room ID.</param>
     /// <returns>Round results.</returns>
-    public ICollection<RoundResult> GetRoomRoundResults(string roomId)
+    public ICollection<RoundResult> GetRoomRoundResults(Guid roomId)
     {
       return Data.Where(x => x.RoomId == roomId).ToList();
     }

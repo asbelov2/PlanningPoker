@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Data;
 
 namespace RoomApi
@@ -22,18 +23,17 @@ namespace RoomApi
     /// <summary>
     /// Create new deck in repository.
     /// </summary>
-    /// <param name="id">Deck ID.</param>
     /// <param name="name">Deck name.</param>
-    public void NewDeck(string id, string name = "New deck")
+    public void NewDeck(string name = "New deck")
     {
-      decks.Add(new Deck(id, name));
+      decks.Add(new Deck(name));
     }
 
     /// <summary>
     /// Delete deck from repository.
     /// </summary>
     /// <param name="id">Deck ID.</param>
-    public void DeleteDeck(string id)
+    public void DeleteDeck(Guid id)
     {
       decks.Delete(decks.GetItem(id));
     }
@@ -72,7 +72,7 @@ namespace RoomApi
     /// </summary>
     /// <param name="id">Deck ID.</param>
     /// <returns>Deck.</returns>
-    public Deck GetDeck(string id)
+    public Deck GetDeck(Guid id)
     {
       return decks.GetItem(id);
     }

@@ -103,17 +103,17 @@ namespace PlanningPokerTests
       this.roomService.HostRoom("TestIDRoom", host);
       this.roomService.EnterUser("TestIDRoom", user1, string.Empty);
 
-      this.roomService.StartNewRound("TestIDRoom", host.Id);
-      this.roomService.EndRound(this.rounds.GetList().First().Id, host.Id);
+      this.roomService.StartNewRound("TestIDRoom", host.ConnectionId);
+      this.roomService.EndRound(this.rounds.GetList().First().Id, host.ConnectionId);
 
-      this.roomService.StartNewRound("TestIDRoom", host.Id);
-      this.roomService.EndRound(this.rounds.GetList().ElementAt(1).Id, host.Id);
+      this.roomService.StartNewRound("TestIDRoom", host.ConnectionId);
+      this.roomService.EndRound(this.rounds.GetList().ElementAt(1).Id, host.ConnectionId);
 
       this.roomService.HostRoom("TestID2Room", user1);
       this.roomService.EnterUser("TestID2Room", host, string.Empty);
 
-      this.roomService.StartNewRound("TestID2Room", user1.Id);
-      this.roomService.EndRound(this.rounds.GetList().FirstOrDefault(x => x.RoomId == "TestID2Room").Id, user1.Id);
+      this.roomService.StartNewRound("TestID2Room", user1.ConnectionId);
+      this.roomService.EndRound(this.rounds.GetList().FirstOrDefault(x => x.RoomId == "TestID2Room").Id, user1.ConnectionId);
 
       Assert.AreEqual(3, this.results.GetList().Count());
       Assert.AreEqual(2, this.results.GetRoomRoundResults("TestIDRoom").Count());

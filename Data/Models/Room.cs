@@ -16,14 +16,9 @@ namespace Data
     /// <param name="name">Name of the room.</param>
     /// <param name="password">Password of the room.</param>
     /// <param name="cardInterpretation">Card's interpretation.</param>
-    public Room(string id, User host, string name = "Default name", string password = "", string cardInterpretation = "Hours")
+    public Room(User host, string name = "Default name", string password = "", string cardInterpretation = "Hours")
     {
-      if (id.Length <= 0)
-      {
-        throw new Exception("Id can't be empty");
-      }
-
-      this.Id = id;
+      this.Id = Guid.NewGuid();
       this.Password = password;
       this.CardInterpretation = cardInterpretation;
       this.Name = name;
@@ -50,7 +45,7 @@ namespace Data
     /// <summary>
     /// Gets room ID.
     /// </summary>
-    public string Id { get; }
+    public Guid Id { get; }
 
     /// <summary>
     /// Gets or sets room name.

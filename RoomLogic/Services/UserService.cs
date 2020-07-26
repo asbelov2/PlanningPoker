@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Data;
 
 namespace RoomApi
@@ -42,7 +43,7 @@ namespace RoomApi
     /// </summary>
     /// <param name="id">User ID.</param>
     /// <returns>User.</returns>
-    public User GetUser(string id)
+    public User GetUser(Guid id)
     {
       return this.users.GetItem(id);
     }
@@ -60,7 +61,7 @@ namespace RoomApi
     /// Delete user from repository by ID.
     /// </summary>
     /// <param name="id">User ID.</param>
-    public void DeleteUser(string id)
+    public void DeleteUser(Guid id)
     {
       this.users.Delete(this.users.GetItem(id));
     }
