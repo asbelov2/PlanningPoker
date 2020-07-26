@@ -9,8 +9,6 @@ namespace PlanningPokerTests
 {
   internal class ServiceTests
   {
-    internal static string InvokedMethod = string.Empty;
-    internal static object[] Args;
     private IHubContext<RoomHub> context;
     private DeckService deckService;
     private RoomService roomService;
@@ -22,6 +20,10 @@ namespace PlanningPokerTests
     private UserRepository users;
     private RoundTimerRepository timers;
     private UsersReadinessRepository readiness;
+
+    internal static string InvokedMethod { get; set; }
+
+    internal static object[] Args { get; set; }
 
     [SetUp]
     public void Setup()
@@ -53,6 +55,7 @@ namespace PlanningPokerTests
         results);
     }
 
+
     [TearDown]
     public void TearDown()
     {
@@ -67,36 +70,36 @@ namespace PlanningPokerTests
     [Test]
     public void NewDeckCreated()
     {
-      this.deckService.NewDeck("123", "TestDeck");
-      Assert.AreEqual("TestDeck", this.deckService.GetDeck("123").Name);
+      var deckId = this.deckService.NewDeck("TestDeck");
+      Assert.AreEqual("TestDeck", this.deckService.GetDeck(deckId).Name);
     }
 
     [Test]
     public void DeleteDeck()
     {
-      this.deckService.NewDeck("123", "TestDeck");
-      this.deckService.DeleteDeck(this.deckService.GetDeck("123"));
-      Assert.IsNull(this.deckService.GetDeck("123"));
-      this.deckService.NewDeck("456", "TestDeck");
-      this.deckService.DeleteDeck("456");
-      Assert.IsNull(this.deckService.GetDeck("456"));
+      var deckId = this.deckService.NewDeck("TestDeck");
+      this.deckService.DeleteDeck(this.deckService.GetDeck(deckId));
+      Assert.IsNull(this.deckService.GetDeck(deckId));
+      deckId = this.deckService.NewDeck("TestDeck");
+      this.deckService.DeleteDeck(deckId);
+      Assert.IsNull(this.deckService.GetDeck(deckId));
     }
 
     [Test]
     public void AddCardAndGetDeck()
     {
-      this.deckService.NewDeck("123", "TestDeck");
-      this.deckService.AddCard(this.deckService.GetDeck("123"), new Card(CardType.Valuable, "321", 321));
-      Assert.IsTrue(this.deckService.GetDeck("123").Cards.Count > 0);
+      var deckId = this.deckService.NewDeck("TestDeck");
+      this.deckService.AddCard(this.deckService.GetDeck(deckId), new Card(CardType.Valuable, "321", 321));
+      Assert.IsTrue(this.deckService.GetDeck(deckId).Cards.Count > 0);
     }
 
     [Test]
     public void RemoveCard()
     {
-      this.deckService.NewDeck("123", "TestDeck");
-      this.deckService.AddCard(this.deckService.GetDeck("123"), new Card(CardType.Valuable, "321", 321));
-      this.deckService.RemoveCard(this.deckService.GetDeck("123"), this.deckService.GetDeck("123").Cards.FirstOrDefault(x => x.Value == 321));
-      Assert.IsFalse(this.deckService.GetDeck("123").Cards.Count > 0);
+      var deckId = this.deckService.NewDeck("TestDeck");
+      this.deckService.AddCard(this.deckService.GetDeck(deckId), new Card(CardType.Valuable, "321", 321));
+      this.deckService.RemoveCard(this.deckService.GetDeck(deckId), this.deckService.GetDeck(deckId).Cards.FirstOrDefault(x => x.Value == 321));
+      Assert.IsFalse(this.deckService.GetDeck(deckId).Cards.Count > 0);
     }
 
     /// <summary>
@@ -105,27 +108,27 @@ namespace PlanningPokerTests
     [Test]
     public void GetDecks()
     {
-      this.deckService.NewDeck("123", "123");
-      this.deckService.NewDeck("4", "4");
+      this.deckService.NewDeck("123");
+      this.deckService.NewDeck("4");
       Assert.AreEqual(2, this.deckService.GetDecks().Count());
     }
 
     [Test]
     public void NewUserAndGetUser()
     {
-      this.userService.AddNewUser(new User("TestUser", "TestID"));
-      Assert.AreEqual("TestUser", this.userService.GetUser("TestID").Name);
+      var userId = this.userService.AddNewUser(new User("TestUser", "TestID"));
+      Assert.AreEqual("TestUser", this.userService.GetUser(userId).Name);
     }
 
     [Test]
     public void DeleteUser()
     {
-      this.userService.AddNewUser(new User("TestUser", "TestID"));
-      this.userService.DeleteUser(this.userService.GetUser("TestID"));
-      Assert.IsNull(this.userService.GetUser("TestID"));
-      this.userService.AddNewUser(new User("TestUser2", "TestID2"));
-      this.userService.DeleteUser("TestID2");
-      Assert.IsNull(this.userService.GetUser("TestID2"));
+      var userId = this.userService.AddNewUser(new User("TestUser", "TestID"));
+      this.userService.DeleteUser(this.userService.GetUser(userId));
+      Assert.IsNull(this.userService.GetUser(userId));
+      userId = this.userService.AddNewUser(new User("TestUser2", "TestID2"));
+      this.userService.DeleteUser(userId);
+      Assert.IsNull(this.userService.GetUser(userId));
     }
 
     public void GetUsers()
@@ -143,20 +146,20 @@ namespace PlanningPokerTests
       User user1 = new User("User1", "TestIDUser1");
       User user2 = new User("User2", "TestIDUser2");
       User user3 = new User("User3", "TestIDUser3");
-      this.roomService.HostRoom("TestIDRoom", host, "TestRoomName", "TestPassword", "TestInterp");
-      this.roomService.EnterUser("TestIDRoom", user1, "TestPassword");
+      var roomId = this.roomService.HostRoom(host, "TestRoomName", "TestPassword", "TestInterp");
+      this.roomService.EnterUser(roomId , user1, "TestPassword");
       Assert.AreEqual("onConnected", InvokedMethod);
       Assert.AreEqual(typeof(Room), Args[0].GetType());
-      this.roomService.EnterUser("TestIDRoom", user2, "TestPassword");
-      this.roomService.EnterUser("TestIDRoom", user3, string.Empty);
-      Assert.AreEqual("Host", this.rooms.GetItem("TestIDRoom").Host.Name);
-      Assert.AreEqual(3, this.rooms.GetItem("TestIDRoom").Users.Count);
-      Assert.AreEqual("TestRoomName", this.rooms.GetItem("TestIDRoom").Name);
-      Assert.AreEqual("TestPassword", this.rooms.GetItem("TestIDRoom").Password);
-      Assert.AreEqual("TestInterp", this.rooms.GetItem("TestIDRoom").CardInterpretation);
-      this.roomService.LeaveUser("TestIDRoom", user2);
+      this.roomService.EnterUser(roomId, user2, "TestPassword");
+      this.roomService.EnterUser(roomId, user3, string.Empty);
+      Assert.AreEqual("Host", this.rooms.GetItem(roomId).Host.Name);
+      Assert.AreEqual(3, this.rooms.GetItem(roomId).Users.Count);
+      Assert.AreEqual("TestRoomName", this.rooms.GetItem(roomId).Name);
+      Assert.AreEqual("TestPassword", this.rooms.GetItem(roomId).Password);
+      Assert.AreEqual("TestInterp", this.rooms.GetItem(roomId).CardInterpretation);
+      this.roomService.LeaveUser(roomId, user2);
       Assert.AreEqual("onDisconnected", InvokedMethod);
-      Assert.AreEqual(2, this.rooms.GetItem("TestIDRoom").Users.Count);
+      Assert.AreEqual(2, this.rooms.GetItem(roomId).Users.Count);
     }
 
     [Test]
@@ -168,16 +171,16 @@ namespace PlanningPokerTests
       this.userService.AddNewUser(host);
       this.userService.AddNewUser(user1);
       this.userService.AddNewUser(user2);
-      this.roomService.HostRoom("TestIDRoom", host, "TestRoomName", "TestPassword", "TestInterp");
-      this.roomService.EnterUser("TestIDRoom", user1, "TestPassword");
-      this.roomService.EnterUser("TestIDRoom", user2, "TestPassword");
-      this.roomService.DeclareReady("TestIDRoom", host).Wait();
+      var roomId = this.roomService.HostRoom(host, "TestRoomName", "TestPassword", "TestInterp");
+      this.roomService.EnterUser(roomId, user1, "TestPassword");
+      this.roomService.EnterUser(roomId, user2, "TestPassword");
+      this.roomService.DeclareReady(roomId, host).Wait();
       Assert.AreEqual("onUserReady", InvokedMethod);
-      this.roomService.DeclareReady("TestIDRoom", user1).Wait();
-      this.roomService.DeclareNotReady("TestIDRoom", host).Wait();
+      this.roomService.DeclareReady(roomId, user1).Wait();
+      this.roomService.DeclareNotReady(roomId, host).Wait();
       Assert.AreEqual("onUserNotReady", InvokedMethod);
-      this.roomService.DeclareReady("TestIDRoom", user2).Wait();
-      this.roomService.DeclareReady("TestIDRoom", host).Wait();
+      this.roomService.DeclareReady(roomId, user2).Wait();
+      this.roomService.DeclareReady(roomId, host).Wait();
       Assert.AreEqual("onRoundStarted", InvokedMethod);
     }
 
@@ -188,16 +191,16 @@ namespace PlanningPokerTests
       User user1 = new User("User1", "TestIDUser1");
       this.userService.AddNewUser(host);
       this.userService.AddNewUser(user1);
-      this.roomService.HostRoom("TestIDRoom", host, "TestRoomName", "TestPassword", "TestInterp");
-      this.roomService.EnterUser("TestIDRoom", user1, "TestPassword");
-      this.roomService.ChangeCardInterpretation("TestIDRoom", host.ConnectionId, "NewCardInterp");
-      Assert.AreEqual("NewCardInterp", this.rooms.GetItem("TestIDRoom").CardInterpretation);
-      this.roomService.ChangePassword("TestIDRoom", host.ConnectionId, "NewPass");
-      Assert.AreEqual("NewPass", this.rooms.GetItem("TestIDRoom").Password);
-      this.roomService.ChangeRoomName("TestIDRoom", host.ConnectionId, "NewName");
-      Assert.AreEqual("NewName", this.rooms.GetItem("TestIDRoom").Name);
-      this.roomService.ChangeHost("TestIDRoom", host.ConnectionId, user1.ConnectionId);
-      Assert.AreEqual("TestIDUser1", this.rooms.GetItem("TestIDRoom").Host.ConnectionId);
+      var roomId = this.roomService.HostRoom(host, "TestRoomName", "TestPassword", "TestInterp");
+      this.roomService.EnterUser(roomId, user1, "TestPassword");
+      this.roomService.ChangeCardInterpretation(roomId, host.Id, "NewCardInterp");
+      Assert.AreEqual("NewCardInterp", this.rooms.GetItem(roomId).CardInterpretation);
+      this.roomService.ChangePassword(roomId, host.Id, "NewPass");
+      Assert.AreEqual("NewPass", this.rooms.GetItem(roomId).Password);
+      this.roomService.ChangeRoomName(roomId, host.Id, "NewName");
+      Assert.AreEqual("NewName", this.rooms.GetItem(roomId).Name);
+      this.roomService.ChangeHost(roomId, host.Id, user1.Id);
+      Assert.AreEqual("TestIDUser1", this.rooms.GetItem(roomId).Host.ConnectionId);
     }
 
     [Test]
@@ -207,17 +210,17 @@ namespace PlanningPokerTests
       User user1 = new User("User1", "TestIDUser1");
       this.userService.AddNewUser(host);
       this.userService.AddNewUser(user1);
-      this.roomService.HostRoom("TestIDRoom", host, "TestRoomName", "TestPassword", "TestInterp");
-      this.roomService.EnterUser("TestIDRoom", user1, "TestPassword");
-      this.deckService.NewDeck("1", "TestDeck");
-      this.roomService.StartNewRound("TestIDRoom", host.ConnectionId, "TestTitle", this.deckService.GetDeck("1"), TimeSpan.FromMinutes(13));
+      var roomId = this.roomService.HostRoom(host, "TestRoomName", "TestPassword", "TestInterp");
+      this.roomService.EnterUser(roomId, user1, "TestPassword");
+      var deckId = this.deckService.NewDeck("TestDeck");
+      var roundId = this.roomService.StartNewRound(roomId, host.Id, this.deckService.GetDeck(deckId), "TestTitle", TimeSpan.FromMinutes(13));
       Assert.AreEqual("onRoundStarted", InvokedMethod);
-      Round round = this.rounds.GetList().First();
+      Round round = this.rounds.GetItem(roundId);
       Assert.NotNull(round.Id);
       Assert.NotNull(round.Duration);
       Assert.NotNull(round.StartDate);
-      Assert.AreEqual("TestIDRoom", round.RoomId);
-      Assert.AreEqual(0, round.Result);
+      Assert.AreEqual(roomId, round.RoomId);
+      Assert.AreEqual("No one chosed", round.Result);
       Assert.AreEqual(new TimeSpan(0, 13, 0), round.RoundTime);
       Assert.AreEqual("TestTitle", round.Title);
       Assert.AreEqual("TestDeck", round.Deck.Name);
@@ -231,20 +234,20 @@ namespace PlanningPokerTests
       User user1 = new User("User1", "TestIDUser1");
       this.userService.AddNewUser(host);
       this.userService.AddNewUser(user1);
-      this.roomService.HostRoom("TestIDRoom", host, "TestRoomName", "TestPassword", "TestInterp");
-      this.roomService.EnterUser("TestIDRoom", user1, "TestPassword");
-      this.deckService.NewDeck("1", "TestDeck");
-      this.deckService.AddCard(this.deckService.GetDeck("1"), new Card(CardType.Valuable, "5", 5));
-      this.deckService.AddCard(this.deckService.GetDeck("1"), new Card(CardType.Valuable, "15", 15));
-      this.roomService.StartNewRound("TestIDRoom", host.ConnectionId, "TestTitle", this.deckService.GetDeck("1"), TimeSpan.FromMinutes(13));
-      Round round = this.rounds.GetList().First();
-      this.roomService.Choose(round.Id, host, new Card(CardType.Valuable, string.Empty, 123)).Wait();
+      var roomId = this.roomService.HostRoom(host, "TestRoomName", "TestPassword", "TestInterp");
+      this.roomService.EnterUser(roomId, user1, "TestPassword");
+      var deckId = this.deckService.NewDeck("TestDeck");
+      this.deckService.AddCard(this.deckService.GetDeck(deckId), new Card(CardType.Valuable, "5", 5));
+      this.deckService.AddCard(this.deckService.GetDeck(deckId), new Card(CardType.Valuable, "15", 15));
+      var roundId = this.roomService.StartNewRound(roomId, host.Id, this.deckService.GetDeck(deckId), "TestTitle", TimeSpan.FromMinutes(13));
+      Round round = this.rounds.GetItem(roundId);
+      this.roomService.Choose(roundId, host, new Card(CardType.Valuable, string.Empty, 123)).Wait();
       Assert.AreEqual("onWrongCard", InvokedMethod);
-      this.roomService.Choose(round.Id, host, this.deckService.GetDeck("1").Cards.ElementAt(0)).Wait();
+      this.roomService.Choose(roundId, host, this.deckService.GetDeck(deckId).Cards.ElementAt(0)).Wait();
       Assert.AreEqual("onUserChosed", InvokedMethod);
-      this.roomService.Choose(round.Id, user1, this.deckService.GetDeck("1").Cards.ElementAt(1)).Wait();
+      this.roomService.Choose(roundId, user1, this.deckService.GetDeck(deckId).Cards.ElementAt(1)).Wait();
       Assert.AreEqual("onAllChosed", InvokedMethod);
-      Assert.AreEqual(10.0, round.Result);
+      Assert.AreEqual("10", round.Result);
     }
 
     [Test]
@@ -254,16 +257,16 @@ namespace PlanningPokerTests
       User user1 = new User("User1", "TestIDUser1");
       this.userService.AddNewUser(host);
       this.userService.AddNewUser(user1);
-      this.roomService.HostRoom("TestIDRoom", host, "TestRoomName", "TestPassword", "TestInterp");
-      this.roomService.EnterUser("TestIDRoom", user1, "TestPassword");
-      this.deckService.NewDeck("1", "TestDeck");
-      this.deckService.AddCard(this.deckService.GetDeck("1"), new Card(CardType.Valuable, "5", 5));
-      this.deckService.AddCard(this.deckService.GetDeck("1"), new Card(CardType.Exceptional, "ff", 0));
-      this.roomService.StartNewRound("TestIDRoom", host.ConnectionId, "TestTitle", this.deckService.GetDeck("1"), TimeSpan.FromMinutes(13));
-      Round round = this.rounds.GetList().First();
-      this.roomService.Choose(round.Id, host, this.deckService.GetDeck("1").Cards.ElementAt(0)).Wait();
-      this.roomService.Choose(round.Id, user1, this.deckService.GetDeck("1").Cards.ElementAt(1)).Wait();
-      Assert.AreEqual(-1.0, round.Result);
+      var roomId = this.roomService.HostRoom(host, "TestRoomName", "TestPassword", "TestInterp");
+      this.roomService.EnterUser(roomId, user1, "TestPassword");
+      var deckId = this.deckService.NewDeck("TestDeck");
+      this.deckService.AddCard(this.deckService.GetDeck(deckId), new Card(CardType.Valuable, "5", 5));
+      this.deckService.AddCard(this.deckService.GetDeck(deckId), new Card(CardType.Exceptional, "ff", 0));
+      var roundId = this.roomService.StartNewRound(roomId, host.Id, this.deckService.GetDeck(deckId), "TestTitle", TimeSpan.FromMinutes(13));
+      Round round = this.rounds.GetItem(roundId);
+      this.roomService.Choose(round.Id, host, this.deckService.GetDeck(deckId).Cards.ElementAt(0)).Wait();
+      this.roomService.Choose(round.Id, user1, this.deckService.GetDeck(deckId).Cards.ElementAt(1)).Wait();
+      Assert.AreEqual("ff", round.Result.Trim());
     }
 
     [Test]
@@ -273,11 +276,10 @@ namespace PlanningPokerTests
       User user1 = new User("User1", "TestIDUser1");
       this.userService.AddNewUser(host);
       this.userService.AddNewUser(user1);
-      this.roomService.HostRoom("TestIDRoom", host);
-      this.roomService.EnterUser("TestIDRoom", user1, string.Empty);
-      var roundId = this.roomService.StartNewRound("TestIDRoom", host.ConnectionId);
-      Round round = this.rounds.GetItem(roundId);
-      this.roomService.EndRound(round.Id, host.ConnectionId).Wait();
+      var roomId = this.roomService.HostRoom(host);
+      this.roomService.EnterUser(roomId, user1, string.Empty);
+      var roundId = this.roomService.StartNewRound(roomId, host.Id, new DefaultDeck());
+      this.roomService.EndRound(roundId, host.Id).Wait();
       Assert.AreEqual("onEnd", InvokedMethod);
       Assert.AreEqual(typeof(RoundDTO), Args[0].GetType());
     }
@@ -291,15 +293,15 @@ namespace PlanningPokerTests
       User user1 = new User("User1", "TestIDUser1");
       this.userService.AddNewUser(host);
       this.userService.AddNewUser(user1);
-      this.roomService.HostRoom("TestIDRoom", host, "TestRoomName", "TestPassword", "TestInterp");
-      this.roomService.EnterUser("TestIDRoom", user1, "TestPassword");
-      this.deckService.NewDeck("1", "TestDeck");
-      this.deckService.AddCard(this.deckService.GetDeck("1"), new Card(CardType.Valuable, "5", 5));
-      this.deckService.AddCard(this.deckService.GetDeck("1"), new Card(CardType.Valuable, "15", 15));
-      this.roomService.StartNewRound("TestIDRoom", host.ConnectionId, "TestTitle", this.deckService.GetDeck("1"), TimeSpan.FromMinutes(13));
-      Round round = this.rounds.GetList().First();
-      this.roomService.SetRoundTitle(host.ConnectionId, round.Id, "TestTitle");
-      this.roomService.SetRoundComment(host.ConnectionId, round.Id, "TestComment");
+      var roomId = this.roomService.HostRoom(host, "TestRoomName", "TestPassword", "TestInterp");
+      this.roomService.EnterUser(roomId, user1, "TestPassword");
+      var deckId = this.deckService.NewDeck("TestDeck");
+      this.deckService.AddCard(this.deckService.GetDeck(deckId), new Card(CardType.Valuable, "5", 5));
+      this.deckService.AddCard(this.deckService.GetDeck(deckId), new Card(CardType.Valuable, "15", 15));
+      var roundId = this.roomService.StartNewRound(roomId, host.Id, this.deckService.GetDeck(deckId), "TestTitle", TimeSpan.FromMinutes(13));
+      Round round = this.rounds.GetItem(roundId);
+      this.roomService.SetRoundTitle(host.Id, roundId, "TestTitle");
+      this.roomService.SetRoundComment(host.Id, roundId, "TestComment");
       Assert.AreEqual("TestTitle", round.Title);
       Assert.AreEqual("TestComment", round.Comment);
     }

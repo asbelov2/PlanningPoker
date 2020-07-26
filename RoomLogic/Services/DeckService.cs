@@ -24,9 +24,9 @@ namespace RoomApi
     /// Create new deck in repository.
     /// </summary>
     /// <param name="name">Deck name.</param>
-    public void NewDeck(string name = "New deck")
+    public Guid NewDeck(string name = "New deck")
     {
-      decks.Add(new Deck(name));
+      return decks.Add(new Deck(name));
     }
 
     /// <summary>

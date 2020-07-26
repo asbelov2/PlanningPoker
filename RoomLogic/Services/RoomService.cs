@@ -120,11 +120,12 @@ namespace RoomApi
     /// <param name="name">Room name.</param>
     /// <param name="password">Room password.</param>
     /// <param name="cardInterpretation">Room card's interpretation.</param>
-    public void HostRoom(User host, string name = "Default name", string password = "", string cardInterpretation = "Hours")
+    public Guid HostRoom(User host, string name = "Default name", string password = "", string cardInterpretation = "Hours")
     {
       var id = this.rooms.Add(new Room(host, name, password, cardInterpretation));
       this.isUsersReady.Add(new UsersReadiness(id));
       this.context.Groups.AddToGroupAsync(host?.ConnectionId, this.GetGroupKey(id)).Wait();
+      return id;
     }
 
     /// <summary>

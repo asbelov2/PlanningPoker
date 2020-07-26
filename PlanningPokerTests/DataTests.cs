@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Data;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace PlanningPokerTests
 {
@@ -54,16 +55,15 @@ namespace PlanningPokerTests
     [Test]
     public void CreateDeck()
     {
-      Deck testDeck = new Deck("1", "testDeck");
+      Deck testDeck = new Deck("testDeck");
       Assert.AreEqual(0, testDeck.Cards.Count);
-      Assert.AreEqual("1", testDeck.Id);
       Assert.AreEqual("testDeck", testDeck.Name);
     }
 
     [Test]
     public void AddCardInDeck()
     {
-      Deck testDeck = new Deck("1", "testDeck");
+      Deck testDeck = new Deck("testDeck");
       testDeck.AddCard(new Card(CardType.Valuable, value: 1));
       testDeck.AddCard(new Card(CardType.Exceptional, name: "test"));
       Assert.AreEqual(testDeck.Cards.Count, 2);
@@ -72,7 +72,7 @@ namespace PlanningPokerTests
     [Test]
     public void RemoveCardFromDeck()
     {
-      Deck testDeck = new Deck("1", "testDeck");
+      Deck testDeck = new Deck("testDeck");
       testDeck.AddCard(new Card(CardType.Valuable, value: 1));
       testDeck.AddCard(new Card(CardType.Exceptional, name: "test"));
       testDeck.RemoveCard(testDeck.Cards.ElementAt(0));
@@ -80,56 +80,21 @@ namespace PlanningPokerTests
     }
 
     [Test]
-    public void CorrectDeckId()
-    {
-      Deck testDeck = new Deck("3322a", "testDeck");
-      Assert.AreEqual(testDeck.Id, "3322a");
-    }
-
-    [Test]
-    public void CorrectRoomId()
+    public void AllEmptyParameters()
     {
       User host = new User("Host", "1");
-      Room testRoom = new Room("1", host);
-      Assert.AreEqual(testRoom.Id, "1");
-    }
-
-    [Test]
-    public void AllEmptyParametersExcludeId()
-    {
-      User host = new User("Host", "1");
-      Room testRoom = new Room("1", host, string.Empty, string.Empty, string.Empty);
+      Room testRoom = new Room(host, string.Empty, string.Empty, string.Empty);
       Assert.AreEqual(testRoom.Name, string.Empty);
       Assert.AreEqual(testRoom.Password, string.Empty);
       Assert.AreEqual(testRoom.CardInterpretation, string.Empty);
     }
 
-    [Test]
-    public void EmptyId()
-    {
-      Assert.Throws<Exception>(() =>
-      {
-        User host = new User("Host", "1");
-        Room testRoom = new Room(string.Empty, host);
-      });
-    }
-
     public void HostNotNull()
     {
       User host = new User("Host", "1");
-      Room testRoom = new Room("1", host, string.Empty, string.Empty, string.Empty);
+      Room testRoom = new Room(host, string.Empty, string.Empty, string.Empty);
 
       Assert.NotNull(testRoom.Host);
-    }
-
-    [Test]
-    public void CorrectRoundId()
-    {
-      var users = new List<User>();
-      users.Add(new User("1", "1"));
-      users.Add(new User("2", "2"));
-      Round testRound = new Round("1", "1", users, new DefaultDeck(), TimeSpan.FromMinutes(5), "test");
-      Assert.AreEqual(testRound.Id, "1");
     }
 
     [Test]
@@ -138,10 +103,10 @@ namespace PlanningPokerTests
       var users = new List<User>();
       users.Add(new User("1", "1"));
       users.Add(new User("2", "2"));
-      Round testRound = new Round("1", "1", users, new DefaultDeck(), TimeSpan.FromMinutes(5), "test");
+      Round testRound = new Round(Guid.NewGuid(), users, new DefaultDeck(), TimeSpan.FromMinutes(5), "test");
       testRound.Choices.Add(new Choice(users[0], testRound.Deck.Cards.FirstOrDefault(x => x.Name == "2")));
       testRound.Choices.Add(new Choice(users[1], testRound.Deck.Cards.FirstOrDefault(x => x.Name == "5")));
-      Assert.AreEqual(testRound.Result, 3.5);
+      Assert.AreEqual("3,5", testRound.Result);
     }
 
     [Test]
@@ -150,7 +115,7 @@ namespace PlanningPokerTests
       var users = new List<User>();
       users.Add(new User("1", "1"));
       users.Add(new User("2", "2"));
-      Round testRound = new Round("1", "1", users, new DefaultDeck(), TimeSpan.FromMinutes(5), "test");
+      Round testRound = new Round(Guid.NewGuid(), users, new DefaultDeck(), TimeSpan.FromMinutes(5), "test");
       Assert.AreEqual(testRound.Users.Count(), 2);
     }
 
@@ -174,23 +139,24 @@ namespace PlanningPokerTests
       var users = new List<User>();
       users.Add(new User("1", "1"));
       users.Add(new User("2", "2"));
-      Round testRound = new Round("TestRoundID", "TestRoomID", users, new DefaultDeck(), TimeSpan.FromMinutes(5), "Test");
+      Round testRound = new Round(Guid.NewGuid(), users, new DefaultDeck(), TimeSpan.FromMinutes(5), "Test");
 
       this.rounds.Add(testRound);
-      RoundTimer timer = new RoundTimer("TestRoundID", TimeSpan.FromMinutes(5));
+      RoundTimer timer = new RoundTimer(testRound.Id, TimeSpan.FromMinutes(5));
       timer.SetTimer();
       timer.Stop();
 
       Assert.AreEqual(1, this.results.GetList().Count());
-      Assert.AreEqual("TestRoundID", this.results.GetList().First().RoundId);
+      Assert.AreEqual(testRound.Id, this.results.GetList().First().RoundId);
 
-      testRound = new Round("TestRound2ID", "TestRoomID", users, new DefaultDeck(), TimeSpan.FromMinutes(5), "Test2");
+      Guid testId = Guid.NewGuid();
+      testRound = new Round(testId, users, new DefaultDeck(), TimeSpan.FromMinutes(5), "Test2");
       this.rounds.Add(testRound);
-      timer = new RoundTimer("TestRound2ID", TimeSpan.FromMinutes(5));
+      timer = new RoundTimer(testRound.Id, TimeSpan.FromMinutes(5));
       timer.SetTimer();
       timer.Stop();
       Assert.AreEqual(2, this.results.GetList().Count());
-      Assert.AreEqual("TestRound2ID", this.results.GetList().Last().RoundId);
+      Assert.AreEqual(testRound.Id, this.results.GetList().Last().RoundId);
     }
   }
 }

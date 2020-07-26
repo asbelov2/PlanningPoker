@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Data;
 using Microsoft.AspNetCore.SignalR;
 using NUnit.Framework;
@@ -76,21 +77,11 @@ namespace PlanningPokerTests
     }
 
     [Test]
-    public void AddSameId()
-    {
-      Deck deck = new Deck("111");
-      this.decks.Add(deck);
-      deck = new Deck("111");
-      this.decks.Add(deck);
-      Assert.AreEqual(1, this.decks.GetList().Count());
-    }
-
-    [Test]
     public void WrongId()
     {
       Deck deck = new Deck("111");
       this.decks.Add(deck);
-      Assert.IsNull(this.decks.GetItem("WrongID"));
+      Assert.IsNull(this.decks.GetItem(Guid.NewGuid()));
     }
 
     [Test]
@@ -100,23 +91,25 @@ namespace PlanningPokerTests
       User user1 = new User("User1", "TestIDUser1");
       this.userService.AddNewUser(host);
       this.userService.AddNewUser(user1);
-      this.roomService.HostRoom("TestIDRoom", host);
-      this.roomService.EnterUser("TestIDRoom", user1, string.Empty);
+      var roomId = this.roomService.HostRoom(host);
+      this.roomService.EnterUser(roomId, user1, string.Empty);
 
-      this.roomService.StartNewRound("TestIDRoom", host.ConnectionId);
-      this.roomService.EndRound(this.rounds.GetList().First().Id, host.ConnectionId);
+      var roundId = this.roomService.StartNewRound(roomId, host.Id, new DefaultDeck());
+      this.roomService.EndRound(roundId, host.Id).Wait();
 
-      this.roomService.StartNewRound("TestIDRoom", host.ConnectionId);
-      this.roomService.EndRound(this.rounds.GetList().ElementAt(1).Id, host.ConnectionId);
+      roundId = this.roomService.StartNewRound(roomId, host.Id, new DefaultDeck());
+      this.roomService.EndRound(roundId, host.Id).Wait();
 
-      this.roomService.HostRoom("TestID2Room", user1);
-      this.roomService.EnterUser("TestID2Room", host, string.Empty);
+      Assert.AreEqual(2, this.results.GetRoomRoundResults(roomId).Count());
 
-      this.roomService.StartNewRound("TestID2Room", user1.ConnectionId);
-      this.roomService.EndRound(this.rounds.GetList().FirstOrDefault(x => x.RoomId == "TestID2Room").Id, user1.ConnectionId);
+      roomId = this.roomService.HostRoom(user1);
+      this.roomService.EnterUser(roomId, host, string.Empty);
+
+      roundId = this.roomService.StartNewRound(roomId, user1.Id, new DefaultDeck());
+      this.roomService.EndRound(roundId, user1.Id).Wait();
 
       Assert.AreEqual(3, this.results.GetList().Count());
-      Assert.AreEqual(2, this.results.GetRoomRoundResults("TestIDRoom").Count());
+
     }
   }
 }

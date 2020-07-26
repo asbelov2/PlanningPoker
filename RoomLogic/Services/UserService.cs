@@ -24,9 +24,9 @@ namespace RoomApi
     /// Add new user in repository.
     /// </summary>
     /// <param name="user">User.</param>
-    public void AddNewUser(User user)
+    public Guid AddNewUser(User user)
     {
-      this.users.Add(user);
+      return this.users.Add(user);
     }
 
     /// <summary>
