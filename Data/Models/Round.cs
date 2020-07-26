@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Data
 {
@@ -67,27 +68,35 @@ namespace Data
     /// <summary>
     /// Gets round result.
     /// </summary>
-    public double Result
+    public string Result
     {
       get
       {
         if (this.Choices.Count <= 0)
         {
-          return 0;
+          return "No one chosed";
         }
 
+        StringBuilder exresult = new StringBuilder(string.Empty);
         double result = 0;
         foreach (var choice in this.Choices)
         {
           if (choice.Card.CardType == CardType.Exceptional)
           {
-            return -1;
+            exresult.Append($"{choice.Card.Name} ");
           }
 
           result += choice.Card.Value;
         }
 
-        return result / this.Choices.Count();
+        if (exresult.ToString() != string.Empty)
+        {
+          return exresult.ToString();
+        }
+        else
+        {
+          return (result / this.Choices.Count()).ToString();
+        }
       }
     }
 

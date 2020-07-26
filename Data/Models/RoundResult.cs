@@ -48,7 +48,7 @@ namespace Data
     /// <summary>
     /// Gets resuilt.
     /// </summary>
-    public double Result { get; }
+    public string Result { get; }
 
     /// <summary>
     /// Gets date of start.
