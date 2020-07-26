@@ -32,8 +32,16 @@ namespace PlanningPokerTests
       this.readiness = new UsersReadinessRepository();
 
       this.context = HubContextImplementation.GetContext;
-      this.userService = new UserService();
-      this.roomService = new RoomService(this.context);
+      this.userService = new UserService(this.users);
+      this.roomService = new RoomService(
+        this.context,
+        new RoundService(this.context, this.rooms, this.rounds, this.timers, this.results),
+        this.userService,
+        this.rooms,
+        this.rounds,
+        this.timers,
+        this.readiness,
+        this.results);
     }
 
     [TearDown]
@@ -44,18 +52,19 @@ namespace PlanningPokerTests
       this.rounds.ClearRepository();
       this.users.ClearRepository();
       this.timers.ClearRepository();
+      this.results.ClearRepository();
       this.readiness.ClearRepository();
     }
 
     [Test]
     public void AddAndDeleteAndGetList()
     {
-      Assert.AreEqual(1, this.decks.GetList().Count());
+      Assert.AreEqual(0, this.decks.GetList().Count());
       Deck deck = new Deck("111");
       this.decks.Add(deck);
-      Assert.AreEqual(2, this.decks.GetList().Count());
-      this.decks.Delete(deck);
       Assert.AreEqual(1, this.decks.GetList().Count());
+      this.decks.Delete(deck);
+      Assert.AreEqual(0, this.decks.GetList().Count());
     }
 
     [Test]
@@ -73,7 +82,7 @@ namespace PlanningPokerTests
       this.decks.Add(deck);
       deck = new Deck("111");
       this.decks.Add(deck);
-      Assert.AreEqual(2, this.decks.GetList().Count());
+      Assert.AreEqual(1, this.decks.GetList().Count());
     }
 
     [Test]
@@ -82,12 +91,6 @@ namespace PlanningPokerTests
       Deck deck = new Deck("111");
       this.decks.Add(deck);
       Assert.IsNull(this.decks.GetItem("WrongID"));
-    }
-
-    [Test]
-    public void DefaultDeck()
-    {
-      Assert.AreEqual(1, this.decks.GetList().Count());
     }
 
     [Test]

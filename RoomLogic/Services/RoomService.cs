@@ -18,6 +18,7 @@ namespace RoomApi
     private RoundRepository rounds;
     private RoundTimerRepository timers;
     private UsersReadinessRepository isUsersReady;
+    private RoundResultRepository roundResults;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RoomService"/> class.
@@ -29,6 +30,7 @@ namespace RoomApi
     /// <param name="roundRepository">Round repository.</param>
     /// <param name="roundTimerRepository">Round timer repository.</param>
     /// <param name="usersReadinessRepository">User readiness repository.</param>
+    /// <param name="roundResultRepository">Round result repository.</param>
     public RoomService(
       IHubContext<RoomHub> hubContext,
       RoundService roundService,
@@ -36,7 +38,8 @@ namespace RoomApi
       RoomRepository roomRepository,
       RoundRepository roundRepository,
       RoundTimerRepository roundTimerRepository,
-      UsersReadinessRepository usersReadinessRepository)
+      UsersReadinessRepository usersReadinessRepository,
+      RoundResultRepository roundResultRepository)
     {
       this.context = hubContext;
       this.roundService = roundService;
@@ -45,6 +48,7 @@ namespace RoomApi
       this.rounds = roundRepository;
       this.timers = roundTimerRepository;
       this.isUsersReady = usersReadinessRepository;
+      this.roundResults = roundResultRepository;
     }
 
     /// <summary>
@@ -298,7 +302,15 @@ namespace RoomApi
     {
       if (this.IsHost(userId, this.rounds.GetItem(roundId).RoomId) && (this.rounds.GetItem(roundId) != null))
       {
-        this.timers.GetItem(roundId).Stop();
+        if (this.timers.GetItem(roundId) != null)
+        {
+          this.timers.GetItem(roundId)?.Stop();
+        }
+        else
+        {
+          this.rounds.GetItem(roundId).Duration = DateTime.Now - this.rounds.GetItem(roundId).StartDate;
+          this.roundResults.Add(new RoundResult(this.rounds.GetItem(roundId)));
+        }
         await this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId))?.SendAsync("onEnd", new RoundDTO(this.rounds.GetItem(roundId)));
       }
     }
@@ -319,7 +331,7 @@ namespace RoomApi
 
     private bool IsHost(string userId, string roomId)
     {
-      return this.userService.GetUser(userId).Id == this.rooms.GetItem(roomId).Host.Id;
+      return userId == this.rooms.GetItem(roomId).Host.Id;
     }
 
     private string GetGroupKey(string roomId)

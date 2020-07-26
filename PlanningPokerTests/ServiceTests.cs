@@ -9,8 +9,8 @@ namespace PlanningPokerTests
 {
   internal class ServiceTests
   {
-    public static string InvokedMethod = string.Empty;
-    public static object[] Args;
+    internal static string InvokedMethod = string.Empty;
+    internal static object[] Args;
     private IHubContext<RoomHub> context;
     private DeckService deckService;
     private RoomService roomService;
@@ -23,22 +23,34 @@ namespace PlanningPokerTests
     private RoundTimerRepository timers;
     private UsersReadinessRepository readiness;
 
-
-
     [SetUp]
     public void Setup()
     {
       this.context = HubContextImplementation.GetContext;
-      this.deckService = new DeckService();
-      this.roomService = new RoomService(this.context);
-      this.roundService = new RoundService(this.context);
-      this.userService = new UserService();
       this.decks = new DeckRepository();
       this.rooms = new RoomRepository();
       this.rounds = new RoundRepository();
       this.users = new UserRepository();
       this.timers = new RoundTimerRepository();
       this.readiness = new UsersReadinessRepository();
+      this.deckService = new DeckService(this.decks);
+      this.userService = new UserService(this.users);
+      var results = new RoundResultRepository();
+      this.roundService = new RoundService(
+        this.context,
+        this.rooms,
+        this.rounds,
+        this.timers,
+        results);
+      this.roomService = new RoomService(
+        this.context,
+        this.roundService,
+        this.userService,
+        this.rooms,
+        this.rounds,
+        this.timers,
+        this.readiness,
+        results);
     }
 
     [TearDown]
@@ -95,7 +107,7 @@ namespace PlanningPokerTests
     {
       this.deckService.NewDeck("123", "123");
       this.deckService.NewDeck("4", "4");
-      Assert.AreEqual(3, this.deckService.GetDecks().Count());
+      Assert.AreEqual(2, this.deckService.GetDecks().Count());
     }
 
     [Test]

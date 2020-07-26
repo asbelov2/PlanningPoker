@@ -16,6 +16,7 @@
       {
         this.AddCard(new Card(CardType.Valuable, number.ToString(), number));
       }
+
       this.AddCard(new Card(CardType.Exceptional, "?", 0));
       this.AddCard(new Card(CardType.Exceptional, "∞", 0));
       this.AddCard(new Card(CardType.Exceptional, "☕", 0));

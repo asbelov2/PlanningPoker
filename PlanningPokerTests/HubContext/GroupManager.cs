@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 
 namespace PlanningPokerTests
-{  
+{
   public class GroupManager : IGroupManager
   {
     private Dictionary<string, ISet<string>> groupsConnections;
@@ -15,12 +15,12 @@ namespace PlanningPokerTests
     }
 
     /// <summary>
-    /// Gets group manager
+    /// Gets group manager.
     /// </summary>
     public static GroupManager GetGroupManager { get; } = new GroupManager();
 
     /// <summary>
-    /// Adding user to group
+    /// Adding user to group.
     /// </summary>
     /// <param name="connectionId">User id</param>
     /// <param name="groupName">Group name</param>
