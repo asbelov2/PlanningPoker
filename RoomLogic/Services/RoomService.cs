@@ -139,21 +139,24 @@ namespace RoomApi
     /// <param name="user">User.</param>
     public void DeclareReady(Guid roomId, User user)
     {
-      if (this.isUsersReady.GetItemByRoomId(roomId)?.IsUsersReady?.ContainsKey(user) ?? false)
+      if ((this.isUsersReady.GetItemByRoomId(roomId) != null) && (user != null))
       {
-        this.isUsersReady.GetItemByRoomId(roomId).IsUsersReady[user] = true;
-      }
-      else
-      {
-        this.isUsersReady.GetItemByRoomId(roomId).IsUsersReady.Add(user, true);
-      }
+        if (this.isUsersReady.GetItemByRoomId(roomId)?.IsUsersReady?.ContainsKey(user) ?? false)
+        {
+          this.isUsersReady.GetItemByRoomId(roomId).IsUsersReady[user] = true;
+        }
+        else
+        {
+          this.isUsersReady.GetItemByRoomId(roomId)?.IsUsersReady?.Add(user, true);
+        }
 
-      this.context.Clients.Group(this.GetGroupKey(roomId)).SendAsync("onUserReady", user.ConnectionId, user.Name).Wait();
+        this.context.Clients.Group(this.GetGroupKey(roomId)).SendAsync("onUserReady", user.ConnectionId, user.Name).Wait();
 
-      if (this.IsUsersReady(roomId) && (this.rooms.GetItem(roomId) != null))
-      {
-        this.StartNewRound(roomId, this.rooms.GetItem(roomId).Host.Id, this.deckService.GetDefaultDeck());
-        this.TurnReadinessToFalse(roomId);
+        if (this.IsUsersReady(roomId) && (this.rooms.GetItem(roomId) != null))
+        {
+          this.StartNewRound(roomId, this.rooms.GetItem(roomId).Host.Id, this.deckService.GetDefaultDeck());
+          this.TurnReadinessToFalse(roomId);
+        }
       }
     }
 
@@ -189,9 +192,12 @@ namespace RoomApi
       }
 
       bool flag = false;
-      foreach (var item in this.isUsersReady.GetItemByRoomId(roomId).IsUsersReady)
+      if (this.isUsersReady.GetItemByRoomId(roomId) != null)
       {
-        flag = item.Value || flag;
+        foreach (var item in this.isUsersReady.GetItemByRoomId(roomId)?.IsUsersReady)
+        {
+          flag = item.Value || flag;
+        }
       }
 
       return flag;
