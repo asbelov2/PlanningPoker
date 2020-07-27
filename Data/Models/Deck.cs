@@ -55,7 +55,7 @@ namespace Data
     /// <param name="newCard">New card.</param>
     public void AddCard(Card newCard)
     {
-      if (!(this.Cards.Where(x => x.Name == newCard.Name).Count() > 0))
+      if (!this.Cards.Any(x => x.Name == newCard.Name))
       {
         this.Cards?.Add(newCard);
       }
