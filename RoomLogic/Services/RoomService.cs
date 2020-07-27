@@ -16,9 +16,8 @@ namespace RoomApi
     private RoundService roundService;
     private RoomRepository rooms;
     private RoundRepository rounds;
-    private RoundTimerRepository timers;
-    private UsersReadinessRepository isUsersReady;
-    private RoundResultRepository roundResults;
+    private RoundTimerService timers;
+    private UsersReadinessService isUsersReady;
     private DeckService deckService;
 
     /// <summary>
@@ -29,8 +28,8 @@ namespace RoomApi
     /// <param name="userService">User service.</param>
     /// <param name="roomRepository">Room repository.</param>
     /// <param name="roundRepository">Round repository.</param>
-    /// <param name="roundTimerRepository">Round timer repository.</param>
-    /// <param name="usersReadinessRepository">User readiness repository.</param>
+    /// <param name="roundTimerService">Round timer service.</param>
+    /// <param name="usersReadinessService">User readiness service.</param>
     /// <param name="roundResultRepository">Round result repository.</param>
     public RoomService(
       IHubContext<RoomHub> hubContext,
@@ -39,9 +38,8 @@ namespace RoomApi
       DeckService deckService,
       RoomRepository roomRepository,
       RoundRepository roundRepository,
-      RoundTimerRepository roundTimerRepository,
-      UsersReadinessRepository usersReadinessRepository,
-      RoundResultRepository roundResultRepository)
+      RoundTimerService roundTimerService,
+      UsersReadinessService usersReadinessService)
     {
       this.context = hubContext;
       this.roundService = roundService;
@@ -49,9 +47,8 @@ namespace RoomApi
       this.deckService = deckService;
       this.rooms = roomRepository;
       this.rounds = roundRepository;
-      this.timers = roundTimerRepository;
-      this.isUsersReady = usersReadinessRepository;
-      this.roundResults = roundResultRepository;
+      this.timers = roundTimerService;
+      this.isUsersReady = usersReadinessService;
     }
 
     /// <summary>
@@ -279,14 +276,13 @@ namespace RoomApi
     {
       if (this.IsHost(userId, this.rounds.GetItem(roundId).RoomId) && (this.rounds.GetItem(roundId) != null))
       {
-        if (this.timers.GetItem(roundId) != null)
+        if (this.timers.GetTimer(roundId) != null)
         {
-          this.timers.GetItem(roundId)?.Stop();
+          this.timers.GetTimer(roundId)?.Stop();
         }
         else
         {
           this.rounds.GetItem(roundId).Duration = DateTime.Now - this.rounds.GetItem(roundId).StartDate;
-          this.roundResults.Add(new RoundResult(this.rounds.GetItem(roundId)));
         }
 
         this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId))?.SendAsync("onEnd", new RoundDTO(this.rounds.GetItem(roundId))).Wait();

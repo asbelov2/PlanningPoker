@@ -4,18 +4,18 @@ using System.Linq;
 using Data;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using RoomApi;
 
 namespace PlanningPokerTests
 {
   public class DataTests
   {
-    private RoundResultRepository results;
     private DeckRepository decks;
     private RoomRepository rooms;
     private RoundRepository rounds;
     private UserRepository users;
-    private RoundTimerRepository timers;
-    private UsersReadinessRepository readiness;
+    private RoundTimerService timers;
+    private UsersReadinessService readiness;
 
     [SetUp]
     public void Setup()
@@ -24,9 +24,8 @@ namespace PlanningPokerTests
       this.rooms = new RoomRepository();
       this.rounds = new RoundRepository();
       this.users = new UserRepository();
-      this.timers = new RoundTimerRepository();
-      this.readiness = new UsersReadinessRepository();
-      this.results = new RoundResultRepository();
+      this.timers = new RoundTimerService();
+      this.readiness = new UsersReadinessService();
     }
 
     [TearDown]
@@ -36,9 +35,6 @@ namespace PlanningPokerTests
       this.rooms.ClearRepository();
       this.rounds.ClearRepository();
       this.users.ClearRepository();
-      this.timers.ClearRepository();
-      this.readiness.ClearRepository();
-      this.results.ClearRepository();
     }
 
     [Test]
@@ -145,8 +141,7 @@ namespace PlanningPokerTests
       RoundTimer timer = new RoundTimer(testRound.Id, TimeSpan.FromMinutes(5));
       timer.SetTimer();
       timer.Stop();
-      Assert.AreEqual(1, this.results.GetList().Count());
-      Assert.AreEqual(testRound.Id, this.results.GetList().First().RoundId);
+      Assert.IsNotNull(this.rounds.GetList().First().Duration);
 
       Guid testId = Guid.NewGuid();
       testRound = new Round(testId, users, this.decks.GetItem(this.DefaultDeck()), TimeSpan.FromMinutes(5), "Test2");
@@ -154,8 +149,7 @@ namespace PlanningPokerTests
       timer = new RoundTimer(testRound.Id, TimeSpan.FromMinutes(5));
       timer.SetTimer();
       timer.Stop();
-      Assert.AreEqual(2, this.results.GetList().Count());
-      Assert.AreEqual(testRound.Id, this.results.GetList().Last().RoundId);
+      Assert.IsNotNull(this.rounds.GetList().Last().Duration);
     }
 
     private Guid DefaultDeck()

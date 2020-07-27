@@ -18,8 +18,8 @@ namespace PlanningPokerTests
     private RoomRepository rooms;
     private RoundRepository rounds;
     private UserRepository users;
-    private RoundTimerRepository timers;
-    private UsersReadinessRepository readiness;
+    private RoundTimerService timers;
+    private UsersReadinessService readiness;
 
     internal static string InvokedMethod { get; set; }
 
@@ -33,17 +33,15 @@ namespace PlanningPokerTests
       this.rooms = new RoomRepository();
       this.rounds = new RoundRepository();
       this.users = new UserRepository();
-      this.timers = new RoundTimerRepository();
-      this.readiness = new UsersReadinessRepository();
+      this.timers = new RoundTimerService();
+      this.readiness = new UsersReadinessService();
       this.deckService = new DeckService(this.decks);
       this.userService = new UserService(this.users);
-      var results = new RoundResultRepository();
       this.roundService = new RoundService(
         this.context,
         this.rooms,
         this.rounds,
-        this.timers,
-        results);
+        this.timers);
       this.roomService = new RoomService(
         this.context,
         this.roundService,
@@ -52,8 +50,7 @@ namespace PlanningPokerTests
         this.rooms,
         this.rounds,
         this.timers,
-        this.readiness,
-        results);
+        this.readiness);
       this.InitDefaultDeck();
     }
 
@@ -64,8 +61,6 @@ namespace PlanningPokerTests
       this.rooms.ClearRepository();
       this.rounds.ClearRepository();
       this.users.ClearRepository();
-      this.timers.ClearRepository();
-      this.readiness.ClearRepository();
     }
 
     [Test]

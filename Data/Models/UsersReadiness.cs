@@ -7,7 +7,7 @@ namespace Data
   /// <see cref="UsersReadiness"/> class. Presents users readiness in room. Used for automatic round start in rooms.
   /// </summary>
   /// <remarks>Contains readiness of all users of the room.</remarks>
-  public class UsersReadiness : IEntity
+  public class UsersReadiness
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="UsersReadiness"/> class.

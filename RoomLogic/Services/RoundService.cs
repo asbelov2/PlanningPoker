@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Data;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.SignalR;
 
 namespace RoomApi
@@ -14,9 +15,8 @@ namespace RoomApi
   {
     private RoundRepository rounds;
     private RoomRepository rooms;
-    private RoundTimerRepository timers;
+    private RoundTimerService timers;
     private IHubContext<RoomHub> context;
-    private RoundResultRepository roundResults;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RoundService"/> class.
@@ -30,14 +30,12 @@ namespace RoomApi
       IHubContext<RoomHub> hubContext,
       RoomRepository roomRepository,
       RoundRepository roundRepository,
-      RoundTimerRepository roundTimerRepository,
-      RoundResultRepository roundResultRepository)
+      RoundTimerService roundTimerService)
     {
       this.context = hubContext;
       this.rooms = roomRepository;
       this.rounds = roundRepository;
-      this.timers = roundTimerRepository;
-      this.roundResults = roundResultRepository;
+      this.timers = roundTimerService;
     }
 
     /// <summary>
@@ -55,10 +53,66 @@ namespace RoomApi
       if (roundTime != TimeSpan.Zero)
       {
         this.timers.Add(new RoundTimer(id, roundTime));
-        this.timers.GetItem(id)?.SetTimer();
+        this.timers.GetTimer(id)?.SetTimer();
       }
 
       return id;
+    }
+
+    /// <summary>
+    /// Makes user's choice.
+    /// </summary>
+    /// <param name="round">Round.</param>
+    /// <param name="user">User.</param>
+    /// <param name="card">Card.</param>
+    public void UserChosed(Round round, User user, Card card)
+    {
+      if ((user != null) && (card != null) && (round != null) && (this.timers.GetTimer(round.Id)?.IsEnabled ?? true))
+      {
+        if (round.Deck.Cards.Contains(card))
+        {
+          if (round.Choices.Where(x => x.User == user).Count() > 0)
+          {
+            round.Choices.FirstOrDefault(x => x.User == user).Card = card;
+            this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onUserChosed", user).Wait();
+            if (round.Choices.Count() == round.Users.Count())
+            {
+              this.timers.GetTimer(round.Id)?.Stop();
+              this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onAllChosed", new RoundDTO(this.rounds.GetItem(round.Id))).Wait();
+            }
+          }
+          else
+          {
+            round.Choices.Add(new Choice(user, card));
+            this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onUserChosed", user).Wait();
+            if (round.Choices.Count() == round.Users.Count())
+            {
+              if (this.timers.GetTimer(round.Id) == null)
+              {
+                round.Duration = DateTime.Now - round.StartDate;
+              }
+
+              this.timers.GetTimer(round.Id)?.Stop();
+              this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onAllChosed", new RoundDTO(this.rounds.GetItem(round.Id))).Wait();
+            }
+          }
+        }
+        else
+        {
+          this.context.Clients.Client(user.ConnectionId).SendAsync("onWrongCard").Wait();
+        }
+      }
+    }
+
+    public IEnumerable<RoundDTO> GetRoundResultsByRoomId(Guid roomId)
+    {
+      var results = rounds.GetRoomRoundResults(roomId);
+      var resultsDTOList = new List<RoundDTO>();
+      foreach(var result in results)
+      {
+        resultsDTOList.Add(new RoundDTO(result));
+      }
+      return resultsDTOList;
     }
 
     /// <summary>
@@ -70,52 +124,7 @@ namespace RoomApi
     {
       if (this.IsHost(userId, this.rounds.GetItem(roundId)?.RoomId ?? default))
       {
-        this.timers.GetItem(roundId)?.SetTimer();
-      }
-    }
-
-    /// <summary>
-    /// Makes user's choice.
-    /// </summary>
-    /// <param name="round">Round.</param>
-    /// <param name="user">User.</param>
-    /// <param name="card">Card.</param>
-    public void UserChosed(Round round, User user, Card card)
-    {
-      if ((user != null) && (card != null) && (round != null) && (this.timers.GetItem(round.Id)?.IsEnabled ?? true))
-      {
-        if (round.Deck.Cards.Contains(card))
-        {
-          if (round.Choices.Where(x => x.User == user).Count() > 0)
-          {
-            round.Choices.FirstOrDefault(x => x.User == user).Card = card;
-            this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onUserChosed", user).Wait();
-            if (round.Choices.Count() == round.Users.Count())
-            {
-              this.timers.GetItem(round.Id)?.Stop();
-              this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onAllChosed", new RoundDTO(this.rounds.GetItem(round.Id))).Wait();
-            }
-          }
-          else
-          {
-            round.Choices.Add(new Choice(user, card));
-            this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onUserChosed", user).Wait();
-            if (round.Choices.Count() == round.Users.Count())
-            {
-              if (this.timers.GetItem(round.Id) == null)
-              {
-                this.roundResults.Add(new RoundResult(this.rounds.GetItem(round.Id)));
-              }
-
-              this.timers.GetItem(round.Id)?.Stop();
-              this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onAllChosed", new RoundDTO(this.rounds.GetItem(round.Id))).Wait();
-            }
-          }
-        }
-        else
-        {
-          this.context.Clients.Client(user.ConnectionId).SendAsync("onWrongCard").Wait();
-        }
+        this.timers.GetTimer(roundId)?.SetTimer();
       }
     }
 

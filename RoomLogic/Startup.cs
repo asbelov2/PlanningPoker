@@ -35,14 +35,13 @@ namespace RoomApi
       services.AddSingleton<RoomService>();
       services.AddSingleton<RoundService>();
       services.AddSingleton<UserService>();
+      services.AddSingleton<RoundTimerService>();
+      services.AddSingleton<UsersReadinessService>();
 
       services.AddSingleton<DeckRepository>();
       services.AddSingleton<RoomRepository>();
       services.AddSingleton<RoundRepository>();
-      services.AddSingleton<RoundResultRepository>();
-      services.AddSingleton<RoundTimerRepository>();
       services.AddSingleton<UserRepository>();
-      services.AddSingleton<UsersReadinessRepository>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

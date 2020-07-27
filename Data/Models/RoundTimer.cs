@@ -6,11 +6,10 @@ namespace Data
   /// <summary>
   /// <see cref="RoundTimer"/> class. Used if round has round time.
   /// </summary>
-  public class RoundTimer : IEntity
+  public class RoundTimer
   {
     private TimeSpan roundTime;
     private Timer timer;
-    private RoundResultRepository roundResults = new RoundResultRepository();
     private RoundRepository rounds = new RoundRepository();
 
     /// <summary>
@@ -55,7 +54,6 @@ namespace Data
       this.timer.Stop();
 
       this.rounds.GetItem(this.Id).Duration = DateTime.Now - this.rounds.GetItem(this.Id).StartDate;
-      this.roundResults.Add(new RoundResult(this.rounds.GetItem(this.Id)));
       this.IsEnabled = false;
     }
 

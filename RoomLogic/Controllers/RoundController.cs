@@ -38,10 +38,9 @@ namespace RoomApi.Controllers
     /// <param name="roomId">Room ID.</param>
     /// <returns>Round results from room.</returns>
     [HttpGet("RoundResult")]
-    public IEnumerable<RoundResult> GetRoundResults(Guid roomId)
+    public IEnumerable<RoundDTO> GetRoundResults(Guid roomId)
     {
-      var roundResults = new RoundResultRepository();
-      return roundResults.GetRoomRoundResults(roomId);
+      return roundService.GetRoundResultsByRoomId(roomId);
     }
 
     /// <summary>

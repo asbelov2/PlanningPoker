@@ -23,7 +23,7 @@ namespace Data
     /// <returns>Id of item.</returns>
     public virtual Guid Add(T item)
     {
-      if (Data.Any(x => x.Id == item.Id) == false)
+      if (Data.Any(x => x.Id == item?.Id) == false)
       {
         Data.Add(item);
         return item.Id;

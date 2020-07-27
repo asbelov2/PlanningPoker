@@ -13,13 +13,13 @@ namespace PlanningPokerTests
     private RoomRepository rooms;
     private RoundRepository rounds;
     private UserRepository users;
-    private RoundTimerRepository timers;
-    private RoundResultRepository results;
-    private UsersReadinessRepository readiness;
+    private RoundTimerService timers;
+    private UsersReadinessService readiness;
 
     private IHubContext<RoomHub> context;
     private UserService userService;
     private RoomService roomService;
+    private RoundService roundService;
 
     [SetUp]
     public void Setup()
@@ -28,22 +28,21 @@ namespace PlanningPokerTests
       this.rooms = new RoomRepository();
       this.rounds = new RoundRepository();
       this.users = new UserRepository();
-      this.timers = new RoundTimerRepository();
-      this.results = new RoundResultRepository();
-      this.readiness = new UsersReadinessRepository();
+      this.timers = new RoundTimerService();
+      this.readiness = new UsersReadinessService();
 
       this.context = HubContextImplementation.GetContext;
       this.userService = new UserService(this.users);
+      this.roundService = new RoundService(this.context, rooms, rounds, timers);
       this.roomService = new RoomService(
         this.context,
-        new RoundService(this.context, this.rooms, this.rounds, this.timers, this.results),
+        this.roundService,
         this.userService,
         new DeckService(this.decks),
         this.rooms,
         this.rounds,
         this.timers,
-        this.readiness,
-        this.results);
+        this.readiness);
     }
 
     [TearDown]
@@ -53,9 +52,6 @@ namespace PlanningPokerTests
       this.rooms.ClearRepository();
       this.rounds.ClearRepository();
       this.users.ClearRepository();
-      this.timers.ClearRepository();
-      this.results.ClearRepository();
-      this.readiness.ClearRepository();
     }
 
     [Test]
@@ -101,7 +97,7 @@ namespace PlanningPokerTests
       roundId = this.roomService.StartNewRound(roomId, host.Id, this.decks.GetItem(this.DefaultDeck()));
       this.roomService.EndRound(roundId, host.Id);
 
-      Assert.AreEqual(2, this.results.GetRoomRoundResults(roomId).Count());
+      Assert.AreEqual(2, this.roundService.GetRoundResultsByRoomId(roomId).Count());
 
       roomId = this.roomService.HostRoom(user1);
       this.roomService.EnterUser(roomId, host, string.Empty);
@@ -109,7 +105,7 @@ namespace PlanningPokerTests
       roundId = this.roomService.StartNewRound(roomId, user1.Id, this.decks.GetItem(this.DefaultDeck()));
       this.roomService.EndRound(roundId, user1.Id);
 
-      Assert.AreEqual(3, this.results.GetList().Count());
+      Assert.AreEqual(3, this.rounds.GetList().Count());
 
     }
 
