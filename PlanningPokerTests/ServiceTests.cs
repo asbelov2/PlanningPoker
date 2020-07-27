@@ -301,8 +301,8 @@ namespace PlanningPokerTests
       this.deckService.AddCard(this.deckService.GetDeck(deckId), new Card(CardType.Valuable, "15", 15));
       var roundId = this.roomService.StartNewRound(roomId, host.Id, this.deckService.GetDeck(deckId), "TestTitle", TimeSpan.FromMinutes(13));
       Round round = this.rounds.GetItem(roundId);
-      this.roomService.SetRoundTitle(host.Id, roundId, "TestTitle");
-      this.roomService.SetRoundComment(host.Id, roundId, "TestComment");
+      this.roundService.SetRoundTitle(host.Id, roundId, "TestTitle");
+      this.roundService.SetRoundComment(host.Id, roundId, "TestComment");
       Assert.AreEqual("TestTitle", round.Title);
       Assert.AreEqual("TestComment", round.Comment);
     }
