@@ -31,42 +31,42 @@ namespace Data
     }
 
     /// <summary>
-    /// Gets room ID.
+    /// Room ID.
     /// </summary>
     public Guid RoomId { get; }
 
     /// <summary>
-    /// Gets choices.
+    /// Choices.
     /// </summary>
     public ICollection<Choice> Choices { get; } = new List<Choice>();
 
     /// <summary>
-    /// Gets or sets comment.
+    /// Comment.
     /// </summary>
     public string Comment { get; set; }
 
     /// <summary>
-    /// Gets date of round start.
+    /// Date of round start.
     /// </summary>
     public DateTime StartDate { get; }
 
     /// <summary>
-    /// Gets or sets duration of round.
+    /// Duration of round.
     /// </summary>
     public TimeSpan Duration { get; set; }
 
     /// <summary>
-    /// Gets deck
+    /// Deck.
     /// </summary>
     public Deck Deck { get; }
 
     /// <summary>
-    /// Gets round ID
+    /// Round ID.
     /// </summary>
     public Guid Id { get; }
 
     /// <summary>
-    /// Gets round result.
+    /// Round result.
     /// </summary>
     public double? Result
     {
@@ -93,17 +93,17 @@ namespace Data
     }
 
     /// <summary>
-    /// Gets round time.
+    /// Round time.
     /// </summary>
     public TimeSpan RoundTime { get; }
 
     /// <summary>
-    /// Gets or sets round title.
+    /// Round title.
     /// </summary>
     public string Title { get; set; }
 
     /// <summary>
-    /// Gets collection of participants.
+    /// Collection of participants.
     /// </summary>
     public IEnumerable<User> Users { get; }
   }

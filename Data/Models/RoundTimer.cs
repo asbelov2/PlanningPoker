@@ -26,17 +26,17 @@ namespace Data
     }
 
     /// <summary>
-    /// Gets round timer ID.
+    /// Round timer ID.
     /// </summary>
     public Guid Id { get; }
 
     /// <summary>
-    /// Gets status of timer.
+    /// Status of timer.
     /// </summary>
     public bool IsEnabled { get; private set; }
 
     /// <summary>
-    /// Sets the timer.
+    /// Set the imer.
     /// </summary>
     public void SetTimer()
     {

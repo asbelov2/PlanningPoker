@@ -17,12 +17,12 @@
     }
 
     /// <summary>
-    /// Gets or sets user.
+    /// User.
     /// </summary>
     public User User { get; set; }
 
     /// <summary>
-    /// Gets or sets card.
+    /// Card.
     /// </summary>
     public Card Card { get; set; }
   }

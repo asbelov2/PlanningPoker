@@ -46,17 +46,17 @@
     }
 
     /// <summary>
-    /// Gets type of card.
+    /// Type of card.
     /// </summary>
     public CardType CardType { get; }
 
     /// <summary>
-    /// Gets name of card.
+    /// Name of card.
     /// </summary>
     public string Name { get; }
 
     /// <summary>
-    /// Gets value of card.
+    /// Value of card.
     /// </summary>
     public double Value { get; }
   }

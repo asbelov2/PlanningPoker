@@ -20,17 +20,17 @@ namespace Data
     }
 
     /// <summary>
-    /// Gets user ID.
+    /// User ID.
     /// </summary>
     public Guid Id { get; }
 
     /// <summary>
-    /// Gets or sets user connection ID.
+    /// User connection ID.
     /// </summary>
     public string ConnectionId { get; set; }
 
     /// <summary>
-    /// Gets or sets username.
+    /// Username.
     /// </summary>
     public string Name { get; set; }
   }

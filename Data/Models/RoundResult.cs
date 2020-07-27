@@ -26,47 +26,47 @@ namespace Data
     }
 
     /// <summary>
-    /// Gets RoundResult ID.
+    /// RoundResult ID.
     /// </summary>
     public Guid Id { get; }
 
     /// <summary>
-    /// Gets room ID.
+    /// Room ID.
     /// </summary>
     public Guid RoomId { get; }
 
     /// <summary>
-    /// Gets round ID.
+    /// Round ID.
     /// </summary>
     public Guid RoundId { get; }
 
     /// <summary>
-    /// Gets choices.
+    /// Choices.
     /// </summary>
     public ICollection<Choice> Choices { get; }
 
     /// <summary>
-    /// Gets resuilt.
+    /// Resuilt.
     /// </summary>
     public double? Result { get; }
 
     /// <summary>
-    /// Gets date of start.
+    /// Date of start.
     /// </summary>
     public DateTime StartDate { get; }
 
     /// <summary>
-    /// Gets start date.
+    /// Start date.
     /// </summary>
     public TimeSpan Duration { get; }
 
     /// <summary>
-    /// Gets round title.
+    /// Round title.
     /// </summary>
     public string Title { get; }
 
     /// <summary>
-    /// Gets round comment.
+    /// Round comment.
     /// </summary>
     public string Comment { get; }
   }

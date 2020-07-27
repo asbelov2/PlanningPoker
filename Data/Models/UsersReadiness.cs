@@ -21,17 +21,17 @@ namespace Data
     }
 
     /// <summary>
-    /// Gets user readiness in the room.
+    /// User readiness in the room.
     /// </summary>
     public Dictionary<User, bool> IsUsersReady { get; }
 
     /// <summary>
-    /// Gets ID.
+    /// ID.
     /// </summary>
     public Guid Id { get; }
 
     /// <summary>
-    /// Gets room ID.
+    /// Room ID.
     /// </summary>
     public Guid RoomId { get; }
   }

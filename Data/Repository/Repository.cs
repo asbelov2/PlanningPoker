@@ -12,7 +12,7 @@ namespace Data
     where T : class, IEntity
   {
     /// <summary>
-    /// Gets collection of data.
+    /// Collection of data.
     /// </summary>
     protected static ICollection<T> Data { get; } = new List<T>();
 

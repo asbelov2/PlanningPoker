@@ -35,17 +35,17 @@ namespace Data
     }
 
     /// <summary>
-    /// Gets or sets name of the deck.
+    /// Name of the deck.
     /// </summary>
     public string Name { get; set; } = "New deck";
 
     /// <summary>
-    /// Gets ID of the deck.
+    /// ID of the deck.
     /// </summary>
     public Guid Id { get; }
 
     /// <summary>
-    /// Gets collection of cards in deck.
+    /// Collection of cards in deck.
     /// </summary>
     public ICollection<Card> Cards { get; }
 

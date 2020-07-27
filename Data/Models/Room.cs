@@ -28,32 +28,32 @@ namespace Data
     }
 
     /// <summary>
-    /// Gets or sets host.
+    /// Host.
     /// </summary>
     public User Host { get; set; }
 
     /// <summary>
-    /// Gets collection of users in room.
+    /// Collection of users in room.
     /// </summary>
     public ICollection<User> Users { get; }
 
     /// <summary>
-    /// Gets or sets password.
+    /// Password.
     /// </summary>
     public string Password { get; set; }
 
     /// <summary>
-    /// Gets room ID.
+    /// Room ID.
     /// </summary>
     public Guid Id { get; }
 
     /// <summary>
-    /// Gets or sets room name.
+    /// Room name.
     /// </summary>
     public string Name { get; set; }
 
     /// <summary>
-    /// Gets or sets card's interpretation
+    /// Card's interpretation.
     /// </summary>
     public string CardInterpretation { get; set; }
   }
