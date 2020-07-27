@@ -32,7 +32,7 @@ namespace RoomApi.Controllers
     /// </summary>
     /// <returns>All decks.</returns>
     [HttpGet]
-    public ICollection<DeckDTO> Get()
+    public IEnumerable<DeckDTO> Get()
     {
       var result = new List<DeckDTO>();
       foreach (var deck in this.decks.GetList())

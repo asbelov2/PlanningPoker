@@ -14,7 +14,7 @@ namespace Data
     /// Return collection of items.
     /// </summary>
     /// <returns>collection of items.</returns>
-    ICollection<T> GetList();
+    IEnumerable<T> GetList();
 
     /// <summary>
     /// Returns item.

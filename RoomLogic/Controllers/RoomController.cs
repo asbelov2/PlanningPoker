@@ -42,7 +42,7 @@ namespace RoomApi.Controllers
     /// </summary>
     /// <returns>All rooms.</returns>
     [HttpGet]
-    public ICollection<RoomDTO> Get()
+    public IEnumerable<RoomDTO> Get()
     {
       var result = new List<RoomDTO>();
       foreach (var room in this.rooms.GetList())
@@ -52,6 +52,7 @@ namespace RoomApi.Controllers
           result.Add(new RoomDTO(room));
         }
       }
+
       return result;
     }
 
@@ -192,7 +193,7 @@ namespace RoomApi.Controllers
     }
 
     /// <summary>
-    /// Delete room
+    /// Delete room.
     /// </summary>
     /// <param name="id">Room ID.</param>
     /// <param name="userId">User ID.</param>

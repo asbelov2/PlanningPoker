@@ -81,7 +81,7 @@ namespace RoomApi
     /// Get all deck from repository.
     /// </summary>
     /// <returns>Collection of decks.</returns>
-    public ICollection<Deck> GetDecks()
+    public IEnumerable<Deck> GetDecks()
     {
       return decks.GetList();
     }

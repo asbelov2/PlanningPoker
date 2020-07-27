@@ -58,7 +58,7 @@ namespace Data
     /// Return collection of items.
     /// </summary>
     /// <returns>collection of items.</returns>
-    public virtual ICollection<T> GetList()
+    public virtual IEnumerable<T> GetList()
     {
       return Data;
     }
