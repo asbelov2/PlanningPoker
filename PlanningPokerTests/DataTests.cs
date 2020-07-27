@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Data;
@@ -103,7 +103,7 @@ namespace PlanningPokerTests
       var users = new List<User>();
       users.Add(new User("1", "1"));
       users.Add(new User("2", "2"));
-      Round testRound = new Round(Guid.NewGuid(), users, new DefaultDeck(), TimeSpan.FromMinutes(5), "test");
+      Round testRound = new Round(Guid.NewGuid(), users, this.decks.GetItem(this.DefaultDeck()), TimeSpan.FromMinutes(5), "test");
       testRound.Choices.Add(new Choice(users[0], testRound.Deck.Cards.FirstOrDefault(x => x.Name == "2")));
       testRound.Choices.Add(new Choice(users[1], testRound.Deck.Cards.FirstOrDefault(x => x.Name == "5")));
       Assert.AreEqual(3.5, testRound.Result);
@@ -115,7 +115,7 @@ namespace PlanningPokerTests
       var users = new List<User>();
       users.Add(new User("1", "1"));
       users.Add(new User("2", "2"));
-      Round testRound = new Round(Guid.NewGuid(), users, new DefaultDeck(), TimeSpan.FromMinutes(5), "test");
+      Round testRound = new Round(Guid.NewGuid(), users, this.decks.GetItem(this.DefaultDeck()), TimeSpan.FromMinutes(5), "test");
       Assert.AreEqual(testRound.Users.Count(), 2);
     }
 
@@ -139,7 +139,7 @@ namespace PlanningPokerTests
       var users = new List<User>();
       users.Add(new User("1", "1"));
       users.Add(new User("2", "2"));
-      Round testRound = new Round(Guid.NewGuid(), users, new DefaultDeck(), TimeSpan.FromMinutes(5), "Test");
+      Round testRound = new Round(Guid.NewGuid(), users, this.decks.GetItem(this.DefaultDeck()), TimeSpan.FromMinutes(5), "Test");
       this.rounds.Add(testRound);
 
       RoundTimer timer = new RoundTimer(testRound.Id, TimeSpan.FromMinutes(5));
@@ -149,13 +149,29 @@ namespace PlanningPokerTests
       Assert.AreEqual(testRound.Id, this.results.GetList().First().RoundId);
 
       Guid testId = Guid.NewGuid();
-      testRound = new Round(testId, users, new DefaultDeck(), TimeSpan.FromMinutes(5), "Test2");
+      testRound = new Round(testId, users, this.decks.GetItem(this.DefaultDeck()), TimeSpan.FromMinutes(5), "Test2");
       this.rounds.Add(testRound);
       timer = new RoundTimer(testRound.Id, TimeSpan.FromMinutes(5));
       timer.SetTimer();
       timer.Stop();
       Assert.AreEqual(2, this.results.GetList().Count());
       Assert.AreEqual(testRound.Id, this.results.GetList().Last().RoundId);
+    }
+
+    private Guid DefaultDeck()
+    {
+      var defaultDeck = new Deck();
+      double[] numbers = { 0, 1 / 2, 1, 2, 3, 5, 8, 13, 20, 40, 100 };
+      foreach (var number in numbers)
+      {
+        defaultDeck.AddCard(new Card(CardType.Valuable, number.ToString(), number));
+      }
+
+      defaultDeck.AddCard(new Card(CardType.Exceptional, "?", 0));
+      defaultDeck.AddCard(new Card(CardType.Exceptional, "∞", 0));
+      defaultDeck.AddCard(new Card(CardType.Exceptional, "☕", 0));
+      var decks = new DeckRepository();
+      return decks.Add(defaultDeck);
     }
   }
 }

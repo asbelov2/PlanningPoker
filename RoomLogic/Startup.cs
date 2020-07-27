@@ -1,4 +1,4 @@
-using Data;
+﻿using Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Connections;
@@ -13,8 +13,7 @@ namespace RoomApi
     public Startup(IConfiguration configuration)
     {
       this.Configuration = configuration;
-      var decks = new DeckRepository();
-      decks.Add(new DefaultDeck());
+      this.InitDefaultDeck();
     }
 
     public IConfiguration Configuration { get; }
@@ -67,6 +66,22 @@ namespace RoomApi
           option.Transports = HttpTransportType.WebSockets;
         });
       });
+    }
+
+    private void InitDefaultDeck()
+    {
+      var defaultDeck = new Deck("DefaultDeck");
+      double[] numbers = { 0, 1 / 2, 1, 2, 3, 5, 8, 13, 20, 40, 100 };
+      foreach (var number in numbers)
+      {
+        defaultDeck.AddCard(new Card(CardType.Valuable, number.ToString(), number));
+      }
+
+      defaultDeck.AddCard(new Card(CardType.Exceptional, "?", 0));
+      defaultDeck.AddCard(new Card(CardType.Exceptional, "∞", 0));
+      defaultDeck.AddCard(new Card(CardType.Exceptional, "☕", 0));
+      var decks = new DeckRepository();
+      decks.Add(defaultDeck);
     }
   }
 }

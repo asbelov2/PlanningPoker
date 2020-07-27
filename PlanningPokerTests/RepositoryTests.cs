@@ -38,6 +38,7 @@ namespace PlanningPokerTests
         this.context,
         new RoundService(this.context, this.rooms, this.rounds, this.timers, this.results),
         this.userService,
+        new DeckService(this.decks),
         this.rooms,
         this.rounds,
         this.timers,
@@ -94,22 +95,38 @@ namespace PlanningPokerTests
       var roomId = this.roomService.HostRoom(host);
       this.roomService.EnterUser(roomId, user1, string.Empty);
 
-      var roundId = this.roomService.StartNewRound(roomId, host.Id, new DefaultDeck());
-      this.roomService.EndRound(roundId, host.Id).Wait();
+      var roundId = this.roomService.StartNewRound(roomId, host.Id, this.decks.GetItem(this.DefaultDeck()));
+      this.roomService.EndRound(roundId, host.Id);
 
-      roundId = this.roomService.StartNewRound(roomId, host.Id, new DefaultDeck());
-      this.roomService.EndRound(roundId, host.Id).Wait();
+      roundId = this.roomService.StartNewRound(roomId, host.Id, this.decks.GetItem(this.DefaultDeck()));
+      this.roomService.EndRound(roundId, host.Id);
 
       Assert.AreEqual(2, this.results.GetRoomRoundResults(roomId).Count());
 
       roomId = this.roomService.HostRoom(user1);
       this.roomService.EnterUser(roomId, host, string.Empty);
 
-      roundId = this.roomService.StartNewRound(roomId, user1.Id, new DefaultDeck());
-      this.roomService.EndRound(roundId, user1.Id).Wait();
+      roundId = this.roomService.StartNewRound(roomId, user1.Id, this.decks.GetItem(this.DefaultDeck()));
+      this.roomService.EndRound(roundId, user1.Id);
 
       Assert.AreEqual(3, this.results.GetList().Count());
 
+    }
+
+    private Guid DefaultDeck()
+    {
+      var defaultDeck = new Deck();
+      double[] numbers = { 0, 1 / 2, 1, 2, 3, 5, 8, 13, 20, 40, 100 };
+      foreach (var number in numbers)
+      {
+        defaultDeck.AddCard(new Card(CardType.Valuable, number.ToString(), number));
+      }
+
+      defaultDeck.AddCard(new Card(CardType.Exceptional, "?", 0));
+      defaultDeck.AddCard(new Card(CardType.Exceptional, "∞", 0));
+      defaultDeck.AddCard(new Card(CardType.Exceptional, "☕", 0));
+      var decks = new DeckRepository();
+      return decks.Add(defaultDeck);
     }
   }
 }

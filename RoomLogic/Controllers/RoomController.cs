@@ -130,7 +130,7 @@ namespace RoomApi.Controllers
     [HttpPost("{id}/StartRound")]
     public void StartRound(string id, string userId, string title, string deckId, double roundTimeInMinutes)
     {
-        this.roomService.StartNewRound(Guid.Parse(id), Guid.Parse(userId), this.decks.GetItem(Guid.Parse(deckId)) ?? new DefaultDeck(), title, TimeSpan.FromMinutes(roundTimeInMinutes));
+        this.roomService.StartNewRound(Guid.Parse(id), Guid.Parse(userId), this.decks.GetItem(Guid.Parse(deckId)), title, TimeSpan.FromMinutes(roundTimeInMinutes));
     }
 
     /// <summary>
@@ -174,11 +174,10 @@ namespace RoomApi.Controllers
     /// </summary>
     /// <param name="id">Room ID.</param>
     /// <param name="userId">User ID.</param>
-    /// <returns>Async task.</returns>
     [HttpPut("{id}/DeclareReady")]
-    public async Task DeclareReady(string id, string userId)
+    public void DeclareReady(string id, string userId)
     {
-      await this.roomService.DeclareReady(Guid.Parse(id), this.userService.GetUser(Guid.Parse(userId)));
+      this.roomService.DeclareReady(Guid.Parse(id), this.userService.GetUser(Guid.Parse(userId)));
     }
 
     /// <summary>
@@ -186,11 +185,10 @@ namespace RoomApi.Controllers
     /// </summary>
     /// <param name="id">Room ID.</param>
     /// <param name="userId">User ID.</param>
-    /// <returns>Async task.</returns>
     [HttpPut("{id}/DeclareNotReady")]
-    public async Task DeclareNotReady(string id, string userId)
+    public void DeclareNotReady(string id, string userId)
     {
-      await this.roomService.DeclareNotReady(Guid.Parse(id), this.userService.GetUser(Guid.Parse(userId)));
+      this.roomService.DeclareNotReady(Guid.Parse(id), this.userService.GetUser(Guid.Parse(userId)));
     }
 
     /// <summary>

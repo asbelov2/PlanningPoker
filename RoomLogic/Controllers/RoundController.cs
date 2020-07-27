@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace RoomApi.Controllers
 {
@@ -65,11 +64,10 @@ namespace RoomApi.Controllers
     /// <param name="id">Round ID.</param>
     /// <param name="userId">User ID.</param>
     /// <param name="cardName">Card name.</param>
-    /// <returns>Async task.</returns>
     [HttpPut("{id}/ChooseCard")]
-    public async Task ChooseCard(string id, string userId, string cardName)
+    public void ChooseCard(string id, string userId, string cardName)
     {
-      await this.roomService.Choose(Guid.Parse(id), this.userService.GetUser(Guid.Parse(userId)), this.rounds.GetItem(Guid.Parse(id)).Deck.Cards.FirstOrDefault(x => x.Name == cardName));
+      this.roomService.Choose(Guid.Parse(id), this.userService.GetUser(Guid.Parse(userId)), this.rounds.GetItem(Guid.Parse(id)).Deck.Cards.FirstOrDefault(x => x.Name == cardName));
     }
 
     /// <summary>
@@ -78,11 +76,10 @@ namespace RoomApi.Controllers
     /// <param name="id">Round ID.</param>
     /// <param name="userId">User ID.</param>
     /// <param name="title">New tite.</param>
-    /// <returns>Async task.</returns>
     [HttpPut("{id}/SetTitle")]
-    public async Task SetTitle(string id, string userId, string title)
+    public void SetTitle(string id, string userId, string title)
     {
-      await this.roomService.SetRoundTitle(Guid.Parse(userId), Guid.Parse(id), title);
+      this.roomService.SetRoundTitle(Guid.Parse(userId), Guid.Parse(id), title);
     }
 
     /// <summary>
@@ -91,11 +88,10 @@ namespace RoomApi.Controllers
     /// <param name="id">Round ID.</param>
     /// <param name="userId">User ID.</param>
     /// <param name="comment">Comment.</param>
-    /// <returns>Async task.</returns>
     [HttpPut("{id}/SetComment")]
-    public async Task SetComment(string id, string userId, string comment)
+    public void SetComment(string id, string userId, string comment)
     {
-      await this.roomService.SetRoundComment(Guid.Parse(userId), Guid.Parse(id), comment);
+      this.roomService.SetRoundComment(Guid.Parse(userId), Guid.Parse(id), comment);
     }
 
     /// <summary>
@@ -103,11 +99,10 @@ namespace RoomApi.Controllers
     /// </summary>
     /// <param name="id">Round ID.</param>
     /// <param name="userId">User ID.</param>
-    /// <returns>Async task.</returns>
     [HttpPost("{id}/EndRound")]
-    public async Task EndRound(string id, string userId)
+    public void EndRound(string id, string userId)
     {
-      await this.roomService.EndRound(Guid.Parse(id), Guid.Parse(userId));
+      this.roomService.EndRound(Guid.Parse(id), Guid.Parse(userId));
     }
   }
 }

@@ -48,13 +48,14 @@ namespace PlanningPokerTests
         this.context,
         this.roundService,
         this.userService,
+        new DeckService(this.decks),
         this.rooms,
         this.rounds,
         this.timers,
         this.readiness,
         results);
+      this.InitDefaultDeck();
     }
-
 
     [TearDown]
     public void TearDown()
@@ -110,7 +111,7 @@ namespace PlanningPokerTests
     {
       this.deckService.NewDeck("123");
       this.deckService.NewDeck("4");
-      Assert.AreEqual(2, this.deckService.GetDecks().Count());
+      Assert.AreEqual(3, this.deckService.GetDecks().Count()); // 2 + default deck
     }
 
     [Test]
@@ -174,13 +175,13 @@ namespace PlanningPokerTests
       var roomId = this.roomService.HostRoom(host, "TestRoomName", "TestPassword", "TestInterp");
       this.roomService.EnterUser(roomId, user1, "TestPassword");
       this.roomService.EnterUser(roomId, user2, "TestPassword");
-      this.roomService.DeclareReady(roomId, host).Wait();
+      this.roomService.DeclareReady(roomId, host);
       Assert.AreEqual("onUserReady", InvokedMethod);
-      this.roomService.DeclareReady(roomId, user1).Wait();
-      this.roomService.DeclareNotReady(roomId, host).Wait();
+      this.roomService.DeclareReady(roomId, user1);
+      this.roomService.DeclareNotReady(roomId, host);
       Assert.AreEqual("onUserNotReady", InvokedMethod);
-      this.roomService.DeclareReady(roomId, user2).Wait();
-      this.roomService.DeclareReady(roomId, host).Wait();
+      this.roomService.DeclareReady(roomId, user2);
+      this.roomService.DeclareReady(roomId, host);
       Assert.AreEqual("onRoundStarted", InvokedMethod);
     }
 
@@ -241,11 +242,11 @@ namespace PlanningPokerTests
       this.deckService.AddCard(this.deckService.GetDeck(deckId), new Card(CardType.Valuable, "15", 15));
       var roundId = this.roomService.StartNewRound(roomId, host.Id, this.deckService.GetDeck(deckId), "TestTitle", TimeSpan.FromMinutes(13));
       Round round = this.rounds.GetItem(roundId);
-      this.roomService.Choose(roundId, host, new Card(CardType.Valuable, string.Empty, 123)).Wait();
+      this.roomService.Choose(roundId, host, new Card(CardType.Valuable, string.Empty, 123));
       Assert.AreEqual("onWrongCard", InvokedMethod);
-      this.roomService.Choose(roundId, host, this.deckService.GetDeck(deckId).Cards.ElementAt(0)).Wait();
+      this.roomService.Choose(roundId, host, this.deckService.GetDeck(deckId).Cards.ElementAt(0));
       Assert.AreEqual("onUserChosed", InvokedMethod);
-      this.roomService.Choose(roundId, user1, this.deckService.GetDeck(deckId).Cards.ElementAt(1)).Wait();
+      this.roomService.Choose(roundId, user1, this.deckService.GetDeck(deckId).Cards.ElementAt(1));
       Assert.AreEqual("onAllChosed", InvokedMethod);
       Assert.AreEqual(10, round.Result);
     }
@@ -264,8 +265,8 @@ namespace PlanningPokerTests
       this.deckService.AddCard(this.deckService.GetDeck(deckId), new Card(CardType.Exceptional, "ff", 0));
       var roundId = this.roomService.StartNewRound(roomId, host.Id, this.deckService.GetDeck(deckId), "TestTitle", TimeSpan.FromMinutes(13));
       Round round = this.rounds.GetItem(roundId);
-      this.roomService.Choose(round.Id, host, this.deckService.GetDeck(deckId).Cards.ElementAt(0)).Wait();
-      this.roomService.Choose(round.Id, user1, this.deckService.GetDeck(deckId).Cards.ElementAt(1)).Wait();
+      this.roomService.Choose(round.Id, host, this.deckService.GetDeck(deckId).Cards.ElementAt(0));
+      this.roomService.Choose(round.Id, user1, this.deckService.GetDeck(deckId).Cards.ElementAt(1));
       Assert.IsNull(round.Result);
     }
 
@@ -278,8 +279,8 @@ namespace PlanningPokerTests
       this.userService.AddNewUser(user1);
       var roomId = this.roomService.HostRoom(host);
       this.roomService.EnterUser(roomId, user1, string.Empty);
-      var roundId = this.roomService.StartNewRound(roomId, host.Id, new DefaultDeck());
-      this.roomService.EndRound(roundId, host.Id).Wait();
+      var roundId = this.roomService.StartNewRound(roomId, host.Id, this.deckService.GetDefaultDeck());
+      this.roomService.EndRound(roundId, host.Id);
       Assert.AreEqual("onEnd", InvokedMethod);
       Assert.AreEqual(typeof(RoundDTO), Args[0].GetType());
     }
@@ -304,6 +305,22 @@ namespace PlanningPokerTests
       this.roomService.SetRoundComment(host.Id, roundId, "TestComment");
       Assert.AreEqual("TestTitle", round.Title);
       Assert.AreEqual("TestComment", round.Comment);
+    }
+
+    private void InitDefaultDeck()
+    {
+      var defaultDeck = new Deck("DefaultDeck");
+      double[] numbers = { 0, 1 / 2, 1, 2, 3, 5, 8, 13, 20, 40, 100 };
+      foreach (var number in numbers)
+      {
+        defaultDeck.AddCard(new Card(CardType.Valuable, number.ToString(), number));
+      }
+
+      defaultDeck.AddCard(new Card(CardType.Exceptional, "?", 0));
+      defaultDeck.AddCard(new Card(CardType.Exceptional, "∞", 0));
+      defaultDeck.AddCard(new Card(CardType.Exceptional, "☕", 0));
+      var decks = new DeckRepository();
+      decks.Add(defaultDeck);
     }
   }
 }

@@ -19,6 +19,7 @@ namespace RoomApi
     private RoundTimerRepository timers;
     private UsersReadinessRepository isUsersReady;
     private RoundResultRepository roundResults;
+    private DeckService deckService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RoomService"/> class.
@@ -35,6 +36,7 @@ namespace RoomApi
       IHubContext<RoomHub> hubContext,
       RoundService roundService,
       UserService userService,
+      DeckService deckService,
       RoomRepository roomRepository,
       RoundRepository roundRepository,
       RoundTimerRepository roundTimerRepository,
@@ -44,6 +46,7 @@ namespace RoomApi
       this.context = hubContext;
       this.roundService = roundService;
       this.userService = userService;
+      this.deckService = deckService;
       this.rooms = roomRepository;
       this.rounds = roundRepository;
       this.timers = roundTimerRepository;
@@ -56,8 +59,8 @@ namespace RoomApi
     /// </summary>
     /// <param name="roomId">Room ID.</param>
     /// <param name="userId">User ID.</param>
-    /// <param name="title">Title.</param>
     /// <param name="deck">Deck.</param>
+    /// <param name="title">Title.</param>
     /// <param name="roundTime">Round time.</param>
     /// <returns>Round ID.</returns>
     public Guid StartNewRound(Guid roomId, Guid userId, Deck deck, string title = "Default title", TimeSpan roundTime = default)
@@ -120,6 +123,7 @@ namespace RoomApi
     /// <param name="name">Room name.</param>
     /// <param name="password">Room password.</param>
     /// <param name="cardInterpretation">Room card's interpretation.</param>
+    /// <returns>Room ID.</returns>
     public Guid HostRoom(User host, string name = "Default name", string password = "", string cardInterpretation = "Hours")
     {
       var id = this.rooms.Add(new Room(host, name, password, cardInterpretation));
@@ -133,8 +137,7 @@ namespace RoomApi
     /// </summary>
     /// <param name="roomId">Room ID.</param>
     /// <param name="user">User.</param>
-    /// <returns>Async task.</returns>
-    public async Task DeclareReady(Guid roomId, User user)
+    public void DeclareReady(Guid roomId, User user)
     {
       if (this.isUsersReady.GetItemByRoomId(roomId)?.IsUsersReady?.ContainsKey(user) ?? false)
       {
@@ -145,11 +148,11 @@ namespace RoomApi
         this.isUsersReady.GetItemByRoomId(roomId).IsUsersReady.Add(user, true);
       }
 
-      await this.context.Clients.Group(this.GetGroupKey(roomId)).SendAsync("onUserReady", user.ConnectionId, user.Name);
+      this.context.Clients.Group(this.GetGroupKey(roomId)).SendAsync("onUserReady", user.ConnectionId, user.Name).Wait();
 
       if (this.IsUsersReady(roomId) && (this.rooms.GetItem(roomId) != null))
       {
-        this.StartNewRound(roomId, this.rooms.GetItem(roomId).Host.Id, new DefaultDeck());
+        this.StartNewRound(roomId, this.rooms.GetItem(roomId).Host.Id, this.deckService.GetDefaultDeck());
         this.TurnToFalse(roomId);
       }
     }
@@ -159,8 +162,7 @@ namespace RoomApi
     /// </summary>
     /// <param name="roomId">Room ID.</param>
     /// <param name="user">User.</param>
-    /// <returns>Async task.</returns>
-    public async Task DeclareNotReady(Guid roomId, User user)
+    public void DeclareNotReady(Guid roomId, User user)
     {
       if (this.isUsersReady.GetItemByRoomId(roomId)?.IsUsersReady?.ContainsKey(user) ?? false)
       {
@@ -171,7 +173,7 @@ namespace RoomApi
         this.isUsersReady.GetItemByRoomId(roomId).IsUsersReady.Add(user, false);
       }
 
-      await this.context.Clients.Group(this.GetGroupKey(roomId)).SendAsync("onUserNotReady", user.ConnectionId, user.Name);
+      this.context.Clients.Group(this.GetGroupKey(roomId)).SendAsync("onUserNotReady", user.ConnectionId, user.Name).Wait();
     }
 
     /// <summary>
@@ -257,13 +259,12 @@ namespace RoomApi
     /// <param name="userId">User ID.</param>
     /// <param name="roundId">Round ID.</param>
     /// <param name="title">New title.</param>
-    /// <returns>Async task.</returns>
-    public async Task SetRoundTitle(Guid userId, Guid roundId, string title)
+    public void SetRoundTitle(Guid userId, Guid roundId, string title)
     {
       if (this.IsHost(userId, this.rounds.GetItem(roundId).RoomId) && (this.rounds.GetItem(roundId) != null))
       {
         this.roundService.SetTitle(this.rounds.GetItem(roundId), title);
-        await this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId))?.SendAsync("onRoundChanged", new RoundDTO(this.rounds.GetItem(roundId)));
+        this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId))?.SendAsync("onRoundChanged", new RoundDTO(this.rounds.GetItem(roundId))).Wait();
       }
     }
 
@@ -273,13 +274,12 @@ namespace RoomApi
     /// <param name="userId">User ID.</param>
     /// <param name="roundId">Round ID.</param>
     /// <param name="comment">Comment.</param>
-    /// <returns>Async task.</returns>
-    public async Task SetRoundComment(Guid userId, Guid roundId, string comment)
+    public void SetRoundComment(Guid userId, Guid roundId, string comment)
     {
       if (this.IsHost(userId, this.rounds.GetItem(roundId).RoomId) && (this.rounds.GetItem(roundId) != null))
       {
         this.roundService.SetComment(this.rounds.GetItem(roundId), comment);
-        await this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId))?.SendAsync("onRoundChanged", new RoundDTO(this.rounds.GetItem(roundId)));
+        this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId))?.SendAsync("onRoundChanged", new RoundDTO(this.rounds.GetItem(roundId))).Wait();
       }
     }
 
@@ -289,10 +289,9 @@ namespace RoomApi
     /// <param name="roundId">Round ID.</param>
     /// <param name="user">User.</param>
     /// <param name="card">Card.</param>
-    /// <returns>Async task.</returns>
-    public async Task Choose(Guid roundId, User user, Card card)
+    public void Choose(Guid roundId, User user, Card card)
     {
-      await this.roundService.UserChosed(this.rounds.GetItem(roundId), user, card);
+      this.roundService.UserChosed(this.rounds.GetItem(roundId), user, card);
     }
 
     /// <summary>
@@ -300,8 +299,7 @@ namespace RoomApi
     /// </summary>
     /// <param name="roundId">Round ID.</param>
     /// <param name="userId">User ID.</param>
-    /// <returns>Async task.</returns>
-    public async Task EndRound(Guid roundId, Guid userId)
+    public void EndRound(Guid roundId, Guid userId)
     {
       if (this.IsHost(userId, this.rounds.GetItem(roundId).RoomId) && (this.rounds.GetItem(roundId) != null))
       {
@@ -315,7 +313,7 @@ namespace RoomApi
           this.roundResults.Add(new RoundResult(this.rounds.GetItem(roundId)));
         }
 
-        await this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId))?.SendAsync("onEnd", new RoundDTO(this.rounds.GetItem(roundId)));
+        this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId))?.SendAsync("onEnd", new RoundDTO(this.rounds.GetItem(roundId))).Wait();
       }
     }
 

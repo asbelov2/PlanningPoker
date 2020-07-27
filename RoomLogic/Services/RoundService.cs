@@ -80,8 +80,7 @@ namespace RoomApi
     /// <param name="round">Round.</param>
     /// <param name="user">User.</param>
     /// <param name="card">Card.</param>
-    /// <returns>Async task.</returns>
-    public async Task UserChosed(Round round, User user, Card card)
+    public void UserChosed(Round round, User user, Card card)
     {
       if ((user != null) && (card != null) && (round != null) && (this.timers.GetItem(round.Id)?.IsEnabled ?? true))
       {
@@ -90,17 +89,17 @@ namespace RoomApi
           if (round.Choices.Where(x => x.User == user).Count() > 0)
           {
             round.Choices.FirstOrDefault(x => x.User == user).Card = card;
-            await this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onUserChosed", user);
+            this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onUserChosed", user).Wait();
             if (round.Choices.Count() == round.Users.Count())
             {
               this.timers.GetItem(round.Id)?.Stop();
-              await this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onAllChosed", new RoundDTO(this.rounds.GetItem(round.Id)));
+              this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onAllChosed", new RoundDTO(this.rounds.GetItem(round.Id))).Wait();
             }
           }
           else
           {
             round.Choices.Add(new Choice(user, card));
-            await this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onUserChosed", user);
+            this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onUserChosed", user).Wait();
             if (round.Choices.Count() == round.Users.Count())
             {
               if (this.timers.GetItem(round.Id) == null)
@@ -109,13 +108,13 @@ namespace RoomApi
               }
 
               this.timers.GetItem(round.Id)?.Stop();
-              await this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onAllChosed", new RoundDTO(this.rounds.GetItem(round.Id)));
+              this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onAllChosed", new RoundDTO(this.rounds.GetItem(round.Id))).Wait();
             }
           }
         }
         else
         {
-          await this.context.Clients.Client(user.ConnectionId).SendAsync("onWrongCard");
+          this.context.Clients.Client(user.ConnectionId).SendAsync("onWrongCard").Wait();
         }
       }
     }
