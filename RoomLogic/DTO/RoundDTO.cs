@@ -28,7 +28,7 @@ namespace RoomApi
       DeckDTO deck,
       TimeSpan roundTime,
       string title,
-      string result,
+      double? result,
       string comment,
       ICollection<ChoiceDTO> choices,
       TimeSpan duration,
@@ -92,7 +92,7 @@ namespace RoomApi
     /// <summary>
     /// Gets result.
     /// </summary>
-    public string Result { get; }
+    public double? Result { get; }
 
     /// <summary>
     /// Gets deck.

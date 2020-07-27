@@ -220,7 +220,7 @@ namespace PlanningPokerTests
       Assert.NotNull(round.Duration);
       Assert.NotNull(round.StartDate);
       Assert.AreEqual(roomId, round.RoomId);
-      Assert.AreEqual("No one chosed", round.Result);
+      Assert.IsNull(round.Result);
       Assert.AreEqual(new TimeSpan(0, 13, 0), round.RoundTime);
       Assert.AreEqual("TestTitle", round.Title);
       Assert.AreEqual("TestDeck", round.Deck.Name);
@@ -247,7 +247,7 @@ namespace PlanningPokerTests
       Assert.AreEqual("onUserChosed", InvokedMethod);
       this.roomService.Choose(roundId, user1, this.deckService.GetDeck(deckId).Cards.ElementAt(1)).Wait();
       Assert.AreEqual("onAllChosed", InvokedMethod);
-      Assert.AreEqual("10", round.Result);
+      Assert.AreEqual(10, round.Result);
     }
 
     [Test]
@@ -266,7 +266,7 @@ namespace PlanningPokerTests
       Round round = this.rounds.GetItem(roundId);
       this.roomService.Choose(round.Id, host, this.deckService.GetDeck(deckId).Cards.ElementAt(0)).Wait();
       this.roomService.Choose(round.Id, user1, this.deckService.GetDeck(deckId).Cards.ElementAt(1)).Wait();
-      Assert.AreEqual("ff", round.Result.Trim());
+      Assert.IsNull(round.Result);
     }
 
     [Test]

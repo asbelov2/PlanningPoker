@@ -68,35 +68,27 @@ namespace Data
     /// <summary>
     /// Gets round result.
     /// </summary>
-    public string Result
+    public double? Result
     {
       get
       {
         if (this.Choices.Count <= 0)
         {
-          return "No one chosed";
+          return null;
         }
 
-        StringBuilder exresult = new StringBuilder(string.Empty);
         double result = 0;
         foreach (var choice in this.Choices)
         {
           if (choice.Card.CardType == CardType.Exceptional)
           {
-            exresult.Append($"{choice.Card.Name} ");
+            return null;
           }
 
           result += choice.Card.Value;
         }
 
-        if (exresult.ToString() != string.Empty)
-        {
-          return exresult.ToString();
-        }
-        else
-        {
-          return (result / this.Choices.Count()).ToString();
-        }
+        return result / this.Choices.Count();
       }
     }
 

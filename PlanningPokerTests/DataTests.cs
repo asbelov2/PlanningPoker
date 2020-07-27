@@ -106,7 +106,7 @@ namespace PlanningPokerTests
       Round testRound = new Round(Guid.NewGuid(), users, new DefaultDeck(), TimeSpan.FromMinutes(5), "test");
       testRound.Choices.Add(new Choice(users[0], testRound.Deck.Cards.FirstOrDefault(x => x.Name == "2")));
       testRound.Choices.Add(new Choice(users[1], testRound.Deck.Cards.FirstOrDefault(x => x.Name == "5")));
-      Assert.AreEqual("3,5", testRound.Result);
+      Assert.AreEqual(3.5, testRound.Result);
     }
 
     [Test]
@@ -140,12 +140,11 @@ namespace PlanningPokerTests
       users.Add(new User("1", "1"));
       users.Add(new User("2", "2"));
       Round testRound = new Round(Guid.NewGuid(), users, new DefaultDeck(), TimeSpan.FromMinutes(5), "Test");
-
       this.rounds.Add(testRound);
+
       RoundTimer timer = new RoundTimer(testRound.Id, TimeSpan.FromMinutes(5));
       timer.SetTimer();
       timer.Stop();
-
       Assert.AreEqual(1, this.results.GetList().Count());
       Assert.AreEqual(testRound.Id, this.results.GetList().First().RoundId);
 
