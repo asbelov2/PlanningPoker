@@ -153,7 +153,7 @@ namespace RoomApi
       if (this.IsUsersReady(roomId) && (this.rooms.GetItem(roomId) != null))
       {
         this.StartNewRound(roomId, this.rooms.GetItem(roomId).Host.Id, this.deckService.GetDefaultDeck());
-        this.TurnToFalse(roomId);
+        this.TurnReadinessToFalse(roomId);
       }
     }
 
@@ -317,12 +317,11 @@ namespace RoomApi
       }
     }
 
-
     /// <summary>
     /// Turn to false all readiness in room.
     /// </summary>
     /// <param name="roomId">Room ID.</param>
-    private void TurnToFalse(Guid roomId)
+    private void TurnReadinessToFalse(Guid roomId)
     {
       var dict = this.isUsersReady.GetList().FirstOrDefault(x => x.RoomId == roomId).IsUsersReady;
       foreach (var key in dict.Keys.Cast<User>().ToArray())
