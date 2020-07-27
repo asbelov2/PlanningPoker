@@ -33,7 +33,7 @@ namespace PlanningPokerTests
 
       this.context = HubContextImplementation.GetContext;
       this.userService = new UserService(this.users);
-      this.roundService = new RoundService(this.context, rooms, rounds, timers);
+      this.roundService = new RoundService(this.context, this.rooms, this.rounds, this.timers);
       this.roomService = new RoomService(
         this.context,
         this.roundService,
@@ -106,7 +106,6 @@ namespace PlanningPokerTests
       this.roomService.EndRound(roundId, user1.Id);
 
       Assert.AreEqual(3, this.rounds.GetList().Count());
-
     }
 
     private Guid DefaultDeck()

@@ -7,7 +7,6 @@ namespace Data
   /// </summary>
   public class DeckRepository : Repository<Deck>
   {
-
     /// <summary>
     /// Gets default deck from deck.
     /// </summary>

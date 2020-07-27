@@ -106,9 +106,9 @@ namespace RoomApi
 
     public IEnumerable<RoundDTO> GetRoundResultsByRoomId(Guid roomId)
     {
-      var results = rounds.GetRoomRoundResults(roomId);
+      var results = this.rounds.GetRoomRoundResults(roomId);
       var resultsDTOList = new List<RoundDTO>();
-      foreach(var result in results)
+      foreach (var result in results)
       {
         resultsDTOList.Add(new RoundDTO(result));
       }

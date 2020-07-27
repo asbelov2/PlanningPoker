@@ -1,8 +1,7 @@
-﻿using Data;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Data;
+using Microsoft.AspNetCore.Mvc;
 
 namespace RoomApi.Controllers
 {

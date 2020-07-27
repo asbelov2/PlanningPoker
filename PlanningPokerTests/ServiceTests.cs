@@ -143,7 +143,7 @@ namespace PlanningPokerTests
       User user2 = new User("User2", "TestIDUser2");
       User user3 = new User("User3", "TestIDUser3");
       var roomId = this.roomService.HostRoom(host, "TestRoomName", "TestPassword", "TestInterp");
-      this.roomService.EnterUser(roomId , user1, "TestPassword");
+      this.roomService.EnterUser(roomId, user1, "TestPassword");
       Assert.AreEqual("onConnected", InvokedMethod);
       Assert.AreEqual(typeof(Room), Args[0].GetType());
       this.roomService.EnterUser(roomId, user2, "TestPassword");
