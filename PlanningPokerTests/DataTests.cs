@@ -45,7 +45,7 @@ namespace PlanningPokerTests
     public void CreateCard()
     {
       Card card = new Card(CardType.Exceptional, "test", 111);
-      Assert.AreEqual(card.Value, 0);
+      Assert.IsNull(card.Value);
       Assert.AreEqual(card.Name, "test");
       card = new Card(CardType.Valuable, "1", 2);
       Assert.AreEqual(card.Value, 2);

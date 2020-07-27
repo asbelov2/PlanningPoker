@@ -39,7 +39,7 @@
       else
       {
         this.Name = name;
-        this.Value = 0;
+        this.Value = null;
       }
 
       this.CardType = cardType;
@@ -58,6 +58,6 @@
     /// <summary>
     /// Value of card.
     /// </summary>
-    public double Value { get; }
+    public double? Value { get; }
   }
 }

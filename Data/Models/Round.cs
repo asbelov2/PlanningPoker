@@ -77,7 +77,7 @@ namespace Data
           return null;
         }
 
-        double result = 0;
+        double? result = 0;
         foreach (var choice in this.Choices)
         {
           if (choice.Card.CardType == CardType.Exceptional)
