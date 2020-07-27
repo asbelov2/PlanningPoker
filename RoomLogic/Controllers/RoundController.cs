@@ -16,6 +16,7 @@ namespace RoomApi.Controllers
     private RoundRepository rounds;
     private UserService userService;
     private RoomService roomService;
+    private RoundService roundService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RoundController"/> class.
@@ -23,9 +24,10 @@ namespace RoomApi.Controllers
     /// <param name="roomService">Room service.</param>
     /// <param name="userService">User serivce.</param>
     /// <param name="roundRepository">Round repository.</param>
-    public RoundController(RoomService roomService, UserService userService, RoundRepository roundRepository)
+    public RoundController(RoomService roomService, RoundService roundService, UserService userService, RoundRepository roundRepository)
     {
       this.roomService = roomService;
+      this.roundService = roundService;
       this.userService = userService;
       this.rounds = roundRepository;
     }
@@ -79,7 +81,7 @@ namespace RoomApi.Controllers
     [HttpPut("{id}/SetTitle")]
     public void SetTitle(Guid id, Guid userId, string title)
     {
-      this.roomService.SetRoundTitle(userId, id, title);
+      this.roundService.SetRoundTitle(userId, id, title);
     }
 
     /// <summary>
@@ -91,7 +93,7 @@ namespace RoomApi.Controllers
     [HttpPut("{id}/SetComment")]
     public void SetComment(Guid id, Guid userId, string comment)
     {
-      this.roomService.SetRoundComment(userId, id, comment);
+      this.roundService.SetRoundComment(userId, id, comment);
     }
 
     /// <summary>

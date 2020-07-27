@@ -260,36 +260,6 @@ namespace RoomApi
     }
 
     /// <summary>
-    /// Sets new round title.
-    /// </summary>
-    /// <param name="userId">User ID.</param>
-    /// <param name="roundId">Round ID.</param>
-    /// <param name="title">New title.</param>
-    public void SetRoundTitle(Guid userId, Guid roundId, string title)
-    {
-      if (this.IsHost(userId, this.rounds.GetItem(roundId).RoomId) && (this.rounds.GetItem(roundId) != null))
-      {
-        this.roundService.SetTitle(this.rounds.GetItem(roundId), title);
-        this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId))?.SendAsync("onRoundChanged", new RoundDTO(this.rounds.GetItem(roundId))).Wait();
-      }
-    }
-
-    /// <summary>
-    /// Sets round comment.
-    /// </summary>
-    /// <param name="userId">User ID.</param>
-    /// <param name="roundId">Round ID.</param>
-    /// <param name="comment">Comment.</param>
-    public void SetRoundComment(Guid userId, Guid roundId, string comment)
-    {
-      if (this.IsHost(userId, this.rounds.GetItem(roundId).RoomId) && (this.rounds.GetItem(roundId) != null))
-      {
-        this.roundService.SetComment(this.rounds.GetItem(roundId), comment);
-        this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId))?.SendAsync("onRoundChanged", new RoundDTO(this.rounds.GetItem(roundId))).Wait();
-      }
-    }
-
-    /// <summary>
     /// Makes user's choice.
     /// </summary>
     /// <param name="roundId">Round ID.</param>
