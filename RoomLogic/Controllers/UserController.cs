@@ -44,9 +44,9 @@ namespace RoomApi.Controllers
     /// <param name="id">User ID></param>
     /// <returns>User.</returns>
     [HttpGet("{id}")]
-    public UserDTO Get(string id)
+    public UserDTO Get(Guid id)
     {
-      return new UserDTO(this.userService.GetUser(Guid.Parse(id)));
+      return new UserDTO(this.userService.GetUser(id));
     }
 
     /// <summary>
@@ -55,9 +55,9 @@ namespace RoomApi.Controllers
     /// <param name="id">User ID.</param>
     /// <param name="newName">New name.</param>
     [HttpPut("{id}/ChangeName")]
-    public void ChangeName(string id, string newName)
+    public void ChangeName(Guid id, string newName)
     {
-      this.userService.GetUser(Guid.Parse(id)).Name = newName;
+      this.userService.GetUser(id).Name = newName;
     }
   }
 }

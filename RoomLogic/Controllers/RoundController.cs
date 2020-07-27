@@ -36,10 +36,10 @@ namespace RoomApi.Controllers
     /// <param name="roomId">Room ID.</param>
     /// <returns>Round results from room.</returns>
     [HttpGet("RoundResult")]
-    public ICollection<RoundResult> GetRoundResults(string roomId)
+    public ICollection<RoundResult> GetRoundResults(Guid roomId)
     {
       var roundResults = new RoundResultRepository();
-      return roundResults.GetRoomRoundResults(Guid.Parse(roomId));
+      return roundResults.GetRoomRoundResults(roomId);
     }
 
     /// <summary>
@@ -48,11 +48,11 @@ namespace RoomApi.Controllers
     /// <param name="id">Round ID.</param>
     /// <returns>Round.</returns>
     [HttpGet("{id}")]
-    public RoundDTO Get(string id)
+    public RoundDTO Get(Guid id)
     {
-      if (this.rounds.GetItem(Guid.Parse(id)) != null)
+      if (this.rounds.GetItem(id) != null)
       {
-        return new RoundDTO(this.rounds.GetItem(Guid.Parse(id)));
+        return new RoundDTO(this.rounds.GetItem(id));
       }
 
       return null;
@@ -65,9 +65,9 @@ namespace RoomApi.Controllers
     /// <param name="userId">User ID.</param>
     /// <param name="cardName">Card name.</param>
     [HttpPut("{id}/ChooseCard")]
-    public void ChooseCard(string id, string userId, string cardName)
+    public void ChooseCard(Guid id, Guid userId, string cardName)
     {
-      this.roomService.Choose(Guid.Parse(id), this.userService.GetUser(Guid.Parse(userId)), this.rounds.GetItem(Guid.Parse(id)).Deck.Cards.FirstOrDefault(x => x.Name == cardName));
+      this.roomService.Choose(id, this.userService.GetUser(userId), this.rounds.GetItem(id).Deck.Cards.FirstOrDefault(x => x.Name == cardName));
     }
 
     /// <summary>
@@ -77,9 +77,9 @@ namespace RoomApi.Controllers
     /// <param name="userId">User ID.</param>
     /// <param name="title">New tite.</param>
     [HttpPut("{id}/SetTitle")]
-    public void SetTitle(string id, string userId, string title)
+    public void SetTitle(Guid id, Guid userId, string title)
     {
-      this.roomService.SetRoundTitle(Guid.Parse(userId), Guid.Parse(id), title);
+      this.roomService.SetRoundTitle(userId, id, title);
     }
 
     /// <summary>
@@ -89,9 +89,9 @@ namespace RoomApi.Controllers
     /// <param name="userId">User ID.</param>
     /// <param name="comment">Comment.</param>
     [HttpPut("{id}/SetComment")]
-    public void SetComment(string id, string userId, string comment)
+    public void SetComment(Guid id, Guid userId, string comment)
     {
-      this.roomService.SetRoundComment(Guid.Parse(userId), Guid.Parse(id), comment);
+      this.roomService.SetRoundComment(userId, id, comment);
     }
 
     /// <summary>
@@ -100,9 +100,9 @@ namespace RoomApi.Controllers
     /// <param name="id">Round ID.</param>
     /// <param name="userId">User ID.</param>
     [HttpPost("{id}/EndRound")]
-    public void EndRound(string id, string userId)
+    public void EndRound(Guid id, Guid userId)
     {
-      this.roomService.EndRound(Guid.Parse(id), Guid.Parse(userId));
+      this.roomService.EndRound(id, userId);
     }
   }
 }

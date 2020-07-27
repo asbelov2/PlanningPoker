@@ -61,11 +61,11 @@ namespace RoomApi.Controllers
     /// <param name="id">Room ID.</param>
     /// <returns>Room.</returns>
     [HttpGet("{id}")]
-    public RoomDTO Get(string id)
+    public RoomDTO Get(Guid id)
     {
-      if (this.rooms.GetItem(Guid.Parse(id)) != null)
+      if (this.rooms.GetItem(id) != null)
       {
-        return new RoomDTO(this.rooms.GetItem(Guid.Parse(id)));
+        return new RoomDTO(this.rooms.GetItem(id));
       }
 
       return null;
@@ -78,9 +78,9 @@ namespace RoomApi.Controllers
     /// <param name="userId">User ID.</param>
     /// <param name="password">Room password.</param>
     [HttpPost("{id}/Connect")]
-    public void Connect(string id, string userId, string password)
+    public void Connect(Guid id, Guid userId, string password)
     {
-      this.roomService.EnterUser(Guid.Parse(id), this.userService.GetUser(Guid.Parse(userId)), password);
+      this.roomService.EnterUser(id, this.userService.GetUser(userId), password);
     }
 
     /// <summary>
@@ -89,9 +89,9 @@ namespace RoomApi.Controllers
     /// <param name="id">Room ID.</param>
     /// <param name="userId">User ID.</param>
     [HttpPost("{id}/Disconnect")]
-    public void Disconnect(string id, string userId)
+    public void Disconnect(Guid id, Guid userId)
     {
-      this.roomService.LeaveUser(Guid.Parse(id), this.userService.GetUser(Guid.Parse(userId)));
+      this.roomService.LeaveUser(id, this.userService.GetUser(userId));
     }
 
     /// <summary>
@@ -102,9 +102,9 @@ namespace RoomApi.Controllers
     /// <param name="password">Room password.</param>
     /// <param name="cardInterpretation">Room card's interpretation.</param>
     [HttpPost]
-    public void Create(string hostId, string name = "Default name", string password = "", string cardInterpretation = "Hours")
+    public void Create(Guid hostId, string name = "Default name", string password = "", string cardInterpretation = "Hours")
     {
-      this.roomService.HostRoom(this.userService.GetUser(Guid.Parse(hostId)), name, password, cardInterpretation);
+      this.roomService.HostRoom(this.userService.GetUser(hostId), name, password, cardInterpretation);
     }
 
     /// <summary>
@@ -114,9 +114,9 @@ namespace RoomApi.Controllers
     /// <param name="userId">User ID.</param>
     /// <param name="cardInterpretation">Room card's interpretation</param>
     [HttpPut("{id}/SetCardInterpretation")]
-    public void SetCardInterpretation(string id, string userId, string cardInterpretation)
+    public void SetCardInterpretation(Guid id, Guid userId, string cardInterpretation)
     {
-      this.roomService.ChangeCardInterpretation(Guid.Parse(id), Guid.Parse(userId), cardInterpretation);
+      this.roomService.ChangeCardInterpretation(id, userId, cardInterpretation);
     }
 
     /// <summary>
@@ -128,9 +128,9 @@ namespace RoomApi.Controllers
     /// <param name="deckId">Deck ID.</param>
     /// <param name="roundTimeInMinutes">Round time in minutes.</param>
     [HttpPost("{id}/StartRound")]
-    public void StartRound(string id, string userId, string title, string deckId, double roundTimeInMinutes)
+    public void StartRound(Guid id, Guid userId, string title, Guid deckId, double roundTimeInMinutes)
     {
-        this.roomService.StartNewRound(Guid.Parse(id), Guid.Parse(userId), this.decks.GetItem(Guid.Parse(deckId)), title, TimeSpan.FromMinutes(roundTimeInMinutes));
+        this.roomService.StartNewRound(id, userId, this.decks.GetItem(deckId), title, TimeSpan.FromMinutes(roundTimeInMinutes));
     }
 
     /// <summary>
@@ -140,9 +140,9 @@ namespace RoomApi.Controllers
     /// <param name="userId">User ID.</param>
     /// <param name="name">Room new name.</param>
     [HttpPut("{id}/SetName")]
-    public void SetName(string id, string userId, string name)
+    public void SetName(Guid id, Guid userId, string name)
     {
-      this.roomService.ChangeRoomName(Guid.Parse(id), Guid.Parse(userId), name);
+      this.roomService.ChangeRoomName(id, userId, name);
     }
 
     /// <summary>
@@ -152,9 +152,9 @@ namespace RoomApi.Controllers
     /// <param name="userId">User ID.</param>
     /// <param name="hostId">New host ID.</param>
     [HttpPut("{id}/SetHost")]
-    public void SetHost(string id, string userId, string hostId)
+    public void SetHost(Guid id, Guid userId, string hostId)
     {
-      this.roomService.ChangeHost(Guid.Parse(id), Guid.Parse(userId), Guid.Parse(hostId));
+      this.roomService.ChangeHost(id, userId, Guid.Parse(hostId));
     }
 
     /// <summary>
@@ -164,9 +164,9 @@ namespace RoomApi.Controllers
     /// <param name="userId">User ID.</param>
     /// <param name="password">Room password.</param>
     [HttpPut("{id}/SetPassword")]
-    public void SetPassword(string id, string userId, string password)
+    public void SetPassword(Guid id, Guid userId, string password)
     {
-      this.roomService.ChangePassword(Guid.Parse(id), Guid.Parse(userId), password);
+      this.roomService.ChangePassword(id, userId, password);
     }
 
     /// <summary>
@@ -186,9 +186,9 @@ namespace RoomApi.Controllers
     /// <param name="id">Room ID.</param>
     /// <param name="userId">User ID.</param>
     [HttpPut("{id}/DeclareNotReady")]
-    public void DeclareNotReady(string id, string userId)
+    public void DeclareNotReady(Guid id, Guid userId)
     {
-      this.roomService.DeclareNotReady(Guid.Parse(id), this.userService.GetUser(Guid.Parse(userId)));
+      this.roomService.DeclareNotReady(id, this.userService.GetUser(userId));
     }
 
     /// <summary>
@@ -197,11 +197,11 @@ namespace RoomApi.Controllers
     /// <param name="id">Room ID.</param>
     /// <param name="userId">User ID.</param>
     [HttpDelete("{id}")]
-    public void Delete(string id, string userId)
+    public void Delete(Guid id, Guid userId)
     {
-      if (userId == this.rooms.GetItem(Guid.Parse(id)).Host.ConnectionId)
+      if (userId == this.rooms.GetItem(id).Host.Id)
       {
-        this.rooms.Delete(this.rooms.GetItem(Guid.Parse(id)));
+        this.rooms.Delete(this.rooms.GetItem(id));
       }
     }
   }
