@@ -77,18 +77,23 @@ namespace Data
           return null;
         }
 
-        double? result = 0;
+        double? result = null;
         foreach (var choice in this.Choices)
         {
-          if (choice.Card.CardType == CardType.Exceptional)
+          if (choice.Card.CardType == CardType.Valuable)
           {
-            return null;
+            result += choice.Card.Value;
           }
-
-          result += choice.Card.Value;
         }
 
-        return result / this.Choices.Count();
+        if (result == null)
+        {
+          return null;
+        }
+        else
+        {
+          return result / this.Choices.Count();
+        }
       }
     }
 
