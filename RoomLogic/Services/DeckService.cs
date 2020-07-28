@@ -89,10 +89,6 @@ namespace RoomApi
     /// <summary>
     /// Get default deck from repository.
     /// </summary>
-    /// <returns>Deck.</returns>
-    public Deck GetDefaultDeck()
-    {
-      return decks.GetDefaultDeck();
-    }
+    public Deck DefaultDeck { get; set; }
   }
 }

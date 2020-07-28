@@ -70,7 +70,7 @@ namespace RoomApi
     private void InitDefaultDeck()
     {
       var defaultDeck = new Deck("DefaultDeck");
-      double[] numbers = { 0, 1 / 2, 1, 2, 3, 5, 8, 13, 20, 40, 100 };
+      double[] numbers = { 0, 1.0 / 2, 1, 2, 3, 5, 8, 13, 20, 40, 100 };
       foreach (var number in numbers)
       {
         defaultDeck.AddCard(new Card(CardType.Valuable, number.ToString(), number));
@@ -80,7 +80,8 @@ namespace RoomApi
       defaultDeck.AddCard(new Card(CardType.Exceptional, "∞", 0));
       defaultDeck.AddCard(new Card(CardType.Exceptional, "☕", 0));
       var decks = new DeckRepository();
-      decks.Add(defaultDeck);
+      var deckService = new DeckService(decks);
+      deckService.DefaultDeck = decks.GetItem(decks.Add(defaultDeck));
     }
   }
 }

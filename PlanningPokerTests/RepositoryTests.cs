@@ -18,6 +18,7 @@ namespace PlanningPokerTests
 
     private IHubContext<RoomHub> context;
     private UserService userService;
+    private DeckService deckService;
     private RoomService roomService;
     private RoundService roundService;
 
@@ -33,16 +34,18 @@ namespace PlanningPokerTests
 
       this.context = HubContextImplementation.GetContext;
       this.userService = new UserService(this.users);
+      this.deckService = new DeckService(this.decks);
       this.roundService = new RoundService(this.context, this.rooms, this.rounds, this.timers);
       this.roomService = new RoomService(
         this.context,
         this.roundService,
         this.userService,
-        new DeckService(this.decks),
+        this.deckService,
         this.rooms,
         this.rounds,
         this.timers,
         this.readiness);
+      InitDefaultDeck();
     }
 
     [TearDown]
@@ -57,12 +60,12 @@ namespace PlanningPokerTests
     [Test]
     public void AddAndDeleteAndGetList()
     {
-      Assert.AreEqual(0, this.decks.GetList().Count());
+      Assert.AreEqual(1, this.decks.GetList().Count());
       Deck deck = new Deck("111");
       this.decks.Add(deck);
-      Assert.AreEqual(1, this.decks.GetList().Count());
+      Assert.AreEqual(2, this.decks.GetList().Count());
       this.decks.Delete(deck);
-      Assert.AreEqual(0, this.decks.GetList().Count());
+      Assert.AreEqual(1, this.decks.GetList().Count());
     }
 
     [Test]
@@ -91,10 +94,10 @@ namespace PlanningPokerTests
       var roomId = this.roomService.HostRoom(host);
       this.roomService.EnterUser(roomId, user1, string.Empty);
 
-      var roundId = this.roomService.StartNewRound(roomId, host.Id, this.decks.GetItem(this.DefaultDeck()));
+      var roundId = this.roomService.StartNewRound(roomId, host.Id, deckService.DefaultDeck);
       this.roomService.EndRound(roundId, host.Id);
 
-      roundId = this.roomService.StartNewRound(roomId, host.Id, this.decks.GetItem(this.DefaultDeck()));
+      roundId = this.roomService.StartNewRound(roomId, host.Id, deckService.DefaultDeck);
       this.roomService.EndRound(roundId, host.Id);
 
       Assert.AreEqual(2, this.roundService.GetRoundResultsByRoomId(roomId).Count());
@@ -102,16 +105,16 @@ namespace PlanningPokerTests
       roomId = this.roomService.HostRoom(user1);
       this.roomService.EnterUser(roomId, host, string.Empty);
 
-      roundId = this.roomService.StartNewRound(roomId, user1.Id, this.decks.GetItem(this.DefaultDeck()));
+      roundId = this.roomService.StartNewRound(roomId, user1.Id, deckService.DefaultDeck);
       this.roomService.EndRound(roundId, user1.Id);
 
       Assert.AreEqual(3, this.rounds.GetList().Count());
     }
 
-    private Guid DefaultDeck()
+    private void InitDefaultDeck()
     {
-      var defaultDeck = new Deck();
-      double[] numbers = { 0, 1 / 2, 1, 2, 3, 5, 8, 13, 20, 40, 100 };
+      var defaultDeck = new Deck("DefaultDeck");
+      double[] numbers = { 0, 1.0 / 2, 1, 2, 3, 5, 8, 13, 20, 40, 100 };
       foreach (var number in numbers)
       {
         defaultDeck.AddCard(new Card(CardType.Valuable, number.ToString(), number));
@@ -120,8 +123,7 @@ namespace PlanningPokerTests
       defaultDeck.AddCard(new Card(CardType.Exceptional, "?", 0));
       defaultDeck.AddCard(new Card(CardType.Exceptional, "∞", 0));
       defaultDeck.AddCard(new Card(CardType.Exceptional, "☕", 0));
-      var decks = new DeckRepository();
-      return decks.Add(defaultDeck);
+      this.deckService.DefaultDeck = decks.GetItem(this.decks.Add(defaultDeck));
     }
   }
 }

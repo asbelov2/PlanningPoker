@@ -151,7 +151,7 @@ namespace RoomApi
 
         if (this.IsUsersReady(roomId) && (this.rooms.GetItem(roomId) != null))
         {
-          this.StartNewRound(roomId, this.rooms.GetItem(roomId).Host.Id, this.deckService.GetDefaultDeck());
+          this.StartNewRound(roomId, this.rooms.GetItem(roomId).Host.Id, deckService.DefaultDeck);
           this.TurnReadinessToFalse(roomId);
         }
       }

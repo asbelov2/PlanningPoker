@@ -274,7 +274,7 @@ namespace PlanningPokerTests
       this.userService.AddNewUser(user1);
       var roomId = this.roomService.HostRoom(host);
       this.roomService.EnterUser(roomId, user1, string.Empty);
-      var roundId = this.roomService.StartNewRound(roomId, host.Id, this.deckService.GetDefaultDeck());
+      var roundId = this.roomService.StartNewRound(roomId, host.Id, this.deckService.DefaultDeck);
       this.roomService.EndRound(roundId, host.Id);
       Assert.AreEqual("onEnd", InvokedMethod);
       Assert.AreEqual(typeof(RoundDTO), Args[0].GetType());
@@ -305,7 +305,7 @@ namespace PlanningPokerTests
     private void InitDefaultDeck()
     {
       var defaultDeck = new Deck("DefaultDeck");
-      double[] numbers = { 0, 1 / 2, 1, 2, 3, 5, 8, 13, 20, 40, 100 };
+      double[] numbers = { 0, 1.0 / 2, 1, 2, 3, 5, 8, 13, 20, 40, 100 };
       foreach (var number in numbers)
       {
         defaultDeck.AddCard(new Card(CardType.Valuable, number.ToString(), number));
@@ -314,8 +314,7 @@ namespace PlanningPokerTests
       defaultDeck.AddCard(new Card(CardType.Exceptional, "?", 0));
       defaultDeck.AddCard(new Card(CardType.Exceptional, "∞", 0));
       defaultDeck.AddCard(new Card(CardType.Exceptional, "☕", 0));
-      var decks = new DeckRepository();
-      decks.Add(defaultDeck);
+      this.deckService.DefaultDeck = decks.GetItem(this.decks.Add(defaultDeck));
     }
   }
 }
