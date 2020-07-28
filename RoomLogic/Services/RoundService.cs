@@ -166,7 +166,7 @@ namespace RoomApi
     /// <returns>Is user host or not.</returns>
     private bool IsHost(Guid userId, Guid roomId)
     {
-      return userId == this.rooms.GetItem(roomId).Host.Id;
+      return userId == this.rooms.GetItem(roomId)?.Host?.Id;
     }
 
     /// <summary>

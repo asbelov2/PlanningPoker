@@ -310,12 +310,7 @@ namespace RoomApi
     /// <returns>Is user host or not.</returns>
     private bool IsHost(Guid userId, Guid roomId)
     {
-      if (userId != null)
-      {
         return userId == this.rooms.GetItem(roomId)?.Host?.Id;
-      }
-
-      return false;
     }
 
     /// <summary>
