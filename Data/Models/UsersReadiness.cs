@@ -16,7 +16,6 @@ namespace Data
     public UsersReadiness(Guid roomId)
     {
       this.IsUsersReady = new Dictionary<User, bool>();
-      this.Id = Guid.NewGuid();
       this.RoomId = roomId;
     }
 
@@ -24,11 +23,6 @@ namespace Data
     /// User readiness in the room.
     /// </summary>
     public Dictionary<User, bool> IsUsersReady { get; }
-
-    /// <summary>
-    /// ID.
-    /// </summary>
-    public Guid Id { get; }
 
     /// <summary>
     /// Room ID.

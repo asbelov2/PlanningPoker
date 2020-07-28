@@ -13,13 +13,13 @@ namespace RoomApi
     /// Add readiness.
     /// </summary>
     /// <param name="readiness">Readiness.</param>
-    /// <returns>Id of readiness.</returns>
+    /// <returns>Room ID.</returns>
     public Guid Add(UsersReadiness readiness)
     {
-      if (!data.Any(x => x.Id == readiness.Id))
+      if (!data.Any(x => x.RoomId == readiness.RoomId))
       { 
         data.Add(readiness);
-        return readiness.Id;
+        return readiness.RoomId;
       }
 
       return default;
@@ -45,16 +45,6 @@ namespace RoomApi
       {
         data.Remove(readiness);
       }
-    }
-
-    /// <summary>
-    /// Returns readiness.
-    /// </summary>
-    /// <param name="id">Readiness's ID.</param>
-    /// <returns>Readiness.</returns>
-    public UsersReadiness GetReadiness(Guid id)
-    {
-      return data.FirstOrDefault(x => x.Id == id);
     }
 
     /// <summary>
