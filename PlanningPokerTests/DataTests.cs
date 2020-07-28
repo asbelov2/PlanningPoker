@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Data;
+using Microsoft.AspNetCore.SignalR;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using RoomApi;
@@ -10,20 +11,26 @@ namespace PlanningPokerTests
 {
   public class DataTests
   {
+    private IHubContext<RoomHub> context;
+    private RoundTimerService timers;
     private DeckRepository decks;
     private DeckService deckService;
     private RoomRepository rooms;
     private RoundRepository rounds;
+    private RoundService roundService;
     private UserRepository users;
 
     [SetUp]
     public void Setup()
     {
+      this.context = HubContextImplementation.GetContext;
+      this.timers = new RoundTimerService();
       this.decks = new DeckRepository();
       this.rooms = new RoomRepository();
       this.rounds = new RoundRepository();
       this.users = new UserRepository();
       this.deckService = new DeckService(decks);
+      this.roundService = new RoundService(this.context, this.rooms, this.rounds, this.timers);
       InitDefaultDeck();
     }
 
@@ -137,7 +144,7 @@ namespace PlanningPokerTests
       Round testRound = new Round(Guid.NewGuid(), users, deckService.DefaultDeck, TimeSpan.FromMinutes(5), "Test");
       this.rounds.Add(testRound);
 
-      RoundTimer timer = new RoundTimer(testRound.Id, TimeSpan.FromMinutes(5));
+      RoundTimer timer = new RoundTimer(testRound.Id, TimeSpan.FromMinutes(5), this.roundService);
       timer.SetTimer();
       timer.Stop();
       Assert.IsNotNull(this.rounds.GetList().First().Duration);
@@ -145,7 +152,7 @@ namespace PlanningPokerTests
       Guid testId = Guid.NewGuid();
       testRound = new Round(testId, users, deckService.DefaultDeck, TimeSpan.FromMinutes(5), "Test2");
       this.rounds.Add(testRound);
-      timer = new RoundTimer(testRound.Id, TimeSpan.FromMinutes(5));
+      timer = new RoundTimer(testRound.Id, TimeSpan.FromMinutes(5), this.roundService);
       timer.SetTimer();
       timer.Stop();
       Assert.IsNotNull(this.rounds.GetList().Last().Duration);

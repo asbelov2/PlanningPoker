@@ -262,6 +262,25 @@ namespace PlanningPokerTests
       Round round = this.rounds.GetItem(roundId);
       this.roomService.Choose(round.Id, host, this.deckService.GetDeck(deckId).Cards.ElementAt(0));
       this.roomService.Choose(round.Id, user1, this.deckService.GetDeck(deckId).Cards.ElementAt(1));
+      Assert.AreEqual(5, round.Result);
+    }
+
+    [Test]
+    public void ChooseAllExceptional()
+    {
+      User host = new User("Host", "TestIDHost");
+      User user1 = new User("User1", "TestIDUser1");
+      this.userService.AddNewUser(host);
+      this.userService.AddNewUser(user1);
+      var roomId = this.roomService.HostRoom(host, "TestRoomName", "TestPassword", "TestInterp");
+      this.roomService.EnterUser(roomId, user1, "TestPassword");
+      var deckId = this.deckService.NewDeck("TestDeck");
+      this.deckService.AddCard(this.deckService.GetDeck(deckId), new Card(CardType.Exceptional, "gg", 5));
+      this.deckService.AddCard(this.deckService.GetDeck(deckId), new Card(CardType.Exceptional, "ff", 0));
+      var roundId = this.roomService.StartNewRound(roomId, host.Id, this.deckService.GetDeck(deckId), "TestTitle", TimeSpan.FromMinutes(13));
+      Round round = this.rounds.GetItem(roundId);
+      this.roomService.Choose(round.Id, host, this.deckService.GetDeck(deckId).Cards.ElementAt(0));
+      this.roomService.Choose(round.Id, user1, this.deckService.GetDeck(deckId).Cards.ElementAt(1));
       Assert.IsNull(round.Result);
     }
 

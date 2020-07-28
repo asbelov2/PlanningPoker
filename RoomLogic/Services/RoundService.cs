@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Data;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.SignalR;
 
 namespace RoomApi
@@ -52,7 +50,7 @@ namespace RoomApi
       Guid id = this.rounds.Add(new Round(roomId, users, deck, roundTime, title));
       if (roundTime != TimeSpan.Zero)
       {
-        this.timers.Add(new RoundTimer(id, roundTime));
+        this.timers.Add(new RoundTimer(id, roundTime, this));
         this.timers.GetTimer(id)?.SetTimer();
       }
 
@@ -156,6 +154,11 @@ namespace RoomApi
         this.rounds.GetItem(roundId).Comment = comment;
         this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId))?.SendAsync("onRoundChanged", new RoundDTO(this.rounds.GetItem(roundId))).Wait();
       }
+    }
+
+    public void NotifyUsersOnTimeOver(Guid roundId)
+    {
+      this.context.Clients.Group(this.GetGroupKey(this.rounds.GetItem(roundId).RoomId))?.SendAsync("onTimeOver", new RoundDTO(this.rounds.GetItem(roundId))).Wait();
     }
 
     /// <summary>

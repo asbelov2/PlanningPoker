@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Data;
 
 namespace RoomApi
 {
@@ -17,7 +16,7 @@ namespace RoomApi
     /// <returns>Id of timer.</returns>
     public Guid Add(RoundTimer timer)
     {
-      if (data.Any(x => x.Id == timer.Id))
+      if (!data.Any(x => x.Id == timer.Id))
       {
         data.Add(timer);
         return timer.Id;
@@ -34,6 +33,7 @@ namespace RoomApi
     {
       if (timer != null)
       {
+        timer.Dispose();
         data.Remove(timer);
       }
     }
