@@ -16,7 +16,7 @@ namespace RoomApi
     /// <returns>Id of readiness.</returns>
     public Guid Add(UsersReadiness readiness)
     {
-      if (data.Any(x => x.Id == readiness.Id) == false)
+      if (!data.Any(x => x.Id == readiness.Id))
       { 
         data.Add(readiness);
         return readiness.Id;

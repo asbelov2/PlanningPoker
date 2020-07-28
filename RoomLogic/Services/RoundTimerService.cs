@@ -17,7 +17,7 @@ namespace RoomApi
     /// <returns>Id of timer.</returns>
     public Guid Add(RoundTimer timer)
     {
-      if (data.Any(x => x.Id == timer.Id) == false)
+      if (data.Any(x => x.Id == timer.Id))
       {
         data.Add(timer);
         return timer.Id;

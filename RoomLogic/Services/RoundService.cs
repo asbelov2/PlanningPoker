@@ -71,7 +71,7 @@ namespace RoomApi
       {
         if (round.Deck.Cards.Contains(card))
         {
-          if (round.Choices.Where(x => x.User == user).Count() > 0)
+          if (round.Choices.Any(x => x.User == user))
           {
             round.Choices.FirstOrDefault(x => x.User == user).Card = card;
             this.context.Clients.Group(this.GetGroupKey(round.RoomId)).SendAsync("onUserChosed", user).Wait();
