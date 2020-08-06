@@ -49,6 +49,16 @@ namespace RoomApi
     }
 
     /// <summary>
+    /// Get user from repository.
+    /// </summary>
+    /// <param name="id">User ID.</param>
+    /// <returns>User.</returns>
+    public User GetUserByConnectionId(string connectionId)
+    {
+      return this.users.GetByConnectionID(connectionId);
+    }
+
+    /// <summary>
     /// Delete user from repository.
     /// </summary>
     /// <param name="user">User.</param>

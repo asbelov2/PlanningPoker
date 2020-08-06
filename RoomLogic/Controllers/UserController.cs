@@ -50,6 +50,17 @@ namespace RoomApi.Controllers
     }
 
     /// <summary>
+    /// Gets user by ConnectionID.
+    /// </summary>
+    /// <param name="id">User ID></param>
+    /// <returns>User.</returns>
+    [HttpGet("GetByConnectionId")]
+    public UserDTO GetByConnectionId(string connectionId)
+    {
+      return new UserDTO(this.userService.GetUserByConnectionId(connectionId));
+    }
+
+    /// <summary>
     /// Changing user's name.
     /// </summary>
     /// <param name="id">User ID.</param>

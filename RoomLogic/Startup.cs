@@ -26,8 +26,9 @@ namespace RoomApi
         "CorsPolicy",
         builder =>
         {
-           builder.AllowAnyMethod().AllowAnyHeader()
-              .WithOrigins("http://localhost:44365")
+           builder.AllowAnyMethod()
+              .AllowAnyHeader()
+              .SetIsOriginAllowed(origin => true)
               .AllowCredentials();
         }));
       services.AddSignalR();
