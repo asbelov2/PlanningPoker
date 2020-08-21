@@ -72,6 +72,22 @@ namespace RoomApi.Controllers
     }
 
     /// <summary>
+    /// Get one room by id.
+    /// </summary>
+    /// <param name="id">Room ID.</param>
+    /// <returns>Room.</returns>
+    [HttpGet("GetByHostId/{id}")]
+    public RoomDTO GetByHostId(Guid id)
+    {
+      if (this.rooms.GetByHostId(id) != null)
+      {
+        return new RoomDTO(this.rooms.GetByHostId(id));
+      }
+
+      return null;
+    }
+
+    /// <summary>
     /// Connecting user to room.
     /// </summary>
     /// <param name="id">Room ID.</param>
@@ -130,7 +146,7 @@ namespace RoomApi.Controllers
     [HttpPost("{id}/StartRound")]
     public void StartRound(Guid id, Guid userId, string title, Guid deckId, double roundTimeInMinutes)
     {
-        this.roomService.StartNewRound(id, userId, this.decks.GetItem(deckId), title, TimeSpan.FromMinutes(roundTimeInMinutes));
+        this.roomService.StartNewRound(id, userId, this.decks.GetItem(deckId), TimeSpan.FromMinutes(double.IsNaN(roundTimeInMinutes) ? 0 : roundTimeInMinutes), title);
     }
 
     /// <summary>

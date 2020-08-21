@@ -105,5 +105,16 @@ namespace RoomApi.Controllers
     {
       this.roomService.EndRound(id, userId);
     }
+
+    /// <summary>
+    /// Resets timer.
+    /// </summary>
+    /// <param name="id">Round ID.</param>
+    /// <param name="userId">User ID.</param>
+    [HttpPost("{id}/ResetTimer")]
+    public void ResetTimer(Guid id, Guid userId)
+    {
+      this.roundService.ResetTimer(id, userId);
+    }
   }
 }

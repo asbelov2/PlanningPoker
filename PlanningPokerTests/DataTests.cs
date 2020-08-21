@@ -105,7 +105,7 @@ namespace PlanningPokerTests
       var users = new List<User>();
       users.Add(new User("1", "1"));
       users.Add(new User("2", "2"));
-      Round testRound = new Round(Guid.NewGuid(), users, deckService.DefaultDeck, TimeSpan.FromMinutes(5), "test");
+      Round testRound = new Round(Guid.NewGuid(), users, DeckService.DefaultDeck, TimeSpan.FromMinutes(5), "test");
       testRound.Choices.Add(new Choice(users[0], testRound.Deck.Cards.FirstOrDefault(x => x.Name == "2")));
       testRound.Choices.Add(new Choice(users[1], testRound.Deck.Cards.FirstOrDefault(x => x.Name == "5")));
       Assert.AreEqual(3.5, testRound.Result);
@@ -117,7 +117,7 @@ namespace PlanningPokerTests
       var users = new List<User>();
       users.Add(new User("1", "1"));
       users.Add(new User("2", "2"));
-      Round testRound = new Round(Guid.NewGuid(), users, deckService.DefaultDeck, TimeSpan.FromMinutes(5), "test");
+      Round testRound = new Round(Guid.NewGuid(), users, DeckService.DefaultDeck, TimeSpan.FromMinutes(5), "test");
       Assert.AreEqual(testRound.Users.Count(), 2);
     }
 
@@ -141,7 +141,7 @@ namespace PlanningPokerTests
       var users = new List<User>();
       users.Add(new User("1", "1"));
       users.Add(new User("2", "2"));
-      Round testRound = new Round(Guid.NewGuid(), users, deckService.DefaultDeck, TimeSpan.FromMinutes(5), "Test");
+      Round testRound = new Round(Guid.NewGuid(), users, DeckService.DefaultDeck, TimeSpan.FromMinutes(5), "Test");
       this.rounds.Add(testRound);
 
       RoundTimer timer = new RoundTimer(testRound.Id, TimeSpan.FromMinutes(5), this.roundService);
@@ -150,7 +150,7 @@ namespace PlanningPokerTests
       Assert.IsNotNull(this.rounds.GetList().First().Duration);
 
       Guid testId = Guid.NewGuid();
-      testRound = new Round(testId, users, deckService.DefaultDeck, TimeSpan.FromMinutes(5), "Test2");
+      testRound = new Round(testId, users, DeckService.DefaultDeck, TimeSpan.FromMinutes(5), "Test2");
       this.rounds.Add(testRound);
       timer = new RoundTimer(testRound.Id, TimeSpan.FromMinutes(5), this.roundService);
       timer.SetTimer();
@@ -170,7 +170,7 @@ namespace PlanningPokerTests
       defaultDeck.AddCard(new Card(CardType.Exceptional, "?", 0));
       defaultDeck.AddCard(new Card(CardType.Exceptional, "∞", 0));
       defaultDeck.AddCard(new Card(CardType.Exceptional, "☕", 0));
-      this.deckService.DefaultDeck = decks.GetItem(this.decks.Add(defaultDeck));
+      DeckService.DefaultDeck = decks.GetItem(this.decks.Add(defaultDeck));
     }
   }
 }

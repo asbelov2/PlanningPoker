@@ -63,13 +63,23 @@ namespace RoomApi.Controllers
     }
 
     /// <summary>
+    /// Get default deck.
+    /// </summary>
+    /// <returns>Deck.</returns>
+    [HttpGet("GetDefault")]
+    public DeckDTO GetDefaultDeck()
+    {
+      return new DeckDTO(DeckService.DefaultDeck);
+    }
+
+    /// <summary>
     /// Creating new deck.
     /// </summary>
     /// <param name="name">Deck name.</param>
     [HttpPost]
-    public void NewDeck(string name)
+    public Guid NewDeck(string name)
     {
-      this.deckService.NewDeck(name);
+      return this.deckService.NewDeck(name);
     }
 
     /// <summary>

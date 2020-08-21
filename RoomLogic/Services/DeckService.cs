@@ -89,6 +89,6 @@ namespace RoomApi
     /// <summary>
     /// Get default deck from repository.
     /// </summary>
-    public Deck DefaultDeck { get; set; }
+    public static Deck DefaultDeck { get; set; }
   }
 }

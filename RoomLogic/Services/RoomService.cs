@@ -59,7 +59,7 @@ namespace RoomApi
     /// <param name="title">Title.</param>
     /// <param name="roundTime">Round time.</param>
     /// <returns>Round ID.</returns>
-    public Guid StartNewRound(Guid roomId, Guid userId, Deck deck, string title = "Default title", TimeSpan roundTime = default)
+    public Guid StartNewRound(Guid roomId, Guid userId, Deck deck, TimeSpan roundTime, string title = "Default title")
     {
       if (this.IsHost(userId, roomId) && (this.rooms.GetItem(roomId) != null))
       {
@@ -81,7 +81,7 @@ namespace RoomApi
       if (this.rooms.GetItem(roomId) != null)
       {
         this.context.Groups.RemoveFromGroupAsync(user?.ConnectionId, this.GetGroupKey(this.rooms.GetItem(roomId).Id)).Wait();
-        this.context.Clients.Group(this.GetGroupKey(roomId)).SendAsync("onUserDisconnected", user, roomId).Wait();
+        this.context.Clients.Group(this.GetGroupKey(roomId)).SendAsync("onUserDisconnected", user, this.rooms.GetItem(roomId).Users).Wait();
         this.context.Clients.Client(user?.ConnectionId).SendAsync("onDisconnected").Wait();
         this.rooms.GetItem(roomId)?.Users?.Remove(user);
       }
@@ -101,7 +101,7 @@ namespace RoomApi
         this.userService.AddNewUser(newUser);
         this.rooms.GetItem(roomId)?.Users?.Add(newUser);
 
-        this.context.Clients.Group(this.GetGroupKey(roomId))?.SendAsync("onUserConnected", newUser, this.rooms.GetItem(roomId).Users, roomId).Wait();
+        this.context.Clients.Group(this.GetGroupKey(roomId))?.SendAsync("onUserConnected", newUser, this.rooms.GetItem(roomId).Users).Wait();
         this.context.Clients.Client(newUser.ConnectionId)?.SendAsync("onConnected", this.rooms.GetItem(roomId)).Wait();
         this.context.Groups.AddToGroupAsync(newUser?.ConnectionId, this.GetGroupKey(roomId)).Wait();
         return true;
@@ -150,7 +150,7 @@ namespace RoomApi
 
         if (this.IsUsersReady(roomId) && (this.rooms.GetItem(roomId) != null))
         {
-          this.StartNewRound(roomId, this.rooms.GetItem(roomId).Host.Id, deckService.DefaultDeck);
+          this.StartNewRound(roomId, this.rooms.GetItem(roomId).Host.Id, DeckService.DefaultDeck, TimeSpan.Zero);
           this.TurnReadinessToFalse(roomId);
         }
       }

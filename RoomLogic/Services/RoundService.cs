@@ -123,6 +123,7 @@ namespace RoomApi
       if (this.IsHost(userId, this.rounds.GetItem(roundId)?.RoomId ?? default))
       {
         this.timers.GetTimer(roundId)?.SetTimer();
+        this.context.Clients.Group(this.GetGroupKey(rounds.GetItem(roundId).RoomId)).SendAsync("onResetTimer").Wait();
       }
     }
 

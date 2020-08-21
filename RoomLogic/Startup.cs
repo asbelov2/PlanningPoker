@@ -82,7 +82,7 @@ namespace RoomApi
       defaultDeck.AddCard(new Card(CardType.Exceptional, "☕", 0));
       var decks = new DeckRepository();
       var deckService = new DeckService(decks);
-      deckService.DefaultDeck = decks.GetItem(decks.Add(defaultDeck));
+      DeckService.DefaultDeck = decks.GetItem(decks.Add(defaultDeck));
     }
   }
 }

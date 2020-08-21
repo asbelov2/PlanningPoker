@@ -94,10 +94,10 @@ namespace PlanningPokerTests
       var roomId = this.roomService.HostRoom(host);
       this.roomService.EnterUser(roomId, user1, string.Empty);
 
-      var roundId = this.roomService.StartNewRound(roomId, host.Id, deckService.DefaultDeck);
+      var roundId = this.roomService.StartNewRound(roomId, host.Id, DeckService.DefaultDeck);
       this.roomService.EndRound(roundId, host.Id);
 
-      roundId = this.roomService.StartNewRound(roomId, host.Id, deckService.DefaultDeck);
+      roundId = this.roomService.StartNewRound(roomId, host.Id, DeckService.DefaultDeck);
       this.roomService.EndRound(roundId, host.Id);
 
       Assert.AreEqual(2, this.roundService.GetRoundResultsByRoomId(roomId).Count());
@@ -105,7 +105,7 @@ namespace PlanningPokerTests
       roomId = this.roomService.HostRoom(user1);
       this.roomService.EnterUser(roomId, host, string.Empty);
 
-      roundId = this.roomService.StartNewRound(roomId, user1.Id, deckService.DefaultDeck);
+      roundId = this.roomService.StartNewRound(roomId, user1.Id, DeckService.DefaultDeck);
       this.roomService.EndRound(roundId, user1.Id);
 
       Assert.AreEqual(3, this.rounds.GetList().Count());
@@ -123,7 +123,7 @@ namespace PlanningPokerTests
       defaultDeck.AddCard(new Card(CardType.Exceptional, "?", 0));
       defaultDeck.AddCard(new Card(CardType.Exceptional, "∞", 0));
       defaultDeck.AddCard(new Card(CardType.Exceptional, "☕", 0));
-      this.deckService.DefaultDeck = decks.GetItem(this.decks.Add(defaultDeck));
+      DeckService.DefaultDeck = decks.GetItem(this.decks.Add(defaultDeck));
     }
   }
 }
