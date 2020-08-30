@@ -48,9 +48,31 @@ namespace RoomApi
       if (this.users.GetByConnectionID(Context.ConnectionId) == null)
       {
         this.users.Add(new User(userName, Context.ConnectionId));
+        await Clients.Caller.SendAsync("onLogin");
       }
+    }
 
-      await Clients.Caller.SendAsync("onLogin");
+    /// <summary>
+    /// When user relogining.
+    /// </summary>
+    /// <param name="userId">User's ID</param>
+    /// <returns>Async task.</returns>
+    public async Task Relogin(Guid userId, Guid roomId)
+    {
+      if (this.users.GetItem(userId) != null)
+      {
+        if (this.users.GetItem(userId).ConnectionId != Context.ConnectionId)
+        {
+          this.users.GetItem(userId).ConnectionId = Context.ConnectionId;
+          this.Groups.AddToGroupAsync(Context.ConnectionId, this.GetGroupKey(roomId)).Wait();
+        }
+        await Clients.Caller.SendAsync("onLogin");
+      }
+    }
+
+    private string GetGroupKey(Guid roomId)
+    {
+      return $"room{roomId}";
     }
   }
 }
