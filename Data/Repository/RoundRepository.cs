@@ -9,6 +9,11 @@ namespace Data
   /// </summary>
   public class RoundRepository : Repository<Round>
   {
+    public RoundRepository(ApplicationContext context) : base(context)
+    {
+
+    }
+
     /// <summary>
     /// Get round results in room.
     /// </summary>
@@ -16,7 +21,7 @@ namespace Data
     /// <returns>Round results.</returns>
     public ICollection<Round> GetRoomRoundResults(Guid roomId)
     {
-      return Data.Where(x => x.RoomId == roomId).ToList();
+      return this.GetItems(x => x.RoomId == roomId).ToList();
     }
   }
 }

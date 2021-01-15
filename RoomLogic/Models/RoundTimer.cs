@@ -11,7 +11,7 @@ namespace RoomApi
   {
     private TimeSpan roundTime;
     private Timer timer;
-    private RoundRepository rounds = new RoundRepository();
+    private RoundRepository rounds = new RoundRepository(new ApplicationContext());
     private RoundService roundService;
 
     /// <summary>

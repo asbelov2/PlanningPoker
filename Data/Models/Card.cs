@@ -1,4 +1,7 @@
-﻿namespace Data
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+
+namespace Data
 {
   /// <summary>
   /// Type of card.
@@ -31,6 +34,7 @@
     /// <remarks>Value of exceptional cards = 0, Name of valuable card same as value.</remarks>
     public Card(CardType cardType, string name = "", double value = 0)
     {
+      this.Id = Guid.NewGuid();
       if (cardType == CardType.Valuable)
       {
         this.Name = value.ToString();
@@ -44,6 +48,13 @@
 
       this.CardType = cardType;
     }
+
+    public Card()
+    {
+      this.Id = Guid.NewGuid();
+    }
+
+    public Guid Id { get; set; }
 
     /// <summary>
     /// Type of card.

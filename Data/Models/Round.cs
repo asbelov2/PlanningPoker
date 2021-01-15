@@ -30,6 +30,11 @@ namespace Data
       this.StartDate = DateTime.Now;
     }
 
+    public Round()
+    {
+
+    }
+
     /// <summary>
     /// Room ID.
     /// </summary>
@@ -63,7 +68,7 @@ namespace Data
     /// <summary>
     /// Round ID.
     /// </summary>
-    public Guid Id { get; }
+    public Guid Id { get; set; }
 
     /// <summary>
     /// Round result.

@@ -27,6 +27,11 @@ namespace Data
       this.Users.Add(this.Host);
     }
 
+    public Room()
+    {
+
+    }
+
     /// <summary>
     /// Host.
     /// </summary>
@@ -45,7 +50,7 @@ namespace Data
     /// <summary>
     /// Room ID.
     /// </summary>
-    public Guid Id { get; }
+    public Guid Id { get; set; }
 
     /// <summary>
     /// Room name.

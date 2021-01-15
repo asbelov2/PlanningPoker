@@ -7,6 +7,11 @@ namespace Data
   /// </summary>
   public class UserRepository : Repository<User>
   {
+    public UserRepository(ApplicationContext context) : base(context)
+    {
+
+    }
+
     /// <summary>
     /// Gets user by connection ID.
     /// </summary>
@@ -14,7 +19,7 @@ namespace Data
     /// <returns>User.</returns>
     public User GetByConnectionID(string connectionID)
     {
-      return UserRepository.Data.FirstOrDefault(x => x.ConnectionId == connectionID);
+      return this.GetItems(x => x.ConnectionId == connectionID).FirstOrDefault();
     }
   }
 }

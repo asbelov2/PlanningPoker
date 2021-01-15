@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,10 +12,14 @@ namespace Data
   public abstract class Repository<T> : IRepository<T>
     where T : class, IEntity
   {
-    /// <summary>
-    /// Collection of data.
-    /// </summary>
-    protected static ICollection<T> Data { get; } = new List<T>();
+    DbContext _context;
+    DbSet<T> _dbSet;
+
+    public Repository(DbContext context)
+    {
+      _context = context;
+      _dbSet = context.Set<T>();
+    }
 
     /// <summary>
     /// Add item.
@@ -23,12 +28,15 @@ namespace Data
     /// <returns>Id of item.</returns>
     public virtual Guid Add(T item)
     {
-      if (!Data.Any(x => x.Id == item?.Id))
+      if (item != null)
       {
-        Data.Add(item);
-        return item.Id;
+        if (!_dbSet.Any(x => x.Id == item.Id))
+        {
+          _dbSet.Add(item);
+          _context.SaveChanges();
+          return item.Id;
+        }
       }
-
       return default;
     }
 
@@ -40,7 +48,8 @@ namespace Data
     {
       if (item != null)
       {
-        Data.Remove(item);
+        _dbSet.Remove(item);
+        _context.SaveChanges();
       }
     }
 
@@ -51,7 +60,12 @@ namespace Data
     /// <returns>Item.</returns>
     public virtual T GetItem(Guid id)
     {
-      return Data.FirstOrDefault(x => x.Id == id);
+      return _dbSet.Find(id);
+    }
+
+    public virtual IEnumerable<T> GetItems(Func<T, bool> predicate)
+    {
+      return _dbSet.AsNoTracking().Where(predicate).ToList();
     }
 
     /// <summary>
@@ -60,16 +74,17 @@ namespace Data
     /// <returns>collection of items.</returns>
     public virtual IEnumerable<T> GetList()
     {
-      return Data;
+      return _dbSet.AsNoTracking().ToList();
     }
 
     /// <summary>
-    /// Save item.
+    /// Save item. (outdated?)
     /// </summary>
     /// <param name="item">Item.</param>
     public virtual void Save(T item)
     {
       this.Add(item);
+      _context.SaveChanges();
     }
 
     /// <summary>
@@ -78,8 +93,8 @@ namespace Data
     /// <param name="item">Item.</param>
     public virtual void Update(T item)
     {
-      this.Delete(this.GetItem(item.Id));
-      this.Add(item);
+      _context.Entry(item).State = EntityState.Modified;
+      _context.SaveChanges();
     }
 
     /// <summary>
@@ -87,7 +102,8 @@ namespace Data
     /// </summary>
     public virtual void ClearRepository()
     {
-      Data.Clear();
+      /*_dbSet.RemoveRange(); (Outdated)
+      Data.Clear();*/
     }
   }
 }

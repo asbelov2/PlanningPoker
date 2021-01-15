@@ -10,7 +10,7 @@ namespace RoomApi
   /// </summary>
   public class RoomHub : Hub
   {
-    private UserRepository users = new UserRepository();
+    private UserRepository users = new UserRepository(new ApplicationContext());
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RoomHub"/> class.

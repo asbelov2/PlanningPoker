@@ -32,6 +32,12 @@ namespace RoomApi
               .AllowCredentials();
         }));
       services.AddSignalR();
+      services.AddSingleton<ApplicationContext>();
+      services.AddSingleton<DeckRepository>();
+      services.AddSingleton<RoomRepository>();
+      services.AddSingleton<RoundRepository>();
+      services.AddSingleton<UserRepository>();
+
       services.AddSingleton<DeckService>();
       services.AddSingleton<RoomService>();
       services.AddSingleton<RoundService>();
@@ -39,10 +45,6 @@ namespace RoomApi
       services.AddSingleton<RoundTimerService>();
       services.AddSingleton<UsersReadinessService>();
 
-      services.AddSingleton<DeckRepository>();
-      services.AddSingleton<RoomRepository>();
-      services.AddSingleton<RoundRepository>();
-      services.AddSingleton<UserRepository>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,7 +82,7 @@ namespace RoomApi
       defaultDeck.AddCard(new Card(CardType.Exceptional, "?", 0));
       defaultDeck.AddCard(new Card(CardType.Exceptional, "∞", 0));
       defaultDeck.AddCard(new Card(CardType.Exceptional, "☕", 0));
-      var decks = new DeckRepository();
+      var decks = new DeckRepository(new ApplicationContext());
       var deckService = new DeckService(decks);
       DeckService.DefaultDeck = decks.GetItem(decks.Add(defaultDeck));
     }

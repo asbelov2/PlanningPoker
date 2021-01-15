@@ -42,7 +42,7 @@ namespace Data
     /// <summary>
     /// ID of the deck.
     /// </summary>
-    public Guid Id { get; }
+    public Guid Id { get; set; }
 
     /// <summary>
     /// Collection of cards in deck.

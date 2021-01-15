@@ -22,7 +22,7 @@ namespace Data
     /// <summary>
     /// User ID.
     /// </summary>
-    public Guid Id { get; }
+    public Guid Id { get; set; }
 
     /// <summary>
     /// User connection ID.
